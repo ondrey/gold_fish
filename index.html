@@ -8,13 +8,21 @@
 
   <link rel="stylesheet" href="Static/w2ui/w2ui-1.5.rc1.min.css">
   <link rel="stylesheet" href="Static/font-awesome-4.7.0/css/font-awesome.css">
+  <link rel="stylesheet" href="Static/base.css">
+
+
   <script type="text/javascript" src="Static/jquery.min.js"></script>
   <script type="text/javascript" src="Static/w2ui/w2ui-1.5.rc1.js"></script>
   <script id="rdivocale" type="text/javascript" src="Static/locale/ru-ru.json"></script>
 
+
+  <script type="text/javascript" src="Static/w2ui/Components/sidebar.js"></script>
+  <script type="text/javascript" src="Static/w2ui/Components/Accounts/config.js"></script>
+
 </head>
 <body>
-
+<div id="header"></div>
+<div id="content"></div>
 
 
 </body>
@@ -22,6 +30,22 @@
 
 $(function () {
     w2utils.locale(ru);
+
+    $('#content').w2layout({
+          name: 'base_layout',
+          padding: 0,
+          style: 'height: 600px',
+          panels: [
+                      { type: 'left', size: 200, content: 'left' },
+                      { type: 'main',  content: 'main' },
+                  ]
+      });
+
+    w2ui.base_layout.content('left', $().w2sidebar(sidebar_config));
+
+    $().w2grid(config_accounts);
+
+    w2ui.base_layout.content('main', w2ui.config_accounts);
 
 });
 
