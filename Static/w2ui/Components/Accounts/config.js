@@ -1,5 +1,15 @@
 config_accounts = {
         name: 'config_accounts',
+
+        show: {
+            toolbar: true,
+            footer: false,
+            toolbarAdd: true,
+            toolbarDelete: true,
+            toolbarSave: true,
+            toolbarEdit: true,
+            columnHeaders: false
+        },
         columns: [
             { field: 'lname', caption: 'Last Name', size: '30%' },
             { field: 'fname', caption: 'First Name', size: '30%' },

@@ -18,6 +18,7 @@
 
   <script type="text/javascript" src="Static/w2ui/Components/sidebar.js"></script>
   <script type="text/javascript" src="Static/w2ui/Components/Accounts/config.js"></script>
+  <script type="text/javascript" src="Static/w2ui/Components/Transact/config.js"></script>
 
 </head>
 <body>
@@ -34,18 +35,21 @@ $(function () {
     $('#content').w2layout({
           name: 'base_layout',
           padding: 0,
-          style: 'height: 600px',
-          panels: [
-                      { type: 'left', size: 200, content: 'left' },
-                      { type: 'main',  content: 'main' },
+          style: 'height: 83%; position: relative; width:100%;',
+          panels: [   { type: 'left', size: 180,  content: 'left' },
+                      { type: 'main', size: '30%',  content: 'main' },
+                      { type: 'preview', size:'70%', content: '7'}
                   ]
       });
 
-    w2ui.base_layout.content('left', $().w2sidebar(sidebar_config));
-
     $().w2grid(config_accounts);
+    $().w2grid(transact_grid);
+    $().w2sidebar(sidebar_config);
 
+    w2ui.base_layout.content('left', w2ui.sidebar);
     w2ui.base_layout.content('main', w2ui.config_accounts);
+    w2ui.base_layout.content('preview', w2ui.transact_grid);
+
 
 });
 
