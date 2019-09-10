@@ -1,5 +1,6 @@
 sidebar_config = {
         name: 'sidebar',
+        bottomHTML : '<div style="background-color: #eee; padding: 10px 5px; border-top: 1px solid silver">Куджима - домашняя бухгалтерия</div>',
         nodes: [
             { id: 'level-1', text: 'Групперовки', img: 'icon-folder', expanded: true, group: true,
               nodes: [ { id: 'level-1-1', text: 'Статьи', icon: 'fa-home' },

@@ -8,8 +8,26 @@ body {
 }
 
 #header {
-  min-height: 128px;
-  height: 17%;
-  width: 100%;
-  background-color: #a5e7fb;
+	min-height: 128px;
+	height: 17%;
+	width: 100%;
+	font-style: oblique;
+	color: #ff2728;
+}
+
+.menu {
+	max-width: 200px;
+	float: right;
+	margin: 0px 20px;
+	font-family: arial;
+	font-style: initial;
+	font-size: smaller;
+}
+
+.menu a {
+	padding: 1px;
+	display: block;
+	color: black;
+	width: 120px;
+	text-align: center;
 }
