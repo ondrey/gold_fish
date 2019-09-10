@@ -9,13 +9,12 @@ body {
 
 #lock {
 	position: absolute;
-	bottom: 10px;
-
+	bottom: 3px;
 	background-color: #0000005e;
 	top: 17%;
 	z-index: 200;
-	left: 10px;
-	right: 10px;
+	left: 3px;
+	right: 3px;
 	border-radius: 10px;
 }
 
