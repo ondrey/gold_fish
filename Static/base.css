@@ -74,7 +74,7 @@ body {
 	width: 90%;
 }
 .fabutton {
-	font-size: x-large;
+	font-size: initial;
 	margin-left: 4px;
 	color: #294d73 !important;
 	background-color: #e6e6e6;
@@ -99,4 +99,18 @@ body {
 
 .menu a:hover {
 	color: #ff2728;
+}
+
+.bage {
+	height: 55px;
+	background-color: #eee;
+	padding: 5px 10px 5px 5px;
+	border-radius: 7px;
+	margin: 4px;
+}
+
+.bage img {
+  border-radius: 100px;
+  width: 50px;
+  float: left;
 }
