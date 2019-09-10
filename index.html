@@ -30,15 +30,13 @@
   <h1 >Kojima</h1> <br>домашняя бухгалтерия.
 </div>
 
-<div class="menu">
-  <a href="" class="fa fa-vk fabutton"> вконтакте</a>
-  <a href="" class="fa fa-telegram fabutton"> телеграм</a>
-  <br>
+<div class="menu" style="padding-top: 10px;">
   <a href="">Инструкция</a>
   <a href="">О программе</a>
   <a href="">Стоимость</a>
   <a href="">Как с нами связатся?</a>
-
+  <a href="" class="fa fa-vk fabutton"></a>
+  <a href="" class="fa fa-telegram fabutton"></a>
 </div>
 <div class="menu">
 <form action="">
@@ -50,9 +48,19 @@
 </div>
 
 
-
 </div>
-<div id="content"></div>
+
+<div id="lock">
+  <div class="message">
+     <p>Для получения полного доступа, необходимо авторизоваться.</p>
+     <a href="#">Просто посмотреть</a>
+
+  </div>
+</div>
+
+<div id="content">
+</div>
+
 
 
 </body>
@@ -60,6 +68,8 @@
 
 $(function () {
     w2utils.locale(ru);
+
+
 
     $('#content').w2layout({
           name: 'base_layout',
@@ -71,6 +81,11 @@ $(function () {
                   ]
       });
 
+      w2ui.base_layout.on('render', function(event) {
+        console.log('object '+ this.name + ' is rendered');
+        w2utils.lock($('#content'), 'Необходимо авторизоваться');
+      });
+
     $().w2grid(config_accounts);
     $().w2grid(transact_grid);
     $().w2sidebar(sidebar_config);
@@ -78,7 +93,6 @@ $(function () {
     w2ui.base_layout.content('left', w2ui.sidebar);
     w2ui.base_layout.content('main', w2ui.config_accounts);
     w2ui.base_layout.content('preview', w2ui.transact_grid);
-
 
 });
 

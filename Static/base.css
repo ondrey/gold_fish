@@ -7,6 +7,30 @@ body {
   height:100%;
 }
 
+#lock {
+	position: absolute;
+	bottom: 10px;
+
+	background-color: #0000005e;
+	top: 17%;
+	z-index: 200;
+	left: 10px;
+	right: 10px;
+	border-radius: 10px;
+}
+
+.message {
+	width: 280px;
+	background-color: #fff;
+	margin: 64px auto;
+	padding: 28px;
+	text-align: center;
+	font-family: arial;
+	border-radius: 5px;
+	font-size: small;
+	box-shadow: 5px 5px #282828;
+}
+
 #header {
 	min-height: 128px;
 	height: 17%;
@@ -51,7 +75,7 @@ body {
 	width: 90%;
 }
 .fabutton {
-	font-size: inherit;
+	font-size: x-large;
 	margin-left: 4px;
 	color: #294d73 !important;
 	background-color: #e6e6e6;
