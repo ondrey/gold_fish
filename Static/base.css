@@ -11,23 +11,69 @@ body {
 	min-height: 128px;
 	height: 17%;
 	width: 100%;
-	font-style: oblique;
+
+  font-family: arial;
 	color: #ff2728;
+}
+
+#header h1 {
+	font-style: oblique;
+	margin: 0px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	display: inline;
+}
+
+.logo {
+	width: 230px;
+	display: inline-block;
+	font-size: smaller;
 }
 
 .menu {
 	max-width: 200px;
 	float: right;
 	margin: 0px 20px;
-	font-family: arial;
 	font-style: initial;
 	font-size: smaller;
+  text-align: end;
+}
+
+.menu form {
+	text-align: center;
+	padding: 10px;
+	background-color: #e6e6e6;
+	border-bottom-left-radius: 17px;
+	border-bottom-right-radius: 17px;
+}
+
+.menu form input {
+	margin: 5px;
+	width: 90%;
+}
+.fabutton {
+	font-size: inherit;
+	margin-left: 4px;
+	color: #294d73 !important;
+	background-color: #e6e6e6;
+	padding: 5px;
+	text-align: center;
+	border-radius: 8px;
+	float: inherit;
+	margin-top: 7px;
+
+	text-decoration: none;
+}
+
+.fabutton:hover {
+  color: #ff2728 !important;
 }
 
 .menu a {
-	padding: 1px;
+	margin-bottom: 5px;
 	display: block;
 	color: black;
-	width: 120px;
-	text-align: center;
+}
+
+.menu a:hover {
+	color: #ff2728;
 }

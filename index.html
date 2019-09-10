@@ -25,42 +25,31 @@
 <div id="header">
 
 <img src="Static/kusya.jpeg" alt="" height="100%" style="float: left;">
-<h1>Kujima</h1> невероятные бухгалерские инструменты.
 
-
-<div class="menu">
-  <a href="">Пункт 1</a>
-
-  <a href="">Пункт 1</a>
-
-  <a href="">Пункт 1</a>
-
-  <a href="">Пункт 1</a>
-
-  <a href="">Пункт 1</a>
-
-</div>
-
-
-<div class="menu">
-  <a href="">Пункт 1</a>
-
-  <a href="">Пункт 1</a>
-
-  <a href="">Пункт 1</a>
-
-  <a href="">Пункт 1</a>
-
-  <a href="">Пункт 1</a>
-
+<div class="logo">
+  <h1 >Kojima</h1> <br>домашняя бухгалтерия.
 </div>
 
 <div class="menu">
-  <form action="">
-    <input type="text">
-    <input type="text">
-  </form>
+  <a href="" class="fa fa-vk fabutton"> вконтакте</a>
+  <a href="" class="fa fa-telegram fabutton"> телеграм</a>
+  <br>
+  <a href="">Инструкция</a>
+  <a href="">О программе</a>
+  <a href="">Стоимость</a>
+  <a href="">Как с нами связатся?</a>
+
 </div>
+<div class="menu">
+<form action="">
+  <input type="email" placeholder="email" required>
+  <input type="password" placeholder="password" required>
+  <input type="submit" value="Войти"> <a href="#">Запрос доступа</a>
+
+</form>
+</div>
+
+
 
 </div>
 <div id="content"></div>
@@ -75,7 +64,7 @@ $(function () {
     $('#content').w2layout({
           name: 'base_layout',
           padding: 0,
-          style: 'height: 83%; position: relative; width:100%;',
+          style: 'height: 80%; position: relative; width:100%;',
           panels: [   { type: 'left', size: 180,  content: 'left' },
                       { type: 'main', size: '30%',  content: 'main' },
                       { type: 'preview', size:'70%', content: '7'}
