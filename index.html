@@ -27,50 +27,22 @@
 <img src="Static/kusya.jpeg" alt="" height="100%" style="float: left;">
 
 <div class="logo">
-  <h1 >Kojima</h1> <br>домашняя бухгалтерия.
+  <h1 >Kojima</h1> <br>
+  Любительская бухгалтерия.
 </div>
 
 <div class="menu" style="padding-top: 10px;">
   <a href="">Инструкция</a>
   <a href="">О программе</a>
-  <a href="">Стоимость</a>
-  <a href="">Как с нами связатся?</a>
   <a href="" class="fa fa-vk fabutton"></a>
   <a href="" class="fa fa-telegram fabutton"></a>
 </div>
 
 <div class="menu">
-  <div class="bage">
-    <img src="Static/brus.jpg" alt="">
-    Вы, Брюс Уилис
-    <a href="" class="fa fa-pencil"> Профиль</a>
-    <a href="" class="fa fa-sign-out" style="display: block;font-size: large;"></a>
-  </div>
-
-   Забрать базу к себе: <br>
-
-   <a href="" class="fa fa-code fabutton"> JSON</a>
-   <a href="" class="fa fa-file-excel-o fabutton"> CSV</a>
-
-   <br>
-
-
-
-
-
+    <a href="" class="fa fa-sign-out fabutton">Выход</a>
+    <a href="" class="fa fa-sign-in fabutton"> Войти</a>
+    <a href="" class="fa fa-rocket fabutton"> Запрос на обслуживание</a>
 </div>
-
-<div class="menu">
-<form action="">
-  <input type="email" placeholder="email" required>
-  <input type="password" placeholder="password" required>
-  <input type="submit" value="Войти"> <a href="#">Запрос доступа</a>
-
-</form>
-</div>
-
-
-
 
 </div>
 
@@ -82,7 +54,7 @@
   </div>
 </div>
 
-<div id="content">
+<div id="content" >
 </div>
 
 
@@ -99,7 +71,7 @@ $(function () {
           name: 'base_layout',
           padding: 0,
           style: 'height: 80%; position: relative; width:100%;',
-          panels: [   { type: 'left', size: 180,  content: 'left' },
+          panels: [   { type: 'left', size: 220,  content: 'left' },
                       { type: 'main', size: '30%',  content: 'main' },
                       { type: 'preview', size:'70%', content: '7'}
                   ]
@@ -109,7 +81,7 @@ $(function () {
         console.log('object '+ this.name + ' is rendered');
         w2utils.lock($('#content'), 'Необходимо авторизоваться');
       });
-
+    $().w2tag();
     $().w2grid(config_accounts);
     $().w2grid(transact_grid);
     $().w2sidebar(sidebar_config);
