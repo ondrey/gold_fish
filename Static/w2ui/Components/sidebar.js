@@ -15,7 +15,7 @@ sidebar_config = {
                            nodes: [
                            { id: 'level-2-1-1', text: 'Счета', icon: 'fa fa-bars' }, //С возможностью выбора владельца
                            { id: 'level-2-1-2', text: 'Статьи расхода', icon: 'fa fa-bars'},
-                           { id: 'level-2-1-3', text: 'Пользователи', icon: 'fa fa-bars' },
+                           { id: 'level-2-1-3', text: 'Мои пользователи', icon: 'fa fa-bars' },
                        ]},
                        { id: 'subscribe', text: 'Подписка', icon: 'fa fa-check-square-o' }, //Пользователи, счета, статьи, операции
                        { id: 'settings', text: 'Настройки', icon: 'fa fa-cogs' },

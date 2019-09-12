@@ -27,30 +27,30 @@
 <img src="Static/kusya.jpeg" alt="" height="100%" style="float: left;">
 
 <div class="logo">
-  <h1 >Kojima</h1> <br>
-  Любительская бухгалтерия.
-</div>
-
-<div class="menu" style="padding-top: 10px;">
-  <a href="">Инструкция</a>
-  <a href="">О программе</a>
-  <a href="" class="fa fa-vk fabutton"></a>
-  <a href="" class="fa fa-telegram fabutton"></a>
+  <h1>Kojima</h1>
+  <p>Любительская бухгалтерия.</p>
 </div>
 
 <div class="menu">
-    <a href="" class="fa fa-sign-out fabutton">Выход</a>
-    <a href="" class="fa fa-sign-in fabutton"> Войти</a>
-    <a href="" class="fa fa-rocket fabutton"> Запрос на обслуживание</a>
+  <span>Помощь </span><br>
+  <a href="#" onclick="w2popup.load({ url: 'Static/ServiceRequest.html' }); console.log(123);"><i class="fa fa-rocket"></i> Запрос на обслуживание</a>
+  <a href="#">Инструкция</a>
+  <a href="#">О программе</a>
+  <div class="button_list">
+    <span>Присоеденяйтесь к нам в соц. сетях </span><br>
+    <a href="#" ><i class="fa fa-vk fabutton"></i></a>
+    <a href="#" ><i class="fa fa-telegram fabutton"></i></a>
+  </div>
+
 </div>
+
 
 </div>
 
 <div id="lock">
   <div class="message">
-     <p>Для получения полного доступа, необходимо авторизоваться.</p>
-     <a href="#">Просто посмотреть</a>
-
+     <p>Чтобы воспользоваться программой, необходимо авторизоваться.</p>
+     <a href="#" onclick='$("#lock").hide()'>Я просто спросить</a>
   </div>
 </div>
 
@@ -77,11 +77,6 @@ $(function () {
                   ]
       });
 
-      w2ui.base_layout.on('render', function(event) {
-        console.log('object '+ this.name + ' is rendered');
-        w2utils.lock($('#content'), 'Необходимо авторизоваться');
-      });
-    $().w2tag();
     $().w2grid(config_accounts);
     $().w2grid(transact_grid);
     $().w2sidebar(sidebar_config);
