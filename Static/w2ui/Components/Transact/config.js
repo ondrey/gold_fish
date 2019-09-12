@@ -1,7 +1,5 @@
 transact_grid = {
         name: 'transact_grid',
-        //url: 'data/list.json',
-
         show: {
             toolbar: true,
             footer: true,

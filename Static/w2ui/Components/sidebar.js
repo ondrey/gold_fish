@@ -21,5 +21,20 @@ sidebar_config = {
                        { id: 'settings', text: 'Настройки', icon: 'fa fa-cogs' },
                      ]
             }
-        ]
+        ],
+        onClick: function(event) {
+
+            // Отображаем меню
+
+            if (event.target == 'account') {
+              w2ui.base_layout.content('main', w2ui.layout_account);
+                w2ui.layout_account.content('main', w2ui.config_accounts);
+                w2ui.layout_account.content('preview', w2ui.transact_grid);
+            }
+
+            if (event.target == 'notify') {
+              w2ui.base_layout.content('main', w2ui.notification_layout);
+            }
+
+        }
     }

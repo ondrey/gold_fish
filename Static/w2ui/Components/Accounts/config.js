@@ -1,3 +1,13 @@
+layout_account = {
+  name: 'layout_account',
+  padding: 0,
+  //style: 'height: 100%; position: relative; width:100%;',
+  panels: [
+    { type: 'main', size: '30%',  content: 'main' },
+    { type: 'preview', size:'70%', content: '7'}
+  ]
+}
+
 config_accounts = {
         name: 'config_accounts',
 

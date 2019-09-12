@@ -59,11 +59,12 @@ a:hover {
 	width: 230px;
 	display: inline-block;
 	font-size: smaller;
-  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+
 }
 .logo h1 {
-  display: contents;
-    color: brown;
+      display: contents;
+        color: brown;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
 .menu {
