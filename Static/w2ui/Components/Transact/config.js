@@ -1,4 +1,4 @@
-transact_grid = {
+var transact_grid = {
         name: 'transact_grid',
         show: {
             toolbar: true,

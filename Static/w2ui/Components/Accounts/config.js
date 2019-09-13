@@ -27,58 +27,58 @@ config_accounts = {
             { field: 'sdate', caption: 'Start Date', size: '90px' }
         ],
         records: [
-            { recid: 1, fname: 'John', lname: 'doe', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] }},
-            { recid: 2, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012',
+            { recid: 1, fname: 'John', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> doe', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] }},
+            { recid: 2, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012',
                 w2ui: {
                     children: [
-                        { recid: 21, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                        { recid: 22, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012',
+                        { recid: 21, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                        { recid: 22, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012',
                             w2ui: {
                                 children: [
-                                    { recid: 221, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                                    { recid: 222, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012',
+                                    { recid: 221, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                                    { recid: 222, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012',
                                         w2ui: {
                                             children: [
-                                                { recid: 2221, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                                                { recid: 2222, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                                                { recid: 2223, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                                                { recid: 2224, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
+                                                { recid: 2221, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                                                { recid: 2222, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                                                { recid: 2223, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                                                { recid: 2224, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
                                             ]
                                         }
                                     },
-                                    { recid: 223, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                                    { recid: 224, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
+                                    { recid: 223, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                                    { recid: 224, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
                                 ]
                             }
                         },
-                        { recid: 23, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                        { recid: 24, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
+                        { recid: 23, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                        { recid: 24, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
                     ]
                 }
             },
-            { recid: 3, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012',
+            { recid: 3, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012',
                 w2ui: {
                     children: [
-                        { recid: 11, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                        { recid: 12, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                        { recid: 13, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                        { recid: 14, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
+                        { recid: 11, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                        { recid: 12, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                        { recid: 13, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                        { recid: 14, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
                     ]
                 }
             },
-            { recid: 4, fname: 'Susan', lname: 'Ottie', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] } },
-            { recid: 5, fname: 'Kelly', lname: 'Silver', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] } },
-            { recid: 6, fname: 'Francis', lname: 'Gatos', email: 'jdoe@gmail.com', sdate: '4/3/2012',
+            { recid: 4, fname: 'Susan', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Ottie', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] } },
+            { recid: 5, fname: 'Kelly', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Silver', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] } },
+            { recid: 6, fname: 'Francis', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Gatos', email: 'jdoe@gmail.com', sdate: '4/3/2012',
                 w2ui: {
                     children: [
-                        { recid: 61, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                        { recid: 62, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                        { recid: 63, fname: 'Stuart', lname: 'Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
-                        { recid: 64, fname: 'Jin', lname: 'Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
+                        { recid: 61, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                        { recid: 62, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                        { recid: 63, fname: 'Stuart', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Motzart', email: 'jdoe@gmail.com', sdate: '4/3/2012' },
+                        { recid: 64, fname: 'Jin', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Franson', email: 'jdoe@gmail.com', sdate: '4/3/2012' }
                     ]
                 }
             },
-            { recid: 7, fname: 'Mark', lname: 'Welldo', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] } },
-            { recid: 8, fname: 'Thomas', lname: 'Bahh', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] } }
+            { recid: 7, fname: 'Mark', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Welldo', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] } },
+            { recid: 8, fname: 'Thomas', lname: '<i class="fa fa-cc-visa" aria-hidden="true"></i> Bahh', email: 'jdoe@gmail.com', sdate: '4/3/2012', w2ui: { children: [] } }
         ]
     }
