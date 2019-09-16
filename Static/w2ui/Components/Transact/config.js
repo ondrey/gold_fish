@@ -10,9 +10,15 @@ var transact_grid = {
         },
         method: 'GET', // need this to avoid 412 error on Safari
         columns: [
-            { field: 'fname', caption: 'First Name', size: '30%' },
-            { field: 'lname', caption: 'Last Name', size: '30%' },
-            { field: 'email', caption: 'Email', size: '40%' },
-            { field: 'sdate', caption: 'Start Date', size: '120px' }
+            { field: 'addate_transact', caption: 'Дата регистрации', size: '5%' },
+            { field: 'date_transact', caption: 'Плановая дата', size: '5%' },
+            { field: 'cost_item', caption: 'Статья расхода', size: '5%' },
+            { field: 'amount_transact', caption: 'Сумма', size: '5%' },
+            { field: 'fact_date', caption: 'Фактическая дата', size: '5%' },
+            { field: 'account_title', caption: 'Cчет', size: '5%' },
+            { field: 'account_num', caption: 'Номер счета', size: '5%' },
+            { field: 'op_num', caption: 'Номер операции', size: '5%' },
+            { field: 'op_type', caption: 'Тип операции', size: '5%' },
+            { field: 'user', caption: 'Владелец счета', size: '5%' }
         ]
     }

@@ -8,7 +8,7 @@ sidebar_config = {
             nodes: [
               { id: 'trash', text: 'Не сортированные', icon: 'fa fa-trash-o', count: 5 },
               { id: 'future', text: 'Скоро', icon: 'fa fa-calendar-check-o', count: 1 },
-              { id: 'confirm', text: 'Проверка', icon: 'fa fa-check-square', count: 256 }
+              { id: 'confirm', text: 'Подтверждение', icon: 'fa fa-check-square', count: 256 }
             ]
           },
 

@@ -14,7 +14,6 @@ config_accounts = {
             footer: true,
             toolbarAdd: true,
             toolbarDelete: true,
-            toolbarSave: true,
             toolbarEdit: true,
             columnHeaders: true
         },
