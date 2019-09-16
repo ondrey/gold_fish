@@ -10,7 +10,7 @@ body {
 a {
 	display: block;
 	text-decoration-style: dashed;
-	color: brown;
+	color: #5ba5da;
 	margin: 3px;
 	text-decoration-color: black;
 }
@@ -62,15 +62,15 @@ a:hover {
 
 }
 .logo h1 {
-      display: contents;
-        color: brown;
-  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	display: contents;
+	color: #5ba5da;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-style: oblique;
 }
 
 .menu {
-
 	float: right;
-	margin: 0px 20px;
+	margin: 10px 20px;
 	font-style: initial;
 	font-size: smaller;
   text-align: end;

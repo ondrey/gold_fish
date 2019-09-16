@@ -4,11 +4,20 @@ sidebar_config = {
         topHTML    : '<div style="height: 30px;"></div>',
         bottomHTML : '<div style="background-color: #eee; padding: 10px 5px; border-top: 1px solid silver">Куджима</div>',
         nodes: [
-            { id: 'trash', text: 'Не сортированные', icon: 'fa fa-trash-o', count: 5 },
-            { id: 'balance', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
+          { id: 'tools', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
+            nodes: [
+              { id: 'trash', text: 'Не сортированные', icon: 'fa fa-trash-o', count: 5 },
+              { id: 'future', text: 'Скоро', icon: 'fa fa-calendar-check-o', count: 1 },
+              { id: 'confirm', text: 'Проверка', icon: 'fa fa-check-square', count: 256 }
+            ]
+          },
+
+          { id: 'balance', text: 'Группы', img: 'icon-folder', expanded: true, group: true,
               nodes: [ { id: 'account', text: 'Счета', icon: 'fa fa-cc-visa' },
-                       { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' }]
-            }],
+                       { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },
+                       { id: 'cost_item', text: 'Статьи', icon: 'fa fa-pie-chart' },]
+                     }
+          ],
             onFlat: function (event) {
               if (event.goFlat) {
                 w2ui.base_layout.get('left').size = 40;

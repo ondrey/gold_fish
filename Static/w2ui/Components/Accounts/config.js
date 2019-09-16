@@ -7,7 +7,6 @@ layout_account = {
     { type: 'preview', size:'70%', content: '7'}
   ]
 }
-
 config_accounts = {
         name: 'config_accounts',
         show: {
