@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="header">
+
+<img src="/static/kusya.jpeg" alt="" height="100%" style="float: left;">
+
+<div class="logo">
+  <h1>Kojima</h1>
+  <p>Малая бухгалтерия.</p>
+</div>
+
+<div class="menu">
+  <span>Помощь </span><br>
+  <a href="#" onclick="w2popup.load({ url: '/static/ServiceRequest.html' }); console.log(123);"><i class="fa fa-rocket"></i> Запрос на обслуживание</a>
+  <a href="#">Инструкция</a>
+  <a href="#">О программе</a>
+  <div class="button_list">
+    <span>Присоеденяйтесь к нам в соц. сетях </span><br>
+    <a href="#" ><i class="fa fa-vk fabutton"></i></a>
+    <a href="#" ><i class="fa fa-telegram fabutton"></i></a>
+  </div>
+
+</div>
+
+<div class="menu">
+    Брюс Вилисович Иванов<a href="#" onclick="w2popup.load({ url: '/static/Sign-in.html' }); console.log(123);"><i class="fa fa-sign-in"></i> Войти</a>
+</div>
+
+</div>
+
+<div id="lock">
+  <div class="message">
+     <p>Чтобы воспользоваться программой, необходимо авторизоваться (ссылка "Войти" вверху справа). </p>
+     <a href="#" onclick='$("#lock").hide()'>Я просто хочу посмотреть</a>
+  </div>
+</div>
+
+<div id="content" >
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+
+  <script type="text/javascript" src="/static/w2ui/Components/sidebar.js"></script>
+  <script type="text/javascript" src="/static/w2ui/Components/Accounts/config.js"></script>
+  <script type="text/javascript" src="/static/w2ui/Components/Transact/config.js"></script>
+  <script type="text/javascript" src="/static/w2ui/Components/Notification/config.js"></script>
+
+
+<script type="text/javascript">
+
+$(function () {
+    w2utils.locale(ru);
+
+
+
+    $('#content').w2layout({
+          name: 'base_layout',
+          padding: 0,
+          style: 'height: 83%; position: relative; width:100%;',
+          panels: [   { type: 'left', size: 220,  content: 'left' },
+                      { type: 'main', size: '100%',  content: 'main' },
+                  ]
+      });
+
+
+    $().w2sidebar(sidebar_config);
+
+    $().w2layout(layout_account);
+      $().w2grid(config_accounts);
+      $().w2grid(transact_grid);
+
+
+    w2ui.base_layout.content('left', w2ui.sidebar);
+
+});
+
+</script>
+
+
+{% endblock %}
