@@ -20,7 +20,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SECRET_KEY = '\x00\xf1\x00Bv\x97\x97K\x11w\xd0vJ\xcfL\xf2\xcf\x90\\1\x04\xe1\xe3g'
     ADMIN_ACCOUNT = {
-        "login": "administrator",
+        "login": "admin",
         "password": "911",
         "email": "mag.ondrei@gmail.com"
     }
@@ -38,7 +38,7 @@ class DevelopmentTemplateConfig(Config):
     DB_CONNECT = dict(db='base_apirator', user='monty', passwd='bonpari', host='109.120.148.106', port=3306, charset='cp1251')
     ADMINS = ['square.wind@yandex.ru', ]
     ERROR_COMMENT = u"При возникновении сложностей, свяжитесь с администратором по телефону: +7 (967) 667 67 91."
-    TELEGRAM = "407030035:AAErYfnXpoVydKj3LGdH-gQuh91q7g-Dkzg"
+    TELEGRAM = "407030035:AAErYfnXpoVydKj3LGdH-gQuh91q7g-"
     SAVE_FILE_PATH = 'C:\\Users\\andrey\\Файлы апиратора'
     API_KEY = '1U6iWrABx0qBBOjwG5xrFyaASig6N0xpn9BP'
 
@@ -48,5 +48,5 @@ class DevelopmentTemplateConfig(Config):
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
     MAIL_USERNAME = 'mag.ondrei@gmail.com'
-    MAIL_PASSWORD = 'bonpari_jenya'
+    MAIL_PASSWORD = 'bonpari_j'
     MAIL_DEFAULT_SENDER = (u'Макрушин Андрей', 'mag.ondrei@gmail.com')
