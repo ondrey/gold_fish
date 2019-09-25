@@ -8,5 +8,4 @@ class AuthSession:
         pass
 
     def login(self):
-
         return False

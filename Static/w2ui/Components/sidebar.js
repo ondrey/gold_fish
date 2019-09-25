@@ -20,9 +20,15 @@ sidebar_config = {
           { id: 'balance', text: 'Группы', img: 'icon-folder', expanded: true, group: true,
               nodes: [ { id: 'account', text: 'Счета', icon: 'fa fa-cc-visa' },
                        { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },
-                       { id: 'cost_item', text: 'Статьи', icon: 'fa fa-pie-chart' },]
-                     }
+                       { id: 'cost_item', text: 'Статьи', icon: 'fa fa-pie-chart' },]},
+
+         { id: 'filters', text: 'Фильтры', img: 'icon-folder', expanded: true, group: true,
+             nodes: [ { id: 'Transact', text: 'Транзакции', icon: 'fa fa-cc-visa' },
+                      { id: 'Filter1', text: 'Фильтр 1', icon: 'fa fa-tasks' },
+                      { id: 'Filter2', text: 'Фильтр 2', icon: 'fa fa-tasks' },]},
+
           ],
+
         onFlat: function (event) {
               if (event.goFlat) {
                 w2ui.base_layout.get('left').size = 40;
