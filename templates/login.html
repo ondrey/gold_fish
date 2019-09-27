@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+#login {
+	width: 350px;
+	margin: 0px auto;
+	text-align: center;
+}
+
+#login input {
+	width: 250px;
+	margin: 6px;
+
+	border-style: solid;
+	padding: 6px;
+	text-align: center;
+	border-color: #e3e3e3;
+}
+
+#login input[type="submit"] {
+	width: 250px;
+	margin: 6px;
+	border-radius: 6px;
+	border-style: unset;
+	padding: 5px;
+	cursor: pointer;
+	background-color: #5ba5da;
+	color: aliceblue;
+}
+
+</style>
+
+<form action="/get_session" id="login">
+    <p>Для того чтобы воспользовааться функциями сайта введите свои учетные данные в форму авторизации.</p>
+    <input type="email" placeholder="Ваш email..." name="user_mail">
+    <input type="password" placeholder="Пароль" name="user_password">
+    <input type="submit" name="authorisation" value="Войти">
+    <hr>
+    <a href="/new_user">Регистрация</a>
+    <a href="/user_luser">Востановление</a>
+
+    <p>Произведя авторизацию, Вы подтверждаете свое согласие на обработку своих персональных данных.</p>
+</form>
+
+{% endblock %}
