@@ -3,21 +3,57 @@
 {% block content %}
 
 <style>
+.services {
+	width: 600px;
+	margin:0px auto;
+	}
+
 .service {
-	width: 350px;
-	background-color: aqua;
+	width: 128px;
+	background-color: #f2f2f2;
 	display: block;
-	margin-left: 150px;
-	margin-right: 80px;
+	margin: 6px;
 	text-align: center;
+	float: left;
+	border-radius: 5px;
+	padding: 6px;
 }
+
+.service .fa {
+	color: steelblue;
+	font-size: 50px;
+}
+
+.title {
+	font-size: xx-large;
+	font-family: arial;
+	color: bisque;
+}
+
 </style>
 
-<div class="service">
+<div class="services">
 
-    <i class="fa fa-paw" aria-hidden="true"></i><br>
-    <a href="/feedback">Оставить отзыв</a>
+    <div class="title">Базовые</div>
+
+    <div class="service">
+    <i class="fa fa-graduation-cap" aria-hidden="true"></i><br>
+    <a href="/feedback">Предложение о доработке</a>
+    </div>
+
+    <div class="service">
+    <i class="fa fa-fire" aria-hidden="true"></i><br>
+    <a href="/feedback">Сообщить об ошибке</a>
+    </div>
+
+    <div class="service">
+    <i class="fa fa-credit-card" aria-hidden="true"></i><br>
+    <a href="/feedback">Запросить стоимость</a>
+    </div>
+
 </div>
+
+
 
 
 {% endblock %}
