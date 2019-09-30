@@ -30,11 +30,6 @@ a:hover {
 	border-radius: 10px;
 }
 
-.button_list a {
-	font-size: x-large;
-  float: right;
-}
-
 .message {
 	width: 280px;
 	background-color: #fff;
@@ -58,14 +53,15 @@ a:hover {
 .logo {
 	width: 230px;
 	display: inline-block;
-	font-size: smaller;
+	font-size: revert;
 }
 
 .logo h1 {
 	display: contents;
-	color: #5ba5da;
+	color: #11649d;
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 	font-style: oblique;
+	font-variant: small-caps;
 }
 
 .menu {
@@ -74,4 +70,35 @@ a:hover {
 	font-style: initial;
 	font-size: smaller;
   text-align: end;
+}
+
+.button_list i {
+	font-size: x-large;
+    float: right;
+    margin-left: 5px;
+}
+
+.button {
+	width: 127px;
+	background-color: #ee4c05;
+	color: white;
+	font-size: x-small;
+	padding: 2px;
+	text-align: left;
+	display: inline-block;
+	text-decoration: none;
+	border-radius: 3px;
+}
+
+.button i{
+	font-size: x-large;
+	color: gold;
+	float: inline-start;
+	margin: 5px;
+}
+
+.button span{
+	float: right;
+	font-weight: bolder;
+	color: gold;
 }

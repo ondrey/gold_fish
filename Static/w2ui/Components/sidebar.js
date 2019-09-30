@@ -2,7 +2,6 @@ sidebar_config = {
         name: 'sidebar',
         flatButton: true,
         topHTML    : '<div style="height: 30px;" id="helpsidebar"></div>',
-        bottomHTML : '<div style="background-color: #f7f7f7; padding: 8px; border-top: 1px solid #63acdd; color: #539ed7;"><i style="font-size: xx-large;float: inline-end;" class="fa fa-info-circle" aria-hidden="true"></i> <div id="bottomHTML"></div></div>',
         nodes: [
           { id: 'tools', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
             nodes: [
@@ -51,11 +50,6 @@ sidebar_config = {
             if (event.target == 'trash') {
               w2ui.base_layout.content('main', w2ui.transact_grid);
             }
-
-            if ('comment' in event.object)
-              {$("#bottomHTML").html(event.object.comment) }
-            else {$("#bottomHTML").html(event.object.text);}
-
 
         }
     }
