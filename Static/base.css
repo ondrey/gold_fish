@@ -5,14 +5,15 @@ html {
 body {
   margin: 0px;
   height:100%;
+  font-family: arial;
 }
 
 a {
-	display: block;
-	text-decoration-style: dashed;
-	color: #5ba5da;
+
+	text-decoration-style: dotted;
+	color: #32819e;
 	margin: 3px;
-	text-decoration-color: black;
+	text-decoration-color: #ee4c05;
 }
 
 a:hover {
@@ -46,7 +47,6 @@ a:hover {
 	min-height: 128px;
 	height: 17%;
 	width: 100%;
-  font-family: arial;
 }
 
 
@@ -58,7 +58,7 @@ a:hover {
 
 .logo h1 {
 	display: contents;
-	color: #11649d;
+	color: #32819e;
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 	font-style: oblique;
 	font-variant: small-caps;
@@ -74,8 +74,16 @@ a:hover {
 
 .button_list i {
 	font-size: x-large;
-    float: right;
-    margin-left: 5px;
+	float: right;
+	margin-left: 11px;
+}
+
+.button_list a {
+  color: #c8c8c8;
+}
+
+.button_list a:hover {
+  color: #32819e;
 }
 
 .button {
@@ -101,4 +109,35 @@ a:hover {
 	float: right;
 	font-weight: bolder;
 	color: gold;
+}
+
+
+.form_center {
+	width: 650px;
+	margin: 0px auto;
+	text-align: center;
+}
+
+input, textarea, select {
+  margin: 6px;
+  border-style: solid;
+  padding: 6px;
+  text-align: center;
+  border-color: #e3e3e3;
+  width: 100%;
+}
+
+textarea {
+  text-align: left;
+}
+
+input[type="submit"] {
+	width: 250px;
+	margin: 6px;
+	border-radius: 6px;
+	border-style: unset;
+	padding: 5px;
+	cursor: pointer;
+	background-color: #5ba5da;
+	color: aliceblue;
 }

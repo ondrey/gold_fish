@@ -1,7 +1,7 @@
 sidebar_config = {
         name: 'sidebar',
         flatButton: true,
-        topHTML    : '<div style="height: 30px;" id="helpsidebar"></div>',
+        topHTML    : '<div style="height: 60px;text-align: center;padding-top: 10px;"><a class="button" href="/login" style="background-color: #4282ae;"><i class="fa fa-sign-in" aria-hidden="true"></i><span>Гость</span>Войти / регистрация</a></div>',
         nodes: [
           { id: 'tools', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
             nodes: [
