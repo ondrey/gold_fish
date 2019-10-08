@@ -13,6 +13,15 @@ def index():
 def login():
     return render_template('login.html')
 
+@app.route('/newuser')
+def newuser():
+    return render_template('newuser.html')
+
+@app.route('/repassword')
+def repassword():
+    return render_template('repassword.html')
+
+
 @app.route('/service_request')
 def service_request():
     return render_template('service_request.html')

@@ -16,15 +16,13 @@
 </style>
 
 <form action="/get_session" id="login">
-    <p>Для того чтобы воспользовааться функциями сайта введите свои учетные данные в форму авторизации.</p>
-    <input type="email" placeholder="Ваш email..." name="user_mail">
-    <input type="password" placeholder="Пароль" name="user_password">
+	  <p>Авторизация</p>
+    <input type="email" placeholder="Ваш email..." name="user_mail"  required=required>
+    <input type="password" placeholder="Пароль" name="user_password" required=required>
     <input type="submit" name="authorisation" value="Войти">
     <hr>
-    <a href="/new_user">Регистрация</a>
-    <a href="/user_luser">Востановление</a>
+    <a href="/newuser">Регистрация</a> / <a href="/repassword">Я кулёма</a>
 
-    <p>Произведя авторизацию, Вы подтверждаете свое согласие на обработку своих персональных данных.</p>
 </form>
 
 {% endblock %}

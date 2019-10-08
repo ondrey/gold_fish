@@ -1,7 +1,7 @@
 sidebar_config = {
         name: 'sidebar',
         flatButton: true,
-        topHTML    : '<div style="height: 60px;text-align: center;padding-top: 10px;"><a class="button" href="/login" style="background-color: #4282ae;"><i class="fa fa-sign-in" aria-hidden="true"></i><span>Гость</span>Войти / регистрация</a></div>',
+        topHTML    : '<div style="height: 60px;text-align: center;padding-top: 25px;color: #ee4c05;">Демонстрационная версия, для получения полного доступа авторизуйтесь</div>',
         nodes: [
           { id: 'tools', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
             nodes: [
@@ -18,13 +18,11 @@ sidebar_config = {
 
           { id: 'balance', text: 'Группы', img: 'icon-folder', expanded: true, group: true,
               nodes: [ { id: 'account', text: 'Счета', icon: 'fa fa-cc-visa' },
-                       { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },
-                       { id: 'cost_item', text: 'Статьи', icon: 'fa fa-pie-chart' },]},
+                       { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },]},
 
-         { id: 'filters', text: 'Фильтры', img: 'icon-folder', expanded: true, group: true,
+         { id: 'reference', text: 'Справочники', img: 'icon-folder', expanded: true, group: true,
              nodes: [ { id: 'Transact', text: 'Транзакции', icon: 'fa fa-cc-visa' },
-                      { id: 'Filter1', text: 'Фильтр 1', icon: 'fa fa-tasks' },
-                      { id: 'Filter2', text: 'Фильтр 2', icon: 'fa fa-tasks' },]},
+                      { id: 'cost_item', text: 'Статьи', icon: 'fa fa-pie-chart' },]},
 
           ],
 
