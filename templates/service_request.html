@@ -2,25 +2,45 @@
 
 {% block content %}
 
-<div class="form_center">
 
+<div class="form_center">
+<h3>Обратная связь</h3>
+<p >Если вы нашли ошибку, пожулуйста сообщите об этом. Кроме того вы можете оставить свой отзыв о программе, вероятно она нуждается в улучшении.</p>
 	<form action="/send_request" method="get">
-		<select name="request_type" id="sel_request_type">
-			<option value="error">Сообщить об ошибке</option>
-			<option value="modification" selected >Предложение о даработке</option>
-			<option value="repor">Оставить отзыв</option>
+
+		<select name="request_type" id="sel_request_type" onchange="">
+
+			<option value="error"        onclick="$('.select_info_error').hide(); $('#error').show(500);" >Сообщить об ошибке</option>
+			<option value="modification" onclick="$('.select_info_error').hide(); $('#modification').show(500);" selected >Предложение о даработке</option>
+			<option value="repor"        onclick="$('.select_info_error').hide(); $('#repor').show(500); ">Оставить отзыв</option>
+			<option value="tz"           onclick="$('.select_info_error').hide(); $('#tz').show(500); ">Заказать разработку</option>
 		</select>
 
+
+		<div class="select_info_error" id="error" style="display:none;">
+			<p>По возможности, максимально подробно укажите обстаятельства возникновения ошибки, а также идентификаторы записей которые связаны с ошибкой.</p> Идентификатор можно посмотреть внизу слева в таблице, если выбрать любую запись.
+		</div>
+
+		<div class="select_info_error" id="modification">
+			Кратко опишите своё предложение, а также не забудте указать с каким функциональным элементом оно связано.
+		</div>
+
+		<div class="select_info_error" id="repor"  style="display:none;">
+		Принимаются ваши отзывы о работе программы. Буду благодарен как за критику так и за положительные отзывы.
+		</div>
+
+		<div class="select_info_error" id="tz"  style="display:none;">
+			Если у вас есть идеи которые требуют реализации, то возможно я смогу вам помочь. Опишите примерно, что требуется сделать и оставте свой номер телефона, я перезвоню вам для утачнения деталей.
+			<br> Сюда также принимаются предложения о сотруднечестве.
+		</div>
+
 		<textarea name="textrequest" rows="8"></textarea>
-
+		<p>Укажите телефон, для того чтобы мы смогли с вами связаться.</p>
+		<input type="tel" name="phone" value="" placeholder="+79676676791">
 		<input type="submit" name="" value="Отправить запрос">
-
 
 	</form>
 
-	<p >Если вы нашли ошибку, пожулуйста сообщите об этом. Кроме того вы можете оставить свой отзыв о программе, вероятно она нуждается в улучшении 	и ваш отзыв поможет в этом.</p>
 </div>
-
-
 
 {% endblock %}
