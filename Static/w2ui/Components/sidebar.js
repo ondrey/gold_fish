@@ -34,6 +34,11 @@ sidebar_config = {
               w2ui.base_layout.resize();
             },
 
+        onRender: function(event) {
+                this.click('account');
+                this.select('account');
+        },
+
         onClick: function(event) {
           console.log(event);
             // Отображаем меню

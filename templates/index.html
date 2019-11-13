@@ -26,7 +26,7 @@ $(function () {
     $('#content').w2layout({
           name: 'base_layout',
           padding: 0,
-          style: 'height: 85%; position: relative; width: 100%; box-shadow: rgb(0, 0, 0) 0px 12px 22px; border-top: thin groove rgb(23, 102, 126);',
+          style: 'height: 85%; position: relative; width: 100%; ',
           panels: [   { type: 'left', size: 220,  content: 'left' },
                       { type: 'main', size: '100%',  content: 'main' },
                   ]
@@ -41,6 +41,7 @@ $(function () {
 
 
     w2ui.base_layout.content('left', w2ui.sidebar);
+
 
 });
 
