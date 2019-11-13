@@ -1,7 +1,6 @@
 sidebar_config = {
         name: 'sidebar',
         flatButton: true,
-        topHTML    : '<div style="height: 60px;text-align: center;padding-top: 25px;color: #ee4c05;">Демонстрационная версия, для получения полного доступа авторизуйтесь</div>',
         nodes: [
           { id: 'tools', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
             nodes: [
