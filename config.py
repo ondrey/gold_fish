@@ -35,7 +35,9 @@ class DevelopmentTemplateConfig(Config):
 
     DEBUG = True
     SECRET_KEY = '\x00\xf1\x00Bv\x97\x97K\x11w\xd0vJ\xcfL\xf2\xcf\x90\\1\x04\xe1\xe3g'
-    DB_CONNECT = dict(db='base_apirator', user='monty', passwd='bonpari', host='109.120.148.106', port=3306, charset='cp1251')
+
+    DB_CONNECT = dict(db='kojima', user='prokat', passwd='prokatmysql', host='89.108.99.136', port=3306, charset='cp1251')
+
     ADMINS = ['square.wind@yandex.ru', ]
     ERROR_COMMENT = u"При возникновении сложностей, свяжитесь с администратором по телефону: +7 (967) 667 67 91."
     TELEGRAM = "407030035:AAErYfnXpoVydKj3LGdH-gQuh91q7g-"

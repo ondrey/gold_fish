@@ -13,15 +13,13 @@
   <script type="text/javascript" src="/static/w2ui/Components/sidebar.js"></script>
   <script type="text/javascript" src="/static/w2ui/Components/Accounts/config.js"></script>
   <script type="text/javascript" src="/static/w2ui/Components/Transact/config.js"></script>
-  <script type="text/javascript" src="/static/w2ui/Components/Notification/config.js"></script>
+  <script type="text/javascript" src="/static/w2ui/Components/Operation/config.js"></script>
 
 
 <script type="text/javascript">
 
 $(function () {
     w2utils.locale(ru);
-
-
 
     $('#content').w2layout({
           name: 'base_layout',
@@ -34,10 +32,13 @@ $(function () {
 
 
     $().w2sidebar(sidebar_config);
-
     $().w2layout(layout_account);
-      $().w2grid(config_accounts);
-      $().w2grid(transact_grid);
+
+    $().w2grid(config_accounts);
+    $().w2grid(transact_grid);
+
+    $().w2layout(layout_operation);    
+    $().w2grid(config_operation);
 
 
     w2ui.base_layout.content('left', w2ui.sidebar);

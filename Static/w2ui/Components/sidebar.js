@@ -17,12 +17,7 @@ sidebar_config = {
 
           { id: 'balance', text: 'Группы', img: 'icon-folder', expanded: true, group: true,
               nodes: [ { id: 'account', text: 'Счета', icon: 'fa fa-cc-visa' },
-                       { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },]},
-
-         { id: 'reference', text: 'Справочники', img: 'icon-folder', expanded: true, group: true,
-             nodes: [ { id: 'Transact', text: 'Транзакции', icon: 'fa fa-cc-visa' },
-                      { id: 'cost_item', text: 'Статьи', icon: 'fa fa-pie-chart' },]},
-
+                       { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },]}
           ],
 
         onFlat: function (event) {
@@ -40,17 +35,26 @@ sidebar_config = {
         },
 
         onClick: function(event) {
-          console.log(event);
-            // Отображаем меню
 
+            // Отображаем меню
             if (event.target == 'account') {
               w2ui.base_layout.content('main', w2ui.layout_account);
-                w2ui.layout_account.content('main', w2ui.config_accounts);
-                w2ui.layout_account.content('preview', w2ui.transact_grid);
-            }
+              w2ui.layout_account.content('main', w2ui.config_accounts);
+              w2ui.layout_account.content('preview', w2ui.transact_grid);
 
-            if (event.target == 'trash') {
+            } else if (event.target == 'trash') {
               w2ui.base_layout.content('main', w2ui.transact_grid);
+
+            } else if (event.target == 'future') {
+              w2ui.base_layout.content('main', w2ui.transact_grid);
+
+            } else if (event.target == 'confirm') {
+              w2ui.base_layout.content('main', w2ui.transact_grid);
+
+            } else if (event.target == 'operation') {
+              w2ui.base_layout.content('main', w2ui.layout_operation);
+                w2ui.layout_operation.content('main', w2ui.config_operation);
+                w2ui.layout_operation.content('preview', w2ui.transact_grid);
             }
 
         }

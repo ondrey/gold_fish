@@ -18,10 +18,16 @@
 <form action="/get_session" id="login">
 	  <p>Регистрация</p>
     <input type="email" placeholder="Ваш email..." name="user_mail" required=required>
-    <input type="password" placeholder="Пароль" name="user_password1" required=required>
+	<input type="text" placeholder="Ваше имя или наименование организации" name="name_user" required=required>
+	<input type="tel" placeholder="Номер телефона" name="phone" required=required>
+
+	<div style="background-color: #f2f2f2;border-radius: 9px;">
+		<input type="password" placeholder="Пароль" name="user_password1" required=required>
 		<input type="password" placeholder="Пароль еще раз" name="user_password2" required=required>
-		<input type="text" placeholder="Ваше имя или наименование организации" name="name_user" required=required>
-    <input type="submit" name="authorisation" value="Зарегистрировать">
+	</div>
+
+
+	<input type="submit" name="authorisation" value="Зарегистрировать">
 		<hr>
 		<p>Нажимая кнопку "Зарегистрировать", Вы даете своё согласие на хранение и обработку персональных данных.</p>
 </form>
