@@ -15,7 +15,7 @@
 
 </style>
 
-<form action="/get_session" id="login">
+<form action="/auth/create_user" id="login" method="post">
 	  <p>Регистрация</p>
     <input type="email" placeholder="Ваш email..." name="user_mail" required=required>
 	<input type="text" placeholder="Ваше имя или наименование организации" name="name_user" required=required>
@@ -28,8 +28,25 @@
 
 
 	<input type="submit" name="authorisation" value="Зарегистрировать">
+		<ul style="text-align: start;font-size: smaller;color: red;">
+		{% for item in errors %}
+        	<li> {{ item }} </li>
+    	{% endfor %}
+		</ul>
+
+
 		<hr>
 		<p>Нажимая кнопку "Зарегистрировать", Вы даете своё согласие на хранение и обработку персональных данных.</p>
 </form>
+
+
+<script type="text/javascript">
+
+$(function () {
+
+});
+
+
+</script>
 
 {% endblock %}

@@ -8,6 +8,7 @@ from flask import request
 from flask import session
 from flask import redirect, url_for
 from flask import Response
+from flask import render_template
 from flask import current_app as app
 
 from ObjectAPI import ObjectAPI
@@ -106,3 +107,20 @@ class Auth(ObjectAPI, ObjectDb):
         for i in range(length):
             pas.append(choice('QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-='))
         return ''.join(pas)
+
+    def api_create_user(self):
+
+        error = []
+        if len(request.form) == 6:
+            if len(request.form['user_password1']) < 6:
+                error.append(u"Пароль менее шести символов - слишком слабый.")
+            else:
+                if request.form['user_password1'] != request.form['user_password2']:
+                    error.append(u"Пароли не совпадают.")
+        else:
+            error.append(u"Не хватает параметров.")
+
+        if len(error) > 0:
+            return render_template('newuser.html', errors = error)
+        else:
+            return render_template('newuser.html', errors = [1,2,3,4])
