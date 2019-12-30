@@ -72,40 +72,37 @@ class Auth(ObjectAPI, ObjectDb):
         error = []
         mail = Mail(app)
 
-        if len(request.form) == 6:
+        if len(request.form) == 5:
             if len(request.form['user_password1']) < 6:
                 error.append(u"Пароль менее шести символов - слишком слабый.")
             else:
                 if request.form['user_password1'] != request.form['user_password2']:
                     error.append(u"Пароли не совпадают.")
+                else:
+                    cur = self.connect.cursor()
+                    cur.execute(u"select * from Users where email_user=%s", (request.form['user_mail']))
+
+                    for row in cur.fetchall():
+                        error.append(u"Пользователь с таким email уже зарегистрирован.")
+
         else:
             error.append(u"Не хватает параметров.")
 
         if len(error) > 0:
-            return render_template('newuser.html', errors = error)
+            return render_template('newuser.html', errors=error)
         else:
-            # заполнение корректно.
-            cur = self.connect.cursor()
-            cur.execute(u"select * from Users where login_user=%s", (request.form['login']))
+            sql = u"INSERT INTO Users(password_user, email_user, code_activ_user, name_user) " \
+                  u"VALUES (%s, %s, %s, %s)"
+            code = uuid4().hex
 
-            for row in cur.fetchall():
-                error.append(u"Пользователь с таким логином уже зарегистрирован (воспользуйтейсь востановлением доступа).")
+            cur.execute(sql, (
+                md5(request.form['user_password1']).hexdigest()
+                , request.form['user_mail']
+                , code
+                , request.form['name']
+            ))
 
-            if len(error) > 0:
-                return render_template('newuser.html', errors=error)
-            else:
-                sql = u"INSERT INTO Users(login_user, password_user, email_user, phone_user, code_activ_user) " \
-                      u"VALUES (%s, %s, %s, %s, %s)"
-                code = uuid4().hex
-                cur.execute(sql, (
-                    request.form['login']
-                    , md5(request.form['user_password1']).hexdigest()
-                    , request.form['user_mail']
-                    , request.form['phone']
-                    , code
-                ))
+            html = u"<p>Пройдите по ссылке, для подтверждения регистрации <a href=\"http://"+request.host+u"/auth/activ_user?"+code+u"\"> активация </a> </p>"
+            mail.send_message("Подтверждение регистрации", recipients=["spark-mag@yandex.ru"], html=html)
 
-                html = u"<p>Пройдите по ссылке, для подтверждения регистрации <a href=\"http://"+request.host+u"/auth/activ_user?"+code+u"\"> активация </a> </p>"
-                mail.send_message("Подтверждение регистрации", recipients=["spark-mag@yandex.ru"], html=html)
-
-                return render_template('newuser.html', errors = [], finish = u"Пользователь зарегистрирован в базе. Инструкция по активации выслана на указанный email.")
+            return render_template('newuser.html', errors = [], finish = u"Пользователь зарегистрирован в базе. Инструкция по активации выслана на указанный email.")

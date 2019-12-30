@@ -23,8 +23,7 @@
   <form action="/auth/create_user" id="login" method="post">
 	  <p>Регистрация</p>
     <input type="email" placeholder="Ваш email..." name="user_mail" required=required>
-	<input type="text" placeholder="Логин" name="login" required=required>
-	<input type="tel" placeholder="Номер телефона" name="phone" required=required>
+	<input type="text" placeholder="Ваше имя или назване организации" name="name" required=required>
 
 	<div style="background-color: #f2f2f2;border-radius: 9px;">
 		<input type="password" placeholder="Пароль" name="user_password1" required=required>
@@ -38,7 +37,6 @@
         	<li> {{ item }} </li>
     	{% endfor %}
 		</ul>
-
 
 		<hr>
 		<p>Нажимая кнопку "Зарегистрировать", Вы даете своё согласие на хранение и обработку персональных данных.</p>
