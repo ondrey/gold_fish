@@ -47,8 +47,8 @@ class DevelopmentTemplateConfig(Config):
     # email server
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
-    MAIL_USE_TLS = False
+#    MAIL_USE_TLS = False
     MAIL_USE_SSL = True
     MAIL_USERNAME = 'mag.ondrei@gmail.com'
-    MAIL_PASSWORD = 'bonpari_j'
+    MAIL_PASSWORD = 'bdabilpfrtwnoijx'
     MAIL_DEFAULT_SENDER = (u'Макрушин Андрей', 'mag.ondrei@gmail.com')

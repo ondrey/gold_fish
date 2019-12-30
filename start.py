@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask
-from flask_mail import Mail
 from flask import render_template
 from flask import abort
 import api
 
 app = Flask(__name__)
-mail = Mail(app)
+app.config.from_object('config.DevelopmentTemplateConfig')
 
 
 @app.route('/<api_group>/<method_api>', methods=["GET", "POST"])
@@ -44,6 +43,5 @@ def service_request():
 def page_not_found(error):
     return render_template('page_not_found.html'), 404
 
-app.config.from_object('config.DevelopmentTemplateConfig')
 
 app.run(port=5011)
