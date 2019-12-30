@@ -3,6 +3,7 @@
 from hashlib import md5
 from json import dumps, loads
 from random import choice
+from uuid import uuid4
 
 from flask import request
 from flask import session
@@ -108,8 +109,14 @@ class Auth(ObjectAPI, ObjectDb):
             pas.append(choice('QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890-='))
         return ''.join(pas)
 
-    def api_create_user(self):
+    def api_activ_user(self):
+        code = request.query_string
+        cur = self.connect.cursor()
+        cur.execute(u"UPDATE Users SET code_activ_user = '' WHERE code_activ_user = %s ", (code,))
+        self.connect.commit()
+        return render_template('login.html', mess=u"Пользователь активирован, попробуйте авторизоваться!")
 
+    def api_create_user(self):
         error = []
         if len(request.form) == 6:
             if len(request.form['user_password1']) < 6:
@@ -123,4 +130,24 @@ class Auth(ObjectAPI, ObjectDb):
         if len(error) > 0:
             return render_template('newuser.html', errors = error)
         else:
-            return render_template('newuser.html', errors = [1,2,3,4])
+            # заполнение корректно.
+            cur = self.connect.cursor()
+            cur.execute(u"select * from Users where login_user=%s", (request.form['login']))
+
+            for row in cur.fetchall():
+                error.append(u"Пользователь с таким логином уже зарегистрирован (воспользуйтейсь востановлением доступа).")
+
+            if len(error) > 0:
+                return render_template('newuser.html', errors=error)
+            else:
+                sql = u"INSERT INTO Users(login_user, password_user, email_user, phone_user, code_activ_user) " \
+                      u"VALUES (%s, %s, %s, %s, %s)"
+                code = uuid4().hex
+                cur.execute(sql, (
+                    request.form['login']
+                    , md5(request.form['user_password1']).hexdigest()
+                    , request.form['user_mail']
+                    , request.form['phone']
+                    , code
+                ))
+                return render_template('newuser.html', errors = [], finish = u"Пользователь зарегистрирован в базе. Инструкция по активации выслана на указанный email.")

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask
+from flask_mail import Mail
 from flask import render_template
 from flask import abort
 import api
 
 app = Flask(__name__)
+mail = Mail(app)
 
 
 @app.route('/<api_group>/<method_api>', methods=["GET", "POST"])

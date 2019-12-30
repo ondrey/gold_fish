@@ -32,13 +32,13 @@ config_operation = {
 
         onAdd: function (event) {
           let text = "<p>Вы можете выбрать один из предложенных типов операции</p>";
-          text += "<a href='#' style=\"margin-top: 29px;display: block;\">Разделение по счетам </br> <img src='/static/w2ui/Components/Operation/account.png' /></a> <br />";
-          text += "<a href='#' style=\"margin-top: 29px;display: block;\">Разделение во времени </br><img src='/static/w2ui/Components/Operation/optype.png' /></a>";
+          text += "<a href='#' style=\"margin-top: 29px;display: block;\">Разделение по счетам </br> <img src='/static/w2ui/Components/Operation/account.jpg' style=\"margin-top: 13px;\"/></a> <br />";
+          text += "<a href='#' style=\"margin-top: 29px;display: block;\">Разделение во времени </br><img src='/static/w2ui/Components/Operation/operation.jpg'  style=\"margin-top: 13px;\" /></a>";
 
           w2popup.open({
               body: '<div class="w2ui-centered">'+text+'</div>',
               color: '#3b798c',
-              height: 400
+              height: 450
            });
 
         },
