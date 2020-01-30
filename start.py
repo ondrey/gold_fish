@@ -34,11 +34,6 @@ def newuser():
 def repassword():
     return render_template('repassword.html')
 
-
-@app.route('/service_request')
-def service_request():
-    return render_template('service_request.html')
-
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('page_not_found.html'), 404
