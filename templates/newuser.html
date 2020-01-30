@@ -17,7 +17,8 @@
 
 {% if finish %}
 
-<p style="margin: 0 auto; max-width:350px; width: 60%;text-align: center;font-size: x-large;color: #3281a4;background-color: #f9f9f9;border-radius: 4px;box-shadow: 1px 1px 3px #919191;margin-top: 120px;padding: 10px;">{{ finish }}</p>
+<p style="margin: 0 auto; max-width:350px; width: 60%;text-align: center;font-size: x-large;color: #3281a4;background-color: #f9f9f9;border-radius: 4px;box-shadow: 1px 1px 3px #919191;margin-top: 120px;padding: 10px;">
+	{{ finish }}</p>
 
 {% else %}
   <form action="/auth/create_user" id="login" method="post">

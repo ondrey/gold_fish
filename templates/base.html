@@ -22,13 +22,19 @@
 
 <div id="header">
 
+  <!-- {% if finish %}
+  {{ finish }}  
+  {% endif %}   -->
+
+<div style="display: block;min-width: 370px;background-color: chartreuse;padding: 10px;border-radius: 6px;text-align: center;position: absolute;bottom: 20px;right: 80px;z-index: 5000;">Информация: <br> Вы заблокированны!</div>
+
 <div class="logo">
   <a href="/"><h1>Kojima</h1></a>
   <p><span style="color: #32819e;">Программа учета финансов</span> <span style="font-size: smaller;font-style: oblique;">Учет затрат, бюджетирование, амортизация и планирование.</span></p>
 </div>
 
 <div class="menu">
-
+  <button class="w2ui-btn" onclick="$('#popup2').w2popup()">Popup 2</button>
   <a href="#">Инструкция</a>
   <a href="#">API</a>
   <a href="#">Приложения</a>
@@ -42,14 +48,9 @@
       <a href="#" ><i class="fa fa-facebook-official"></i></a>
     </div>
 
-
-
-
-
+</div>
 </div>
 
-
-</div>
 
 {% block content %}{% endblock %}
 
