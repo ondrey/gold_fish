@@ -72,7 +72,7 @@ class Auth(ObjectAPI, ObjectDb):
         error = []
         mail = Mail(app)
 
-        if len(request.form) == 5:
+        if len(request.form) == 6:
             if len(request.form['user_password1']) < 6:
                 error.append(u"Пароль менее шести символов - слишком слабый.")
             else:
@@ -88,18 +88,29 @@ class Auth(ObjectAPI, ObjectDb):
         else:
             error.append(u"Не хватает параметров.")
 
+        id_ref_user = None
+
+        if request.form['ref']:
+            curef = self.connect.cursor()
+            curef.execute(u"select id_user from Users where guid_user=%s", (request.form['ref']))
+
+            for row in curef.fetchall():
+                id_ref_user = row[0]
+
         if len(error) > 0:
             return render_template('newuser.html', errors=error)
         else:
-            sql = u"INSERT INTO Users(password_user, email_user, code_activ_user, name_user) " \
-                  u"VALUES (%s, %s, %s, %s)"
+            sql = u"INSERT INTO Users(password_user, email_user, code_activ_user, name_user, guid_user, id_manager_user) " \
+                  u"VALUES (%s, %s, %s, %s, %s, %s)"
             code = uuid4().hex
 
             cur.execute(sql, (
                 md5(request.form['user_password1']).hexdigest()
                 , request.form['user_mail']
                 , code
-                , request.form['name']
+                , request.form['name'],
+                uuid4().hex,
+                id_ref_user
             ))
 
             html = u"<p>Пройдите по ссылке, для подтверждения регистрации <a href=\"http://"+request.host+u"/auth/activ_user?"+code+u"\"> активация </a> </p>"
