@@ -68,6 +68,27 @@ class Auth(ObjectAPI, ObjectDb):
         self.connect.commit()
         return render_template('login.html', mess=u"Пользователь активирован, попробуйте авторизоваться!")
 
+    def api_re_access(self):
+
+        if 'user_mail' in request.form:
+            cur = self.connect.cursor()
+            cur.execute(u"select id_user from Users where email_user = %s", (request.form['user_mail'], ))
+            for i in cur.fetchall():
+                mail = Mail(app)
+                session['repass_code'] = uuid4().hex
+                html = u"<p>Пройдите по ссылке, для востановления доступа <a href=\"http://" + request.host +\
+                       u"/auth/re_access?code=" + session['repass_code'] + u"\"> Ввести пароль </a> </p>"
+                mail.send_message("Востановление доступа", recipients=[request.form['user_mail'], ], html=html)
+                return render_template('repassword.html', mess=u"На указанный email отправленна ссылка для "
+                                                               u"востановления доступа. Проверьте почтовый ящик.")
+            return render_template('repassword.html', mess=u"Пользователь с такими данными не зарегистрирован в базе.")
+        elif 'code' in request.values:
+            return render_template('repassword.html', show_form_re_password=True)
+        else:
+            pass
+
+        pass
+
     def api_create_user(self):
         error = []
         mail = Mail(app)
