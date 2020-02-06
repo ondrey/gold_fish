@@ -69,25 +69,37 @@ class Auth(ObjectAPI, ObjectDb):
         return render_template('login.html', mess=u"Пользователь активирован, попробуйте авторизоваться!")
 
     def api_re_access(self):
-
         if 'user_mail' in request.form:
             cur = self.connect.cursor()
             cur.execute(u"select id_user from Users where email_user = %s", (request.form['user_mail'], ))
             for i in cur.fetchall():
                 mail = Mail(app)
                 session['repass_code'] = uuid4().hex
+                session['repass_email'] = request.form['user_mail']
                 html = u"<p>Пройдите по ссылке, для востановления доступа <a href=\"http://" + request.host +\
-                       u"/auth/re_access?code=" + session['repass_code'] + u"\"> Ввести пароль </a> </p>"
+                       u"/auth/re_pass?code=" + session['repass_code'] + u"\"> Ввести пароль </a> </p>"
                 mail.send_message("Востановление доступа", recipients=[request.form['user_mail'], ], html=html)
                 return render_template('repassword.html', mess=u"На указанный email отправленна ссылка для "
                                                                u"востановления доступа. Проверьте почтовый ящик.")
-            return render_template('repassword.html', mess=u"Пользователь с такими данными не зарегистрирован в базе.")
-        elif 'code' in request.values:
-            return render_template('repassword.html', show_form_re_password=True)
-        else:
-            pass
 
-        pass
+            return render_template('repassword.html', mess=u"Пользователь с такими данными не зарегистрирован в базе.")
+
+    def api_re_pass(self):
+        if 'code' in request.values:
+            return render_template('repassword2.html', code=request.values['code'])
+        elif 'code' in request.form:
+            if request.form['pass'] == request.form['repass']:
+                if 'repass_code' in session and 'repass_email' in session:
+                    cur = self.connect.cursor()
+                    cur.execute(u"update Users set password_user=%s where email_user=%s", (request.form['repass'], session['repass_email']))
+                    self.connect.commit()
+                    return redirect(url_for('login'))
+                else:
+                    return render_template('repassword1.html', mess=u"Срок действия кода востановления истёк.")
+
+            return render_template('repassword2.html', code=request.values['code'])
+        else:
+            return render_template('repassword1.html')
 
     def api_create_user(self):
         error = []
