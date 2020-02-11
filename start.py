@@ -22,18 +22,6 @@ def run_api_method(api_group, method_api):
 def index():
     return render_template('index.html')
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-@app.route('/newuser')
-def newuser():
-    return render_template('newuser.html')
-
-@app.route('/repassword')
-def repassword():
-    return render_template('repassword.html')
-
 
 @app.errorhandler(404)
 def page_not_found(error):

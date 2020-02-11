@@ -43,6 +43,15 @@ class Auth(ObjectAPI, ObjectDb):
         ObjectDb.__init__(self)
         self.groups = {}
 
+    def api_page_login(self):
+        return render_template('auth/login.html')
+
+    def api_page_newuser(self):
+        return render_template('auth/newuser.html')
+
+    def api_page_repass(self):
+        return render_template('auth/repassword.html')
+
     def api_logout(self):
         """
         Удалить переменную сесии
@@ -76,30 +85,32 @@ class Auth(ObjectAPI, ObjectDb):
                 mail = Mail(app)
                 session['repass_code'] = uuid4().hex
                 session['repass_email'] = request.form['user_mail']
-                html = u"<p>Пройдите по ссылке, для востановления доступа <a href=\"http://" + request.host +\
-                       u"/auth/re_pass?code=" + session['repass_code'] + u"\"> Ввести пароль </a> </p>"
-                mail.send_message("Востановление доступа", recipients=[request.form['user_mail'], ], html=html)
-                return render_template('repassword.html', mess=u"На указанный email отправленна ссылка для "
+
+                mail.send_message("Востановление доступа - Kojima", recipients=[request.form['user_mail'], ],
+                                  html=render_template('email_tmp/reaccess.html',
+                                                       host=request.host, code=session['repass_code']))
+
+                return render_template('auth/repassword.html', mess=u"На указанный email отправленна ссылка для "
                                                                u"востановления доступа. Проверьте почтовый ящик.")
 
-            return render_template('repassword.html', mess=u"Пользователь с такими данными не зарегистрирован в базе.")
+            return render_template('auth/repassword.html', mess=u"Пользователь с такими данными не зарегистрирован в базе.")
 
     def api_re_pass(self):
-        if 'code' in request.values:
-            return render_template('repassword2.html', code=request.values['code'])
+        if 'code_mail' in request.values:
+            return render_template('auth/repassword2.html', code=request.values['code_mail'])
         elif 'code' in request.form:
             if request.form['pass'] == request.form['repass']:
                 if 'repass_code' in session and 'repass_email' in session:
                     cur = self.connect.cursor()
                     cur.execute(u"update Users set password_user=%s where email_user=%s", (request.form['repass'], session['repass_email']))
                     self.connect.commit()
-                    return redirect(url_for('login'))
+                    redirect(url_for('/auth/page_login'))
                 else:
-                    return render_template('repassword1.html', mess=u"Срок действия кода востановления истёк.")
-
-            return render_template('repassword2.html', code=request.values['code'])
+                    return render_template('auth/repassword.html', mess=u"Срок действия кода востановления истёк.")
+            else:
+                return render_template('auth/repassword2.html', code=request.values['code'], mess=u"Пароли не совпадают")
         else:
-            return render_template('repassword1.html')
+            return render_template('auth/repassword.html')
 
     def api_create_user(self):
         error = []
