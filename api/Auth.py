@@ -13,6 +13,8 @@ from flask import Response
 from flask import render_template
 from flask import current_app as app
 from flask_mail import Mail
+from flask import jsonify
+
 
 from ObjectAPI import ObjectAPI
 from ObjectDb import ObjectDb
@@ -52,6 +54,41 @@ class Auth(ObjectAPI, ObjectDb):
     def api_page_repass(self):
         return render_template('auth/repassword.html')
 
+    def api_login(self):
+
+        if 'user_mail' in request.form and 'user_password' in request.form:
+            password = request.form['user_password']
+            try:
+                password = md5(password).hexdigest()
+            except:
+                return render_template('auth/login.html', mess=u"Пароль может состоять из символов латинского алфавита, цифр и знаков. Проверте раскладку!")
+
+            cur = self.connect.cursor()
+            cur.execute(u"""
+                select us.id_user, us.email_user, us.name_user, us.id_manager_user, us.guid_user
+                from Users us where us.email_user = '{0}' and us.password_user = '{1}' and us.code_activ_user is NULL        
+            """.format(request.form['user_mail'], password))
+
+            for row in cur.fetchall():
+                session = {'client_sess': {}}
+                session['client_sess']['id_user'] = row[0]
+                session['client_sess']['email_user'] = row[1]
+                session['client_sess']['name_user'] = row[2]
+                session['client_sess']['id_manager_user'] = row[3]
+                session['client_sess']['guid_user'] = row[4]
+
+                return redirect(url_for('index'))
+
+            return render_template('auth/login.html', mess=u"Ошибка! Такого сочетания логина и пароля, не зарегистрированно.")
+        else:
+            return render_template('auth/login.html', mess=u"Не передан один из параметров")
+
+    def api_get_user_info(self):
+        if 'client_sess' in session:
+            return jsonify({"name_user": session['client_sess']['name_user']})
+        else:
+            return jsonify({"name_user": "-1"})
+
     def api_logout(self):
         """
         Удалить переменную сесии
@@ -73,7 +110,7 @@ class Auth(ObjectAPI, ObjectDb):
     def api_activ_user(self):
         code = request.query_string
         cur = self.connect.cursor()
-        cur.execute(u"UPDATE Users SET code_activ_user = '' WHERE code_activ_user = %s ", (code,))
+        cur.execute(u"UPDATE Users SET code_activ_user = NULL WHERE code_activ_user = %s ", (code,))
         self.connect.commit()
         return render_template('login.html', mess=u"Пользователь активирован, попробуйте авторизоваться!")
 
@@ -128,7 +165,6 @@ class Auth(ObjectAPI, ObjectDb):
 
                     for row in cur.fetchall():
                         error.append(u"Пользователь с таким email уже зарегистрирован.")
-
         else:
             error.append(u"Не хватает параметров.")
 

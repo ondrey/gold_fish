@@ -28,12 +28,18 @@
 </div>
 
 <div class="menu">
-  <button class="w2ui-btn" onclick="$('#popup2').w2popup()">Popup 2</button>
   <a href="#">Инструкция</a>
   <a href="#">API</a>
   <a href="#">Приложения</a>
   <a href="#">О программе</a>
-  <a href="/auth/page_login" style="font-size: larger;margin-bottom: 9px;"><i class="fa fa-sign-in"></i> Вход</a>
+
+  <button class="w2ui-btn" id="page_login" onclick="location.href='/auth/page_login'"><i class="fa fa-sign-in"></i> Вход</button>
+  <button class="w2ui-btn" id="logout" onclick="location.href='/auth/logout'"><i class="fa fa-sign-out" style="
+    background-color: #32819e;
+    padding: 2px;
+    color: cornsilk;
+    border-radius: 4px;
+  " id="name_user">Мак</i> Выход</button>
 
     <p>Присоеденяйтесь к нам в соц. сетях</p>
     <div class="button_list">
@@ -49,7 +55,10 @@
 {% block content %}{% endblock %}
 
 </body>
+<script>
 
+
+</script>
 {% block script %}{% endblock %}
 
 </html>
