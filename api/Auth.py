@@ -9,11 +9,9 @@ from uuid import uuid4
 from flask import request
 from flask import session
 from flask import redirect, url_for
-from flask import Response
 from flask import render_template
 from flask import current_app as app
 from flask_mail import Mail
-from flask import jsonify
 
 
 from ObjectAPI import ObjectAPI
@@ -70,24 +68,20 @@ class Auth(ObjectAPI, ObjectDb):
             """.format(request.form['user_mail'], password))
 
             for row in cur.fetchall():
-                session = {'client_sess': {}}
+                session['client_sess'] = {}
                 session['client_sess']['id_user'] = row[0]
                 session['client_sess']['email_user'] = row[1]
                 session['client_sess']['name_user'] = row[2]
                 session['client_sess']['id_manager_user'] = row[3]
                 session['client_sess']['guid_user'] = row[4]
 
-                return redirect(url_for('index'))
+                resp = redirect(url_for('index'))
+                resp.set_cookie('show_auth', 'True')
+                return resp
 
             return render_template('auth/login.html', mess=u"Ошибка! Такого сочетания логина и пароля, не зарегистрированно.")
         else:
             return render_template('auth/login.html', mess=u"Не передан один из параметров")
-
-    def api_get_user_info(self):
-        if 'client_sess' in session:
-            return jsonify({"name_user": session['client_sess']['name_user']})
-        else:
-            return jsonify({"name_user": "-1"})
 
     def api_logout(self):
         """
@@ -95,7 +89,7 @@ class Auth(ObjectAPI, ObjectDb):
         :return:
         """
         session.pop('client_sess', None)
-        return Response(dumps(0), mimetype='application/json')
+        return redirect(url_for('index'))
 
     def wassgen(self, length=6):
         """

@@ -13,6 +13,8 @@
 
 
   <script type="text/javascript" src="/static/jquery.min.js"></script>
+
+
   <script type="text/javascript" src="/static/w2ui/w2ui-1.5.rc1.js"></script>
   <script id="rdivocale" type="text/javascript" src="/static/locale/ru-ru.json"></script>
 
@@ -33,13 +35,9 @@
   <a href="#">Приложения</a>
   <a href="#">О программе</a>
 
+  <button class="w2ui-btn" id="logout" onclick="location.href='/auth/logout'"><i class="fa fa-sign-out" id="name_user"></i> Выход </button>
   <button class="w2ui-btn" id="page_login" onclick="location.href='/auth/page_login'"><i class="fa fa-sign-in"></i> Вход</button>
-  <button class="w2ui-btn" id="logout" onclick="location.href='/auth/logout'"><i class="fa fa-sign-out" style="
-    background-color: #32819e;
-    padding: 2px;
-    color: cornsilk;
-    border-radius: 4px;
-  " id="name_user">Мак</i> Выход</button>
+
 
     <p>Присоеденяйтесь к нам в соц. сетях</p>
     <div class="button_list">
@@ -56,8 +54,17 @@
 
 </body>
 <script>
+$( document ).ready(function() {
 
+  if ( !document.cookie.match('show_auth') ) {
+    $('#page_login').show()
+    $('#logout').hide()
+  } else {
+    $('#logout').show()
+    $('#page_login').hide()
+  }
 
+})
 </script>
 {% block script %}{% endblock %}
 

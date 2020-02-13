@@ -21,6 +21,7 @@ def run_api_method(api_group, method_api):
 def index():
     return render_template('index.html')
 
+
 @app.route('/demo')
 def demo():
     return render_template('demo.html')
