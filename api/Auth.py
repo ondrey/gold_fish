@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from hashlib import md5
-from json import dumps, loads
+from flask import jsonify
 from random import choice
 from uuid import uuid4
 
@@ -46,6 +46,19 @@ class Auth(ObjectAPI, ObjectDb):
 
     def api_page_repass(self):
         return render_tmp('auth/repassword.html')
+
+    @isauth
+    def api_userinfo(self):
+        if 'user_name' in request.form:
+            cur = self.connect.cursor()
+            sql = u"update Users set name_user='{0}' where id_user={1}".format(
+                request.form['user_name'],
+                str((session['client_sess']['id_user'])))
+            cur.execute(sql)
+            session['client_sess']['name_user'] = request.form['user_name']
+            self.connect.commit()
+
+        return render_tmp('auth/userinfo.html', code_emploey=session['client_sess']['guid_user'])
 
     def api_login(self):
 
