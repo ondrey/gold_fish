@@ -12,7 +12,6 @@ from flask import redirect, url_for
 from flask import current_app as app
 from flask_mail import Mail
 
-
 from ObjectAPI import ObjectAPI
 from ObjectAPI import render_tmp
 from ObjectDb import ObjectDb
@@ -26,14 +25,10 @@ def isauth(f):
     """
 
     def wrapper(sl):
-        if 'client_sess' in session and u'admin' in session['client_sess']['groups']:
+        if 'client_sess' in session:
             return f(sl)
         else:
-            if 'app_key' in request.values and request.values['app_key'] == app.config.get('API_KEY'):
-                return f(sl)
-            else:
-                return redirect(url_for('index'))
-
+            return redirect(url_for('index'))
     return wrapper
 
 
@@ -104,7 +99,7 @@ class Auth(ObjectAPI, ObjectDb):
         cur = self.connect.cursor()
         cur.execute(u"UPDATE Users SET code_activ_user = NULL WHERE code_activ_user = %s ", (code,))
         self.connect.commit()
-        return render_tmp('login.html', mess=u"Пользователь активирован, попробуйте авторизоваться!")
+        return render_tmp('auth/login.html', mess=u"Пользователь активирован, попробуйте авторизоваться!")
 
     def api_re_access(self):
         if 'user_mail' in request.form:
@@ -130,10 +125,18 @@ class Auth(ObjectAPI, ObjectDb):
         elif 'code' in request.form:
             if request.form['pass'] == request.form['repass']:
                 if 'repass_code' in session and 'repass_email' in session:
+
+                    try:
+                        md5(request.form['repass']).hexdigest()
+                    except:
+                        return render_tmp('auth/repassword2.html', code=request.values['code'],
+                                          mess=u"Пароль может содержать только латинские буквы, символы и цыфры.")
+
                     cur = self.connect.cursor()
-                    cur.execute(u"update Users set password_user=%s where email_user=%s", (request.form['repass'], session['repass_email']))
+                    cur.execute(u"update Users set password_user=%s where email_user=%s", (
+                        md5(request.form['repass']).hexdigest(), session['repass_email']))
                     self.connect.commit()
-                    redirect(url_for('/auth/page_login'))
+                    return render_tmp('auth/login.html', mess=u"Вы успешно сменили пароль. Попробуйте войти теперь.")
                 else:
                     return render_tmp('auth/repassword.html', mess=u"Срок действия кода востановления истёк.")
             else:
@@ -152,11 +155,16 @@ class Auth(ObjectAPI, ObjectDb):
                 if request.form['user_password1'] != request.form['user_password2']:
                     error.append(u"Пароли не совпадают.")
                 else:
-                    cur = self.connect.cursor()
-                    cur.execute(u"select * from Users where email_user=%s", (request.form['user_mail']))
+                    try:
+                        md5(request.form['user_password1']).hexdigest()
 
-                    for row in cur.fetchall():
-                        error.append(u"Пользователь с таким email уже зарегистрирован.")
+                        cur = self.connect.cursor()
+                        cur.execute(u"select * from Users where email_user=%s", (request.form['user_mail']))
+
+                        for row in cur.fetchall():
+                            error.append(u"Пользователь с таким email уже зарегистрирован.")
+                    except:
+                        error.append(u"Пароль может содерать только символы латинского алфавита!")
         else:
             error.append(u"Не хватает параметров.")
 
@@ -169,8 +177,11 @@ class Auth(ObjectAPI, ObjectDb):
             for row in curef.fetchall():
                 id_ref_user = row[0]
 
+            if not(id_ref_user):
+                error.append(u"Такой код проекта отсутствует.")
+
         if len(error) > 0:
-            return render_tmp('newuser.html', errors=error)
+            return render_tmp('auth/newuser.html', errors=error)
         else:
             sql = u"INSERT INTO Users(password_user, email_user, code_activ_user, name_user, guid_user, id_manager_user) " \
                   u"VALUES (%s, %s, %s, %s, %s, %s)"
@@ -185,7 +196,7 @@ class Auth(ObjectAPI, ObjectDb):
                 id_ref_user
             ))
 
-            html = u"<p>Пройдите по ссылке, для подтверждения регистрации <a href=\"http://"+request.host+u"/auth/activ_user?"+code+u"\"> активация </a> </p>"
-            mail.send_message("Подтверждение регистрации", recipients=["spark-mag@yandex.ru"], html=html)
+            html = render_tmp('email_tmp/activate.html', host=request.host, code=code)
+            mail.send_message("Подтверждение регистрации", recipients=[request.form['user_mail'],], html=html)
 
-            return render_tmp('newuser.html', errors = [], finish = u"Пользователь зарегистрирован в базе. Инструкция по активации выслана на указанный email.")
+            return render_tmp('auth/newuser.html', errors = [], finish = u"Пользователь зарегистрирован в базе. Инструкция по активации выслана на указанный email.")
