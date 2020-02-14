@@ -9,12 +9,12 @@ from uuid import uuid4
 from flask import request
 from flask import session
 from flask import redirect, url_for
-from flask import render_template
 from flask import current_app as app
 from flask_mail import Mail
 
 
 from ObjectAPI import ObjectAPI
+from ObjectAPI import render_tmp
 from ObjectDb import ObjectDb
 
 
@@ -44,13 +44,13 @@ class Auth(ObjectAPI, ObjectDb):
         self.groups = {}
 
     def api_page_login(self):
-        return render_template('auth/login.html')
+        return render_tmp('auth/login.html')
 
     def api_page_newuser(self):
-        return render_template('auth/newuser.html')
+        return render_tmp('auth/newuser.html')
 
     def api_page_repass(self):
-        return render_template('auth/repassword.html')
+        return render_tmp('auth/repassword.html')
 
     def api_login(self):
 
@@ -59,7 +59,7 @@ class Auth(ObjectAPI, ObjectDb):
             try:
                 password = md5(password).hexdigest()
             except:
-                return render_template('auth/login.html', mess=u"Пароль может состоять из символов латинского алфавита, цифр и знаков. Проверте раскладку!")
+                return render_tmp('auth/login.html', mess=u"Пароль может состоять из символов латинского алфавита, цифр и знаков. Проверте раскладку!")
 
             cur = self.connect.cursor()
             cur.execute(u"""
@@ -75,13 +75,11 @@ class Auth(ObjectAPI, ObjectDb):
                 session['client_sess']['id_manager_user'] = row[3]
                 session['client_sess']['guid_user'] = row[4]
 
-                resp = redirect(url_for('index'))
-                resp.set_cookie('show_auth', 'True')
-                return resp
+                return redirect(url_for('index'))
 
-            return render_template('auth/login.html', mess=u"Ошибка! Такого сочетания логина и пароля, не зарегистрированно.")
+            return render_tmp('auth/login.html', mess=u"Ошибка! Такого сочетания логина и пароля, не зарегистрированно.")
         else:
-            return render_template('auth/login.html', mess=u"Не передан один из параметров")
+            return render_tmp('auth/login.html', mess=u"Не передан один из параметров")
 
     def api_logout(self):
         """
@@ -106,7 +104,7 @@ class Auth(ObjectAPI, ObjectDb):
         cur = self.connect.cursor()
         cur.execute(u"UPDATE Users SET code_activ_user = NULL WHERE code_activ_user = %s ", (code,))
         self.connect.commit()
-        return render_template('login.html', mess=u"Пользователь активирован, попробуйте авторизоваться!")
+        return render_tmp('login.html', mess=u"Пользователь активирован, попробуйте авторизоваться!")
 
     def api_re_access(self):
         if 'user_mail' in request.form:
@@ -118,17 +116,17 @@ class Auth(ObjectAPI, ObjectDb):
                 session['repass_email'] = request.form['user_mail']
 
                 mail.send_message("Востановление доступа - Kojima", recipients=[request.form['user_mail'], ],
-                                  html=render_template('email_tmp/reaccess.html',
+                                  html=render_tmp('email_tmp/reaccess.html',
                                                        host=request.host, code=session['repass_code']))
 
-                return render_template('auth/repassword.html', mess=u"На указанный email отправленна ссылка для "
+                return render_tmp('auth/repassword.html', mess=u"На указанный email отправленна ссылка для "
                                                                u"востановления доступа. Проверьте почтовый ящик.")
 
-            return render_template('auth/repassword.html', mess=u"Пользователь с такими данными не зарегистрирован в базе.")
+            return render_tmp('auth/repassword.html', mess=u"Пользователь с такими данными не зарегистрирован в базе.")
 
     def api_re_pass(self):
         if 'code_mail' in request.values:
-            return render_template('auth/repassword2.html', code=request.values['code_mail'])
+            return render_tmp('auth/repassword2.html', code=request.values['code_mail'])
         elif 'code' in request.form:
             if request.form['pass'] == request.form['repass']:
                 if 'repass_code' in session and 'repass_email' in session:
@@ -137,11 +135,11 @@ class Auth(ObjectAPI, ObjectDb):
                     self.connect.commit()
                     redirect(url_for('/auth/page_login'))
                 else:
-                    return render_template('auth/repassword.html', mess=u"Срок действия кода востановления истёк.")
+                    return render_tmp('auth/repassword.html', mess=u"Срок действия кода востановления истёк.")
             else:
-                return render_template('auth/repassword2.html', code=request.values['code'], mess=u"Пароли не совпадают")
+                return render_tmp('auth/repassword2.html', code=request.values['code'], mess=u"Пароли не совпадают")
         else:
-            return render_template('auth/repassword.html')
+            return render_tmp('auth/repassword.html')
 
     def api_create_user(self):
         error = []
@@ -172,7 +170,7 @@ class Auth(ObjectAPI, ObjectDb):
                 id_ref_user = row[0]
 
         if len(error) > 0:
-            return render_template('newuser.html', errors=error)
+            return render_tmp('newuser.html', errors=error)
         else:
             sql = u"INSERT INTO Users(password_user, email_user, code_activ_user, name_user, guid_user, id_manager_user) " \
                   u"VALUES (%s, %s, %s, %s, %s, %s)"
@@ -190,4 +188,4 @@ class Auth(ObjectAPI, ObjectDb):
             html = u"<p>Пройдите по ссылке, для подтверждения регистрации <a href=\"http://"+request.host+u"/auth/activ_user?"+code+u"\"> активация </a> </p>"
             mail.send_message("Подтверждение регистрации", recipients=["spark-mag@yandex.ru"], html=html)
 
-            return render_template('newuser.html', errors = [], finish = u"Пользователь зарегистрирован в базе. Инструкция по активации выслана на указанный email.")
+            return render_tmp('newuser.html', errors = [], finish = u"Пользователь зарегистрирован в базе. Инструкция по активации выслана на указанный email.")

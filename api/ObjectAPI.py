@@ -5,6 +5,15 @@ from json import dumps
 from flask import session
 
 
+def render_tmp(tempate_path, **kwargs):
+    render_info = dict(
+        user_name=session['client_sess']['name_user'] if 'client_sess' in session else False,
+    )
+    render_info.update(kwargs)
+
+    return render_template(tempate_path, **render_info)
+
+
 class ErrorAPI(Exception):
     def __init__(self, message, errors):
         # Call the base class constructor with the parameters it needs

@@ -35,8 +35,16 @@
   <a href="#">Приложения</a>
   <a href="#">О программе</a>
 
-  <button class="w2ui-btn" id="logout" onclick="location.href='/auth/logout'"><i class="fa fa-sign-out" id="name_user"></i> Выход </button>
-  <button class="w2ui-btn" id="page_login" onclick="location.href='/auth/page_login'"><i class="fa fa-sign-in"></i> Вход</button>
+  {% if user_name %}
+    <span style="background-color: azure; padding: 3px;">
+      <a href="#"> <i class="fa fa-user-circle" aria-hidden="true"></i> {{user_name}}</a>
+      <a href="/auth/logout"><i class="fa fa-sign-out" id="name_user"></i> Выход</a>
+    </span>
+  {% else %}
+    <span style="background-color: azure; padding: 3px;">
+      <a href="/auth/page_login"><i class="fa fa-sign-in"></i> Вход</a>
+    </span>
+  {% endif %}
 
 
     <p>Присоеденяйтесь к нам в соц. сетях</p>
@@ -53,19 +61,7 @@
 {% block content %}{% endblock %}
 
 </body>
-<script>
-$( document ).ready(function() {
 
-  if ( !document.cookie.match('show_auth') ) {
-    $('#page_login').show()
-    $('#logout').hide()
-  } else {
-    $('#logout').show()
-    $('#page_login').hide()
-  }
-
-})
-</script>
 {% block script %}{% endblock %}
 
 </html>
