@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from hashlib import md5
-from flask import jsonify
 from random import choice
 from uuid import uuid4
 
-
+from flask import jsonify
+from flask import abort
 from flask import request
 from flask import session
 from flask import redirect, url_for
@@ -23,12 +23,12 @@ def isauth(f):
     :param f:
     :return:
     """
-
     def wrapper(sl):
         if 'client_sess' in session:
             return f(sl)
         else:
-            return redirect(url_for('index'))
+            abort(404)
+
     return wrapper
 
 
