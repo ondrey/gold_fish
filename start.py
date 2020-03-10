@@ -22,9 +22,13 @@ def index():
     return api.render_tmp('index.html')
 
 
-@app.route('/demo')
+@app.route('/app')
 def demo():
     return api.render_tmp('demo.html')
+
+@app.route('/about')
+def about():
+    return api.render_tmp('about.html')
 
 
 @app.errorhandler(404)

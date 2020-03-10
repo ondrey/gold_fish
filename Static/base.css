@@ -131,3 +131,13 @@ input[type="submit"] {
 	color: brown;
 	margin: 12px;
 }
+
+
+.content {
+    max-width:580px;
+    margin:0px auto;
+}
+.content .title {
+    color: #32819e;
+    font-size: larger;
+}
