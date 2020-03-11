@@ -8,14 +8,21 @@ layout_account = {
 }
 
 add_form_account = { 
-    header: 'Edit Record',
     name: 'add_form_account',
+    url      : '/acc/add_account',
     fields: [
-        { name: 'recid', type: 'text', html: { caption: 'ID', attr: 'size="10" readonly' } },
-        { name: 'fname', type: 'text', required: true, html: { caption: 'First Name', attr: 'size="40" maxlength="40"' } },
-        { name: 'lname', type: 'text', required: true, html: { caption: 'Last Name', attr: 'size="40" maxlength="40"' } },
-        { name: 'email', type: 'email', html: { caption: 'Email', attr: 'size="30"' } },
-        { name: 'sdate', type: 'date', html: { caption: 'Date', attr: 'size="10"' } }
+        { name: 'title_acc', type: 'text', required: true, 
+            html: { caption: 'Название счета', attr: 'size="40" maxlength="40"' } 
+        },
+        { field: 'discription_acc',   type: 'textarea', 
+            html: { caption: 'Описание', attr: 'style="width: 300px; height: 90px"' } 
+        },
+        { name: 'account_color', type: 'color', 
+            html: { caption: 'Цвет счета', attr: 'size="40" maxlength="40"' } 
+        },        
+        { field: 'is_public', type: 'checkbox',  
+            html: { caption: 'В общем доступе', attr: 'style="width: auto;"' } 
+        },
     ],
     actions: {
         Reset: function () {
@@ -24,13 +31,13 @@ add_form_account = {
         Save: function () {
             var errors = this.validate();
             if (errors.length > 0) return;
+            
             if (this.recid == 0) {
-                w2ui.grid.add($.extend(true, { recid: w2ui.grid.records.length + 1 }, this.record));
-                w2ui.grid.selectNone();
+                this.save(this.record);
                 this.clear();
             } else {
-                w2ui.grid.set(this.recid, this.record);
-                w2ui.grid.selectNone();
+                w2ui.config_accounts.set(this.recid, this.record);
+                w2ui.config_accounts.selectNone();
                 this.clear();
             }
         }
@@ -40,9 +47,7 @@ add_form_account = {
 config_accounts = {
         name: 'config_accounts',
         url  : {
-            get    : '/acc/get_account_list',
-            remove : '',
-            save   : '/acc/add_account'
+            get    : '/acc/get_account_list'
         },
         method: 'POST',
         show: {
@@ -53,17 +58,14 @@ config_accounts = {
             toolbarEdit: true,
             columnHeaders: true
         },
-        // items: [
-        //     { id: 'add', type: 'button', caption: 'Add Record', icon: 'w2ui-icon-plus' }
-        // ],
-
         columns: [
-            { field: 'title_acc', caption: 'Наименование счета/статьи', size: '330px' },
+            { field: 'title_acc', caption: 'Наименование счета', size: '330px' },
 
-            { field: 'in', caption: 'Входящий', size: '120px' },
+            { field: 'in', caption: 'Входящий', size: '120px', info: true },
             { field: 'income', caption: 'Приход', size: '120px' },
             { field: 'cost', caption: 'Расход', size: '120px' },
             { field: 'out', caption: 'Исходящий', size: '120px' },
+            { field: 'discription_acc', caption: 'Комментарий', size: '120px', hidden: true},
             { field: 'name_user_owner', caption: 'Владелец', size: '100%'},
         ],
         
@@ -71,19 +73,19 @@ config_accounts = {
             console.log(event)
 
             w2popup.open({
-                title   : 'Редактирование',
-                width   : 900,
-                height  : 600,
+                title   : 'Редактирование',               
                 showMax : true,
-                body    : '<div id="smain" style="position: absolute; left: 5px; top: 5px; right: 5px; bottom: 5px;"></div>',
+                height  :330,
+                body    : '<div id="smain"></div>',
                 onOpen  : function (event) {
-                    event.onComplete = function () {
-                        $('#smain').w2form(w2ui.add_form_account)
+                    event.onComplete = function () {                        
+                        $('#smain').w2render('add_form_account');
                     };
                 },
                 onToggle: function (event) { 
                     event.onComplete = function () {
-                        w2ui.layout.resize();
+                        $(w2ui.add_form_account.box).show();
+                        w2ui.foo.resize();
                     }
                 }
             });

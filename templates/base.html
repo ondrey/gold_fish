@@ -22,12 +22,20 @@
 
 <body>
 
-<div id="header">
 
-<div class="logo">
-  <a href="/"><h1>Kojima</h1></a>
-  <p><span style="color: #32819e;">Программа учета финансов</span> <span style="font-size: smaller;font-style: oblique;">Учет затрат, бюджетирование, амортизация и планирование.</span></p>
-</div>
+{% if not mini %}
+  <div id="header">
+  <div class="logo">
+    <a href="/"><h1>Kojima</h1></a>
+    <p><span style="color: #32819e;">Программа учета финансов</span> <span style="font-size: smaller;font-style: oblique;">Учет затрат, бюджетирование, амортизация и планирование.</span></p>
+  </div>
+  {% else %}
+  <div>
+  <div class="menu" style="float:left">
+  <a href="/"><strong> <i class="fa fa-home" aria-hidden="true"></i>
+   Kojima</strong> на главную</a>
+  </div>
+ {% endif %}
 
 <div class="menu">
   <a href="#">Инструкция</a>
@@ -45,12 +53,14 @@
     </span>
   {% endif %}
 
+  {% if not mini %}
     <p>Присоеденяйтесь к нам в соц. сетях</p>
     <div class="button_list">
       <a href="#" ><i class="fa fa-vk fabutton"></i></a>
       <a href="#" ><i class="fa fa-telegram fabutton"></i></a>
       <a href="#" ><i class="fa fa-facebook-official"></i></a>
     </div>
+  {% endif %}
 
 </div>
 </div>

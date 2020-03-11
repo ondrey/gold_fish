@@ -27,7 +27,7 @@ def index():
 @app.route('/app')
 def demo():
     if 'client_sess' in session:
-        return api.render_tmp('demo.html')
+        return api.render_tmp('demo.html', mini=True)
     else:
         return redirect("/auth/page_login")
 

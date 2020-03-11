@@ -1,4 +1,4 @@
-{% extends "base-mini.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 
@@ -35,6 +35,7 @@ $(function () {
     $().w2layout(layout_account);
 
     $().w2grid(config_accounts);
+    $().w2form(add_form_account)
     $().w2grid(transact_grid);
 
     $().w2layout(layout_operation);    
