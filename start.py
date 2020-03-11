@@ -3,6 +3,8 @@
 from flask import Flask
 from flask import render_template
 from flask import abort
+from flask import session
+from flask import redirect
 import api
 
 app = Flask(__name__)
@@ -24,7 +26,11 @@ def index():
 
 @app.route('/app')
 def demo():
-    return api.render_tmp('demo.html')
+    if 'client_sess' in session:
+        return api.render_tmp('demo.html')
+    else:
+        return redirect("/auth/page_login")
+
 
 @app.route('/about')
 def about():

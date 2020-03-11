@@ -83,7 +83,7 @@ class Auth(ObjectAPI, ObjectDb):
                 session['client_sess']['id_manager_user'] = row[3]
                 session['client_sess']['guid_user'] = row[4]
 
-                return redirect(url_for('index'))
+                return redirect("/app")
 
             return render_tmp('auth/login.html', mess=u"Ошибка! Такого сочетания логина и пароля, не зарегистрированно.")
         else:

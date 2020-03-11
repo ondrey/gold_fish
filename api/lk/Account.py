@@ -71,7 +71,7 @@ class Account(ObjectAPI, ObjectDb):
                 recid=i[0],
                 id_par_acc=i[1],
                 addate_acc=i[2],                          
-                title_acc=u"{1} <i style='font-size: large; float:right;' class='fa {0}'></i>".format(i[7], i[3]),
+                title_acc=i[3],
                 id_user_owner=i[4],
                 name_user_owner=i[5],
                 is_public=i[6],                								
