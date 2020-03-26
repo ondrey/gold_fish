@@ -37,6 +37,11 @@ def about():
     return api.render_tmp('about.html')
 
 
+@app.route('/applications')
+def applications():
+    return api.render_tmp('applications.html')
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('page_not_found.html'), 404

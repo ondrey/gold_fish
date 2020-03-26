@@ -62,16 +62,18 @@ class Account(ObjectAPI, ObjectDb):
         for i in cur.fetchall():
             ch = self.create_account_list(i[0])
             w2ui = {}
+
             if len(ch) > 0:
                 w2ui.update({'children': ch})
-            if i[8]:
-                w2ui.update({'style': 'color:{0}'.format(i[8])})
 
             records.append(dict(
                 recid=i[0],
                 id_par_acc=i[1],
                 addate_acc=i[2],                          
-                title_acc=i[3],
+                title_acc=u"{0} {1}".format(
+                    i[3],
+                    '<i class="fa fa-wifi iconaccount" aria-hidden="true"></i>' if i[6] == "1" else ''),
+                
                 id_user_owner=i[4],
                 name_user_owner=i[5],
                 is_public=i[6],                								

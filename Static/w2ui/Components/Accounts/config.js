@@ -61,7 +61,7 @@ config_accounts = {
         columns: [
             { field: 'title_acc', caption: 'Наименование счета', size: '330px' },
 
-            { field: 'in', caption: 'Входящий', size: '120px', info: true },
+            { field: 'in', caption: 'Входящий', size: '120px' },
             { field: 'income', caption: 'Приход', size: '120px' },
             { field: 'cost', caption: 'Расход', size: '120px' },
             { field: 'out', caption: 'Исходящий', size: '120px' },
