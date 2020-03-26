@@ -73,7 +73,6 @@ class Account(ObjectAPI, ObjectDb):
                 title_acc=u"{0} {1}".format(
                     i[3],
                     '<i class="fa fa-wifi iconaccount" aria-hidden="true"></i>' if i[6] == "1" else ''),
-                
                 id_user_owner=i[4],
                 name_user_owner=i[5],
                 is_public=i[6],                								
