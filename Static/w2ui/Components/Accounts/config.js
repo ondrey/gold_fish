@@ -42,6 +42,7 @@ config_accounts = {
             { field: 'out', caption: 'Исходящий', size: '120px' },
             { field: 'discription_acc', caption: 'Комментарий', size: '120px', hidden: true},
             { field: 'name_user_owner', caption: 'Владелец', size: '100%'},
+            { field: 'virtual', caption: 'Виртуальный', size: '100%'},
         ],
         onSelect: function(event) {
             //Назначить фильтр по идентификатору для выбранного счета
