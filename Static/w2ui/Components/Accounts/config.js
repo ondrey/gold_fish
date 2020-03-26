@@ -3,7 +3,19 @@ layout_account = {
   padding: 0,
   panels: [
     { type: 'main', size: '30%',  content: 'main', resizable: true },
-    { type: 'preview', size:'70%', content: '7', resizable: true}
+    { type: 'preview', size:'70%', content: '7', resizable: true,
+        tabs: {
+            active: 'tab1',
+            tabs: [
+                { id: 'transact_grid', caption: 'Транзакции' },
+                { id: 'tab2', caption: 'Категории' },
+                { id: 'tab3', caption: 'Настройки' }
+            ],
+            onClick: function (event) {
+                this.owner.content('preview', w2ui[event.target]);
+            }
+        }
+    }
   ]
 }
 
