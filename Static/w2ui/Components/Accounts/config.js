@@ -8,8 +8,8 @@ layout_account = {
             active: 'tab1',
             tabs: [
                 { id: 'transact_grid', caption: 'Транзакции' },
-                { id: 'tab2', caption: 'Категории' },
-                { id: 'tab3', caption: 'Настройки' }
+                { id: 'config_categories', caption: 'Категории' },
+                { id: 'edit_account', caption: 'Настройки' }
             ],
             onClick: function (event) {
                 this.owner.content('preview', w2ui[event.target]);
@@ -31,7 +31,6 @@ config_accounts = {
             footer: true,
             toolbarAdd: true,
             toolbarDelete: true,
-            toolbarEdit: true,
             columnHeaders: true
         },
         columns: [
@@ -44,7 +43,12 @@ config_accounts = {
             { field: 'discription_acc', caption: 'Комментарий', size: '120px', hidden: true},
             { field: 'name_user_owner', caption: 'Владелец', size: '100%'},
         ],
-        
+        onSelect: function(event) {
+            //Назначить фильтр по идентификатору для выбранного счета
+            console.log(w2ui.layout_account.get('preview').tabs.active);
+
+        },
+
         onAdd: function(event) {
             console.log(event)
 
