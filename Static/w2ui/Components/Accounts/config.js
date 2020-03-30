@@ -5,14 +5,18 @@ layout_account = {
     { type: 'main', size: '30%',  content: 'main', resizable: true },
     { type: 'preview', size:'70%', content: '7', resizable: true,
         tabs: {
-            active: 'tab1',
+            active: 'transact_grid',
             tabs: [
                 { id: 'transact_grid', caption: 'Транзакции' },
                 { id: 'config_categories', caption: 'Категории' },
-                { id: 'config_files', caption: 'Файлы' },
-                { id: 'edit_account', caption: 'Настройки' }
+                // { id: 'config_files', caption: 'Файлы' },
+                // { id: 'edit_account', caption: 'Настройки' }
             ],
             onClick: function (event) {
+                if (w2ui.config_accounts.getSelection()) {
+                    w2ui[event.target].postData['id_acc'] = w2ui.config_accounts.getSelection()[0];
+                }
+                
                 this.owner.content('preview', w2ui[event.target]);
             }
         }
@@ -46,14 +50,11 @@ config_accounts = {
             { field: 'name_user_owner', caption: 'Владелец', size: '100%'}
         ],
         onSelect: function(event) {
-            //Назначить фильтр по идентификатору для выбранного счета
-            console.log(w2ui.layout_account.get('preview').tabs.active);
-
-        },
-
-        onDelete: function(event) {
-            console.log(event);
-        },        
+            //Назначить фильтр по идентификатору для выбранного счета           
+            let activ = w2ui.layout_account.get('preview').tabs.active;
+            w2ui[activ].postData['id_acc'] = event.recid;
+            w2ui[activ].reload();
+        },    
 
         onAdd: function(event) {
 

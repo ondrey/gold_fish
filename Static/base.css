@@ -46,12 +46,12 @@ a:hover {
 	font-variant: small-caps;
 }
 
-.menu {
+.menus {
 	float: right;
 	margin: 10px 20px;
 	font-style: initial;
 	font-size: smaller;
-  text-align: end;
+    text-align: end;
 }
 
 .button_list i {

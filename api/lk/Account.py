@@ -6,8 +6,6 @@ from json import loads
 from flask import jsonify
 from flask import request
 from flask import session
-from flask import current_app as app
-from flask_mail import Mail
 
 from ..ObjectAPI import ObjectAPI
 from ..ObjectAPI import render_tmp
