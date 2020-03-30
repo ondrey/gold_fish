@@ -24,7 +24,8 @@ layout_account = {
 config_accounts = {
         name: 'config_accounts',
         url  : {
-            get    : '/acc/get_account_list'
+            get    : '/acc/get_account_list',
+            remove : '/acc/del_account'
         },
         method: 'POST',
         show: {
@@ -42,8 +43,7 @@ config_accounts = {
             { field: 'cost', caption: 'Расход', size: '120px' },
             { field: 'out', caption: 'Исходящий', size: '120px' },
             { field: 'discription_acc', caption: 'Комментарий', size: '120px', hidden: true},
-            { field: 'name_user_owner', caption: 'Владелец', size: '100%'},
-            { field: 'virtual', caption: 'Виртуальный', size: '100%'},
+            { field: 'name_user_owner', caption: 'Владелец', size: '100%'}
         ],
         onSelect: function(event) {
             //Назначить фильтр по идентификатору для выбранного счета
@@ -51,26 +51,31 @@ config_accounts = {
 
         },
 
-        onAdd: function(event) {
-            console.log(event)
+        onDelete: function(event) {
+            console.log(event);
+        },        
 
-            w2popup.open({
-                title   : 'Редактирование',               
-                showMax : true,
-                height  :330,
-                body    : '<div id="smain"></div>',
-                onOpen  : function (event) {
-                    event.onComplete = function () {                        
-                        $('#smain').w2render('addAccount');
-                    };
-                },
-                onToggle: function (event) { 
-                    event.onComplete = function () {
-                        $(w2ui.add_form_account.box).show();
-                        w2ui.foo.resize();
-                    }
-                }
-            });
+        onAdd: function(event) {
+
+           w2popup.open({
+               style:    "padding:8px;",
+               title:'Новый счёт',
+               showClose: true,
+               width:550,
+               height: 310,
+               body    : '<div id="smain"></div>',
+               onOpen  : function (event) {
+                   event.onComplete = function () {
+                       $('#smain').w2render('addAccount');
+                   };
+               },
+               onToggle: function (event) {
+                   event.onComplete = function () {
+                       $(w2ui.add_form_account.box).show();
+                       w2ui.foo.resize();
+                   }
+               }
+           });
 
         }  
     }

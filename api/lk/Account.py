@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from hashlib import md5
-from random import choice
-from uuid import uuid4
+
+from json import loads
 
 from flask import jsonify
-from flask import abort
 from flask import request
 from flask import session
-from flask import redirect, url_for
 from flask import current_app as app
 from flask_mail import Mail
 
@@ -93,5 +90,46 @@ class Account(ObjectAPI, ObjectDb):
         })
 
     @isauth
+    def api_del_account(self):
+        req = loads(request.form['request'])
+        cur = self.connect.cursor()
+        for idrec in req['selected']:
+            cur.execute(u"delete from Accounts where id_acc = {0}".format(idrec))
+
+        self.connect.commit()
+
+        return jsonify({
+            'status': 'success',
+            'records': req['selected']
+        })
+
+    @isauth
     def api_add_account(self):
-        pass
+
+        req = loads(request.form['request'])
+
+        isRoot = False
+        if req['record']['isRoot'] == 1:
+            isRoot = True
+        elif len(req['selection']) > 0:
+            isRoot = False
+        else:
+            isRoot = True
+
+        sql = u"INSERT INTO Accounts(id_par_acc, title_acc, id_user_owner, is_public, discription_acc) VALUES (" \
+              u" {0}, '{1}', {2}, '{3}', '{4}')".format(
+            req['selection'][0] if not isRoot else u"NULL",
+            req['record']['title_acc'],
+            session['client_sess']['id_user'],
+            req['record']['isPublic'],
+            req['record']['discription_acc']
+        )
+
+        cur = self.connect.cursor()
+        cur.execute(sql)
+        self.connect.commit()
+
+        return jsonify({
+            'status': 'success',
+            'records': loads(request.form['request'])
+        })
