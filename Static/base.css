@@ -146,3 +146,10 @@ input[type="submit"] {
     color: cornflowerblue;
     font-size: large;
 }
+
+#iconPreview {
+    margin: 10px;
+    font-size: 42px;
+    color: cornflowerblue;
+    float: right;
+}

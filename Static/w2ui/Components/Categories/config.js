@@ -13,19 +13,30 @@ config_categories = {
         },
         columns: [
             { field: 'title_cat', caption: 'Наименование категории', size: '330px' },
-            { field: 'account', caption: 'Счет', size: '120px' },
-            { field: 'icon', caption: 'Иконка', size: '120px' },
-            { field: 'discript', caption: 'Описание', size: '120px' }
+            { field: 'is_vertual_item', caption: 'Виртуальный', size: '120px', 
+                editable: { type: 'checkbox', style: 'text-align: center' } 
+            },
+            { field: 'discript_item', caption: 'Описание', size: '120px'}
         ],
 
         onAdd: function(event) {
+            if (w2ui.config_accounts.getSelection().length == 0) {
+                w2ui.layout_account.message('preview', {
+                    width: 300,
+                    height: 150,
+                    body: '<div class="w2ui-centered">Нужно выбрать счет</div>',
+                    buttons: '<button class="w2ui-btn" onclick="w2ui.layout_account.message(\'preview\')">Хорошо</button>'
+                })
+
+            return
+            };
 
             w2popup.open({
                 style:    "padding:8px;",
-                title:'Новая категория <i id="iconPreview" style="color: dimgray;"></i>',
+                title:'Новая категория',
                 showClose: true,
                 width:550,
-                height: 310,
+                height: 450,
                 body    : '<div id="addCat"></div>',
                 onOpen  : function (event) {
                     event.onComplete = function () {
@@ -34,7 +45,7 @@ config_categories = {
                 },
                 onToggle: function (event) {
                     event.onComplete = function () {
-                        $(w2ui.add_form_categories.box).show();
+                        $(w2ui.addCategories.box).show();
                         w2ui.foo.resize();
                     }
                 }
