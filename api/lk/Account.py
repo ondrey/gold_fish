@@ -22,25 +22,18 @@ class Account(ObjectAPI, ObjectDb):
     def create_account_list(self, id_parent=None):
         cur = self.connect.cursor()
         sql = u"""
-                select 
-                acc.id_acc,
-                acc.id_par_acc,
-                acc.addate_acc,                          
-                acc.title_acc,                
-                acc.id_user_owner,
-                us.name_user,                
-                acc.is_public,                								
-                i.class_icon,                
-                acc.color_acc,
-                acc.discription_acc
-                
-                FROM 
+               select 
+                    acc.id_acc,
+                    acc.id_par_acc,
+                    acc.addate_acc,                          
+                    acc.title_acc,                
+                    acc.id_user_owner,
+                    us.name_user,                
+                    acc.is_public
+               FROM 
                 Accounts as acc
                 left join Users as us 
                 on us.id_user = acc.id_user_owner
-                left join Icons as i 
-                on i.id_icon = acc.id_icon
-
             WHERE 
             
             (acc.id_user_owner = {0} or {2}) {1}
@@ -70,11 +63,9 @@ class Account(ObjectAPI, ObjectDb):
                     '<i class="fa fa-wifi iconaccount" aria-hidden="true"></i>' if i[6] == "1" else ''),
                 id_user_owner=i[4],
                 name_user_owner=i[5],
-                is_public=i[6],                								
-                class_icon=i[7],
-                color_acc=i[8],
-                discription_acc=i[9],
-                w2ui=w2ui
+                is_public=i[6],
+                w2ui=w2ui,
+                title_acc_clear=i[3]
             ))
 
         return records
@@ -106,7 +97,6 @@ class Account(ObjectAPI, ObjectDb):
 
         req = loads(request.form['request'])
 
-        isRoot = False
         if req['record']['isRoot'] == 1:
             isRoot = True
         elif len(req['selection']) > 0:
@@ -114,16 +104,36 @@ class Account(ObjectAPI, ObjectDb):
         else:
             isRoot = True
 
-        sql = u"INSERT INTO Accounts(id_par_acc, title_acc, id_user_owner, is_public, discription_acc) VALUES (" \
-              u" {0}, '{1}', {2}, '{3}', '{4}')".format(
+        sql = u"INSERT INTO Accounts(id_par_acc, title_acc, id_user_owner, is_public) VALUES (" \
+              u" {0}, '{1}', {2}, '{3}')".format(
             req['selection'][0] if not isRoot else u"NULL",
             req['record']['title_acc'],
             session['client_sess']['id_user'],
-            req['record']['isPublic'],
-            req['record']['discription_acc']
+            req['record']['isPublic']
         )
 
         cur = self.connect.cursor()
+        cur.execute(sql)
+        self.connect.commit()
+
+        return jsonify({
+            'status': 'success',
+            'records': loads(request.form['request'])
+        })
+
+    @isauth
+    def api_edit_account(self):
+        req = loads(request.form['request'])
+        cur = self.connect.cursor()
+        sql = u"""
+        update Accounts set title_acc = '{0}', is_public='{1}' 
+        where id_acc={2} and id_user_owner={3}
+        """.format(
+            req['record']['title_acc'],
+            req['record']['isPublic'],
+            req['record']['id_acc'],
+            session['client_sess']['id_user']
+        )
         cur.execute(sql)
         self.connect.commit()
 

@@ -1,21 +1,15 @@
-addAccount = {
-    name: 'addAccount',
+editAccount = {
+    name: 'editAccount',
     style: "height:100%",
-    url      : '/acc/add_account',
+    url      : '/acc/edit_account',
     fields: [
         
         { name: 'title_acc', type: 'text', required: true,
             html: { caption: 'Название счета', attr: 'size="40" maxlength="40"'}
-        },
-        { field: 'isRoot', type: 'checkbox',
-            html: { caption: 'Корневой', attr: 'style="width: auto;"' }
-        },         
+        },   
         { field: 'isPublic', type: 'checkbox',
             html: { caption: 'В общем доступе', attr: 'style="width: auto;"' }
         },
-        // { field: 'discription_acc',   type: 'textarea',
-        //     html: { caption: 'Описание', attr: 'style="width: 300px; height: 90px"' }
-        // },
     ],
     
     actions: {
@@ -30,9 +24,8 @@ addAccount = {
                 }, 
                 function(e){
                     w2ui.config_accounts.reload();                    
-                    w2ui.addAccount.clear();
                     w2popup.close();
-                                     
+                    this.clear();                   
                 });
 
             

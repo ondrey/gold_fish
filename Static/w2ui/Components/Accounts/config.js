@@ -10,7 +10,7 @@ layout_account = {
                 { id: 'transact_grid', caption: 'Транзакции' },
                 { id: 'config_categories', caption: 'Категории' },
                 // { id: 'config_files', caption: 'Файлы' },
-                // { id: 'edit_account', caption: 'Настройки' }
+                //{ id: 'edit_account', caption: 'Настройки счета' }
             ],
             onClick: function (event) {
                 if (w2ui.config_accounts.getSelection()) {
@@ -37,6 +37,7 @@ config_accounts = {
             footer: true,
             toolbarAdd: true,
             toolbarDelete: true,
+            toolbarEdit: true,
             columnHeaders: true
         },
         columns: [
@@ -50,11 +51,15 @@ config_accounts = {
             { field: 'name_user_owner', caption: 'Владелец', size: '100%'}
         ],
         onSelect: function(event) {
-            //Назначить фильтр по идентификатору для выбранного счета           
+            if(w2ui.layout_account.get('preview').hidden) {
+                w2ui.layout_account.show('preview');
+            }
+            
+            //Назначить фильтр по идентификатору для выбранного счета
             let activ = w2ui.layout_account.get('preview').tabs.active;
             w2ui[activ].postData['id_acc'] = event.recid;
             w2ui[activ].reload();
-        },    
+        },
 
         onAdd: function(event) {
 
@@ -63,7 +68,7 @@ config_accounts = {
                title:'Новый счёт',
                showClose: true,
                width:550,
-               height: 310,
+               height: 230,
                body    : '<div id="smain"></div>',
                onOpen  : function (event) {
                    event.onComplete = function () {
@@ -78,5 +83,38 @@ config_accounts = {
                }
            });
 
-        }  
+        },
+
+
+        onEdit: function(event) {
+
+            w2popup.open({
+                style:    "padding:8px;",
+                title:'Редактировать счёт',
+                showClose: true,
+                width:550,
+                height: 230,
+                body    : '<div id="editAcc"></div>',
+                onOpen  : function (event) {
+                    event.onComplete = function () {
+                        let curRec = w2ui.config_accounts.get(w2ui.config_accounts.getSelection()[0]); 
+                        w2ui.editAccount.record = {
+                            'title_acc': curRec['title_acc_clear'],
+                            'id_acc': curRec['recid'],
+                            'isPublic': Boolean(Number(curRec['is_public']))
+                        };
+                        $('#editAcc').w2render('editAccount');
+                    };
+                },
+                onToggle: function (event) {
+                    event.onComplete = function () {
+                        $(w2ui.editAccount.box).show();
+                        w2ui.foo.resize();
+                    }
+                }
+            });
+ 
+         } 
+
+
     }

@@ -26,7 +26,7 @@
 {% if not mini %}
   <div id="header">
   <div class="logo">
-    <a href="/"><h1>Kojima</h1></a>
+    <a href="/" style="text-decoration: none;"><h1>Kojima</h1></a>
     <p><span style="color: #32819e;">Программа учета финансов</span> <span style="font-size: smaller;font-style: oblique;">Учет затрат, бюджетирование, амортизация и планирование.</span></p>
   </div>
   {% else %}
@@ -43,6 +43,7 @@
 
   {% if user_name %}
     <span style="background-color: azure; padding: 3px;">
+      <a href="/app"> <i class="fa fa-money" aria-hidden="true"></i> Бухгалтерия</a>
       <a href="/auth/userinfo"> <i class="fa fa-user-circle" aria-hidden="true"></i> {{user_name}}</a>
       <a href="/auth/logout"><i class="fa fa-sign-out" id="name_user"></i> Выход</a>
     </span>

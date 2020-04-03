@@ -30,20 +30,23 @@ class Categories(ObjectAPI, ObjectDb):
                     i.id_item,
                     i.is_vertual_item,
                     i.title_item,
-                    ic.class_icon,
-                    i.discript_item
-                from Items as i left join Icons ic 
-                    on ic.id_icon = i.id_icon
+                    i.discript_item,
+                    i.is_cost,
+                    u.name_user
+                from Items as i 
+                inner join Users u on u.id_user = i.id_user
                 where i.id_acc = {0}        
             """.format(
                 req['id_acc']
             ))
             for rec in cur.fetchall():
                 rec_list.append({
-                    'title_cat': u"<i class='fa {1} iconaccount'></i> {0}".format(rec[2], rec[3]),
+                    'title_cat': rec[2],
                     'recid': rec[0],
                     'is_vertual_item': rec[1],
-                    'discript_item': rec[4]
+                    'discript_item': rec[3],
+                    'is_cost': rec[4],
+                    'name_user': rec[5]
                 })
 
         return jsonify({
@@ -53,44 +56,62 @@ class Categories(ObjectAPI, ObjectDb):
         })
 
     @isauth
-    def api_get_icon_list(self):
-        rec_list = []
-
-        cur = self.connect.cursor()
-        cur.execute(u'select id_icon, class_icon from Icons')
-        for rec in cur.fetchall():
-            rec_list.append({'id': rec[0], 'text': rec[1], 'icon': 'fa '+rec[1], 'img': rec[1]})
-
-        return jsonify({
-            'items': rec_list,
-            'status': 'success',
-        })
-
-    @isauth
     def api_add_record(self):
+        errors = []
         cur = self.connect.cursor()
         req = loads(request.form['request'])
-        sql = u"""
-        INSERT INTO Items (title_item, is_vertual_item, id_acc, id_icon, discript_item, id_user) 
-        VALUES ('{0}', '{1}', {2}, {3}, {4}, {5})        
-        """.format(
-            req['record']['title_item'],
-            req['record']['is_vertual_item'],
-            req['selection'][0],
-            req['record']['id_icon'][u'id'],
-            u"'{0}'".format(req['record']['discript_item']) if req['record']['discript_item'] else u'NULL',
-            session['client_sess']['id_user']
-        )
+
+        if not 'id_item' in req['record']:
+            sql = u"""
+            INSERT INTO Items (title_item, is_vertual_item, id_acc, discript_item, id_user, is_cost) 
+            VALUES ('{0}', '{1}', {2}, {3}, {4}, {5})        
+            """.format(
+                req['record']['title_item'],
+                req['record']['is_vertual_item'],
+                req['selection'][0],
+                u"'{0}'".format(req['record']['discript_item']) if req['record']['discript_item'] else u'NULL',
+                session['client_sess']['id_user'],
+                req['record']['is_cost']
+            )
+        else:
+            sql = u"""
+            UPDATE Items SET 
+                title_item='{0}',
+                is_vertual_item='{1}',
+                discript_item={2},
+                is_cost='{3}'
+            WHERE 
+                id_item={4} and id_user={5}
+            """.format(
+                req['record']['title_item'],
+                req['record']['is_vertual_item'],
+                u"'{0}'".format(req['record']['discript_item']) if req['record']['discript_item'] else u'NULL',
+                req['record']['is_cost'],
+                req['record']['id_item'],
+                session['client_sess']['id_user']
+            )
+
         cur.execute(sql)
         self.connect.commit()
-        return jsonify({
-            'status': 'success',
-        })
 
-    @isauth
-    def api_edit_record(self):
-        pass
+        return jsonify({
+            'status': 'success' if len(errors) == 0 else 'error',
+            'error': errors
+        })
 
     @isauth
     def api_del_record(self):
-        pass
+        cur = self.connect.cursor()
+        errors = []
+        req = loads(request.form['request'])
+
+        cur.execute(u"delete from Items where id_item = {0} and id_user={1}".format(
+            req['selected'][0], session['client_sess']['id_user']
+        ))
+
+        self.connect.commit()
+
+        return jsonify({
+            'status': 'success' if len(errors) == 0 else 'error',
+            'error': errors
+        })

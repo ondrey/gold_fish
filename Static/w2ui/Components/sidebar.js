@@ -31,7 +31,7 @@ sidebar_config = {
 
         onRender: function(event) {
                 this.click('account');
-                this.select('account');
+                this.select('account');                
         },
 
         onClick: function(event) {
@@ -56,6 +56,5 @@ sidebar_config = {
                 w2ui.layout_operation.content('main', w2ui.config_operation);
                 w2ui.layout_operation.content('preview', w2ui.transact_grid);
             }
-
         }
     }
