@@ -14,6 +14,21 @@ var transact_grid = {
             toolbarDelete: true
         },
 
+        toolbar: {
+            items: [
+                //{ type: 'break' },
+                { type: 'spacer' },                
+                { type: 'button', id: 'toggleAcc', caption: '', icon: 'fa fa-chevron-up' }
+            ],
+            onClick: function (target, data) {
+                
+                if (target=='toggleAcc') {
+                    w2ui.layout_account.toggle('top');
+                }
+                
+            }
+        },        
+
         parser: function (responseText) {
             
             var data = $.parseJSON(responseText);
@@ -46,12 +61,13 @@ var transact_grid = {
 
 
         columns: [
-            { field: 'title_item', caption: 'Категория', size: '50%' },
-            { field: 'ammount_trans', caption: 'Сумма', size: '80px'},            
-
+           
             { field: 'addate_trans', caption: 'Дата регистрации', size: '120px' },
             { field: 'date_plan', caption: 'Плановая дата', size: '120px' },
             { field: 'date_fact', caption: 'Фактическая дата', size: '120px'},
+
+            { field: 'title_item', caption: 'Категория', size: '50%' },
+            { field: 'ammount_trans', caption: 'Сумма', size: '80px'}, 
             
             { field: 'comment_trans', caption: 'Комментарий', size: '100%'},
             { field: 'name_user', caption: 'Редактор', size: '120px'},

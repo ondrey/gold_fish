@@ -21,7 +21,19 @@ class Transaction(ObjectAPI, ObjectDb):
         req = loads(request.form['request'])
         cur = self.connect.cursor()
         rec_list = []
+        total = 0
         if 'id_acc' in req:
+            sqlCount = u"""
+                SELECT 
+                    count(*)
+                FROM Transactions AS ts
+                INNER JOIN Accounts AS ac ON ts.id_acc = ac.id_acc
+                WHERE ts.id_acc = {0} AND ac.id_user_owner = {1}
+            """.format(req['id_acc'], session['client_sess']['id_user'])
+            cur.execute(sqlCount)
+            for r in cur.fetchall():
+                total = r[0]
+
             sql = u"""
                 SELECT 
                     it.title_item, it.is_vertual_item, it.is_cost,
@@ -38,7 +50,7 @@ class Transaction(ObjectAPI, ObjectDb):
                 INNER JOIN Users AS us ON us.id_user = ts.id_user
 
                 WHERE ts.id_acc = {0} AND ac.id_user_owner = {1}
-                
+                ORDER BY ts.date_plan DESC, ts.date_fact
                 LIMIT {2} OFFSET {3}        
             """.format(
                 req['id_acc'],
@@ -56,7 +68,7 @@ class Transaction(ObjectAPI, ObjectDb):
                     'is_cost': rec[2],
                     'addate_trans': rec[3].strftime("%d.%m.%Y %H:%M"),
                     'date_plan': rec[4].strftime("%d.%m.%Y") if rec[4] else None,
-                    'date_fact': rec[5].strftime("%d.%m.%Y") if rec[5] else None,
+                    'date_fact': rec[5].strftime("%d.%m.%Y %H:%M") if rec[5] else None,
                     'ammount_trans': rec[6],
                     'comment_trans': rec[7],
                     'name_user': rec[8],
@@ -64,9 +76,6 @@ class Transaction(ObjectAPI, ObjectDb):
                 })
 
         return jsonify({
-            'total': 10000,
-            'records': rec_list,
-            'req': req
+            'total': total,
+            'records': rec_list
         })
-
-        pass

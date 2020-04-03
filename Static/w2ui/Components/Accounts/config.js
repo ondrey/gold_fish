@@ -2,8 +2,8 @@ layout_account = {
   name: 'layout_account',
   padding: 0,
   panels: [
-    { type: 'main', size: '30%',  content: 'main', resizable: true },
-    { type: 'preview', size:'70%', content: '7', resizable: true,
+    { type: 'top', size: '30%',  content: '', resizable: true },
+    { type: 'main', size:'70%', content: '', resizable: true,
         tabs: {
             active: 'transact_grid',
             tabs: [
@@ -17,7 +17,7 @@ layout_account = {
                     w2ui[event.target].postData['id_acc'] = w2ui.config_accounts.getSelection()[0];
                 }
                 
-                this.owner.content('preview', w2ui[event.target]);
+                this.owner.content('main', w2ui[event.target]);
             }
         }
     }
@@ -51,12 +51,12 @@ config_accounts = {
             { field: 'name_user_owner', caption: 'Владелец', size: '100%'}
         ],
         onSelect: function(event) {
-            if(w2ui.layout_account.get('preview').hidden) {
-                w2ui.layout_account.show('preview');
+            if(w2ui.layout_account.get('main').hidden) {
+                w2ui.layout_account.show('main');
             }
             
             //Назначить фильтр по идентификатору для выбранного счета
-            let activ = w2ui.layout_account.get('preview').tabs.active;
+            let activ = w2ui.layout_account.get('main').tabs.active;
             w2ui[activ].postData['id_acc'] = event.recid;
             w2ui[activ].reload();
         },

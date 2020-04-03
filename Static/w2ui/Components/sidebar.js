@@ -39,8 +39,8 @@ sidebar_config = {
             // Отображаем меню
             if (event.target == 'account') {
               w2ui.base_layout.content('main', w2ui.layout_account);
-              w2ui.layout_account.content('main', w2ui.config_accounts);
-              w2ui.layout_account.content('preview', w2ui.transact_grid);
+              w2ui.layout_account.content('top', w2ui.config_accounts);
+              w2ui.layout_account.content('main', w2ui.transact_grid);
 
             } else if (event.target == 'trash') {
               w2ui.base_layout.content('main', w2ui.transact_grid);
