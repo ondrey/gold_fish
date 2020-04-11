@@ -4,6 +4,9 @@ sidebar_config = {
         nodes: [
           { id: 'tools', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
             nodes: [
+              { id: 'add', text: 'Новая', icon: 'fa fa-plus-square greenicon', 
+                comment:"Зарегистрировать новую транзакцию - форма"},
+
               { id: 'trash', text: 'Не сортированные', icon: 'fa fa-trash-o', count: 5,
                 comment:"Транзакции зарегистрированы через мобильную форму, имеют не заполненные поля."},
 
@@ -15,9 +18,15 @@ sidebar_config = {
             ]
           },
 
-          { id: 'balance', text: 'Группы', img: 'icon-folder', expanded: true, group: true,
+          { id: 'balance', text: 'Справочники', img: 'icon-folder', expanded: true, group: true,
               nodes: [ { id: 'account', text: 'Счета', icon: 'fa fa-cc-visa' },
-                       { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },]}
+                       { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },
+                       { id: 'transaction', text: 'Транзакции', icon: 'fa fa-terminal' },]},
+
+          { id: 'report', text: 'Отчеты', img: 'icon-folder', expanded: true, group: true,
+            nodes: [ 
+              { id: 'graphRent', text: 'Эффективность', icon: 'fa fa-line-chart' },
+            ]}
           ],
 
         onFlat: function (event) {
@@ -40,7 +49,7 @@ sidebar_config = {
             if (event.target == 'account') {
               w2ui.base_layout.content('main', w2ui.layout_account);
               w2ui.layout_account.content('top', w2ui.config_accounts);
-              w2ui.layout_account.content('main', w2ui.transact_grid);
+              w2ui.layout_account.content('main', w2ui.config_categories);
 
             } else if (event.target == 'trash') {
               w2ui.base_layout.content('main', w2ui.transact_grid);

@@ -10,7 +10,6 @@ var transact_grid = {
         show: {
             toolbar: true,
             footer: true,
-            toolbarAdd: true,
             toolbarDelete: true
         },
 
@@ -64,12 +63,15 @@ var transact_grid = {
            
             { field: 'addate_trans', caption: 'Дата регистрации', size: '120px' },
             { field: 'date_plan', caption: 'Плановая дата', size: '120px' },
-            { field: 'date_fact', caption: 'Фактическая дата', size: '120px'},
+            { field: 'date_fact', caption: 'Фактическая дата', size: '120px',  render: 'date',
+                editable: { type: 'date', options: {btn_now: true} } 
+            },
 
             { field: 'title_item', caption: 'Категория', size: '50%' },
             { field: 'ammount_trans', caption: 'Сумма', size: '80px'}, 
             
             { field: 'comment_trans', caption: 'Комментарий', size: '100%'},
             { field: 'name_user', caption: 'Редактор', size: '120px'},
-        ]
+        ],
+
     }

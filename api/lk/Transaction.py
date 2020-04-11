@@ -17,6 +17,25 @@ class Transaction(ObjectAPI, ObjectDb):
         ObjectAPI.__init__(self)
         ObjectDb.__init__(self)
 
+    @isauth
+    def api_del_record(self):
+        req = loads(request.form['request'])
+        cur = self.connect.cursor()
+        status = 'error'
+        if 'selected' in req:
+            cur.execute(u"delete from Transactions where id_trans={0} and id_user={1}".format(
+                req['selected'][0],
+                session['client_sess']['id_user']
+            ))
+            self.connect.commit()
+            status='success'
+
+        return jsonify({
+            'status': status,
+            'records': req['selected']
+        })
+
+    @isauth
     def api_get_records(self):
         req = loads(request.form['request'])
         cur = self.connect.cursor()
@@ -66,9 +85,9 @@ class Transaction(ObjectAPI, ObjectDb):
                     'title_item': rec[0],
                     'is_vertual_item':rec[1],
                     'is_cost': rec[2],
-                    'addate_trans': rec[3].strftime("%d.%m.%Y %H:%M"),
-                    'date_plan': rec[4].strftime("%d.%m.%Y") if rec[4] else None,
-                    'date_fact': rec[5].strftime("%d.%m.%Y %H:%M") if rec[5] else None,
+                    'addate_trans': rec[3].strftime("%Y-%m-%d %H:%M"),
+                    'date_plan': rec[4].strftime("%Y-%m-%d") if rec[4] else None,
+                    'date_fact': rec[5].strftime("%Y-%m-%d") if rec[5] else None,
                     'ammount_trans': rec[6],
                     'comment_trans': rec[7],
                     'name_user': rec[8],

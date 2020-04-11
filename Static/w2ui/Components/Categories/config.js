@@ -13,11 +13,14 @@ config_categories = {
             toolbarDelete: true,
             columnHeaders: true
         },
+
         columns: [
             { field: 'title_cat', caption: 'Наименование категории', size: '330px' },
             { field: 'name_user', caption: 'Владелец', size: '150px'},
             { field: 'discript_item', caption: 'Описание', size: '100%'},
         ],
+
+
         parser: function (responseText) {
             
             var data = $.parseJSON(responseText);
