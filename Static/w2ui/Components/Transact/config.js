@@ -10,7 +10,8 @@ var transact_grid = {
         show: {
             toolbar: true,
             footer: true,
-            toolbarDelete: true
+            toolbarDelete: true,
+            toolbarAdd: true
         },
 
         toolbar: {
@@ -63,9 +64,7 @@ var transact_grid = {
            
             { field: 'addate_trans', caption: 'Дата регистрации', size: '120px' },
             { field: 'date_plan', caption: 'Плановая дата', size: '120px' },
-            { field: 'date_fact', caption: 'Фактическая дата', size: '120px',  render: 'date',
-                editable: { type: 'date', options: {btn_now: true} } 
-            },
+            { field: 'date_fact', caption: 'Фактическая дата', size: '120px',  render: 'date'},
 
             { field: 'title_item', caption: 'Категория', size: '50%' },
             { field: 'ammount_trans', caption: 'Сумма', size: '80px'}, 
@@ -73,5 +72,29 @@ var transact_grid = {
             { field: 'comment_trans', caption: 'Комментарий', size: '100%'},
             { field: 'name_user', caption: 'Редактор', size: '120px'},
         ],
+
+        onAdd: function(event) {
+
+            w2popup.open({
+                style:    "padding:8px;",
+                title:'Новая транзакция',
+                showClose: true,
+                width:550,
+                height: 450,
+                body    : '<div id="newtrans"></div>',
+                onOpen  : function (event) {
+                    event.onComplete = function () {
+                        $('#newtrans').w2render('addTransaction');
+                    };
+                },
+                onToggle: function (event) {
+                    event.onComplete = function () {
+                        $(w2ui.add_form_account.box).show();
+                        w2ui.foo.resize();
+                    }
+                }
+            });
+ 
+         },        
 
     }

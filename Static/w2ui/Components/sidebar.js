@@ -4,9 +4,6 @@ sidebar_config = {
         nodes: [
           { id: 'tools', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
             nodes: [
-              { id: 'add', text: 'Новая', icon: 'fa fa-plus-square greenicon', 
-                comment:"Зарегистрировать новую транзакцию - форма"},
-
               { id: 'trash', text: 'Не сортированные', icon: 'fa fa-trash-o', count: 5,
                 comment:"Транзакции зарегистрированы через мобильную форму, имеют не заполненные поля."},
 
@@ -21,7 +18,8 @@ sidebar_config = {
           { id: 'balance', text: 'Справочники', img: 'icon-folder', expanded: true, group: true,
               nodes: [ { id: 'account', text: 'Счета', icon: 'fa fa-cc-visa' },
                        { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },
-                       { id: 'transaction', text: 'Транзакции', icon: 'fa fa-terminal' },]},
+                      ]
+          },
 
           { id: 'report', text: 'Отчеты', img: 'icon-folder', expanded: true, group: true,
             nodes: [ 

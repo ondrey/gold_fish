@@ -2,12 +2,12 @@ layout_account = {
   name: 'layout_account',
   padding: 0,
   panels: [
-    { type: 'top', size: '30%',  content: '', resizable: true },
-    { type: 'main', size:'70%', content: '', resizable: true, 
+    { type: 'top', size: '50%',  content: '', resizable: true },
+    { type: 'main', size:'50%', content: '', resizable: true, 
         tabs: {
             active: 'config_categories',
             tabs: [
-                //{ id: 'transact_grid', caption: 'Транзакции' },
+                { id: 'transact_grid', caption: 'Транзакции' },
                 { id: 'config_categories', caption: 'Категории' },
                 // { id: 'config_files', caption: 'Файлы' },
                 //{ id: 'edit_account', caption: 'Настройки счета' }

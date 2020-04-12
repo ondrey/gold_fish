@@ -19,6 +19,42 @@ class Categories(ObjectAPI, ObjectDb):
         ObjectDb.__init__(self)
 
     @isauth
+    def api_get_list_transaction(self):
+        req = loads(request.values['request'])
+
+        rec_list = []
+
+        if 'id_acc' in req:
+            cur = self.connect.cursor()
+            cur.execute(u"""
+                select 
+                    i.id_item,
+                    i.is_vertual_item,
+                    i.title_item,
+                    i.discript_item,
+                    i.is_cost,
+                    u.name_user
+                from Items as i 
+                inner join Users u on u.id_user = i.id_user
+                where i.id_acc = {0}        
+            """.format(
+                req['id_acc']
+            ))
+
+            for rec in cur.fetchall():
+                rec_list.append({
+                    'text': rec[2],
+                    'id': rec[0],
+                    'is_vertual_item': rec[1],
+                    'is_cost': rec[4],
+                })
+
+        return jsonify({
+            "status": "success",
+            "items": rec_list
+        })
+
+    @isauth
     def api_get_list_for_acc(self):
         req = loads(request.form['request'])
         rec_list = []
