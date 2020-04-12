@@ -53,7 +53,7 @@ config_accounts = {
             { field: 'name_user_owner', caption: 'Владелец', size: '100%'}
         ],
         onSelect: function(event) {
-            
+            w2ui.layout_account.sizeTo('top', '50%');
             //Назначить фильтр по идентификатору для выбранного счета
             let activ = w2ui.layout_account.get('main').tabs.active;
             w2ui[activ].postData['id_acc'] = event.recid;

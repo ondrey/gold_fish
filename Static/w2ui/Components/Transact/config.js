@@ -86,12 +86,6 @@ var transact_grid = {
                     event.onComplete = function () {
                         $('#newtrans').w2render('addTransaction');
                     };
-                },
-                onToggle: function (event) {
-                    event.onComplete = function () {
-                        $(w2ui.add_form_account.box).show();
-                        w2ui.foo.resize();
-                    }
                 }
             });
  

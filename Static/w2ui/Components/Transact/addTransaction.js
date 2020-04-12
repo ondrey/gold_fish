@@ -10,7 +10,12 @@ addTransaction = {
                 minLength: 0,
                 match: 'contains',    
                 postData: {
-                    id_acc: 19
+                    id_acc: -1
+                },
+                onRequest(event){
+                    let sel = w2ui.config_accounts.getSelection();
+                    event.postData.id_acc=sel[0];
+                    return event
                 },
                 compare(e,r){
                     let virt = w2ui.addTransaction_toolbar.get('virt');
@@ -81,7 +86,7 @@ addTransaction = {
             
         }
     },
-
+    
     onChange: function (event) {
         if(event.target == 'date_plan') {
             w2ui.addTransaction.record['date_fact'] = event.value_new;

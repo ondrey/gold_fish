@@ -63,5 +63,10 @@ sidebar_config = {
                 w2ui.layout_operation.content('main', w2ui.config_operation);
                 w2ui.layout_operation.content('preview', w2ui.transact_grid);
             }
+
+            // Действия совершаемые при каждой смене или обновлении текущего пункта меню.
+              // Прячим дочернии справочники счетов
+              w2ui.layout_account.sizeTo('top', '100%');
+
         }
     }
