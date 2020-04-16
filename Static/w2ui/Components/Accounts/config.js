@@ -5,7 +5,7 @@ layout_account = {
     { type: 'top', size: '50%',  content: '', resizable: true },
     { type: 'main', size:'50%', content: '', resizable: true, 
         tabs: {
-            active: 'config_categories',
+            active: 'transact_grid',
             tabs: [
                 { id: 'transact_grid', caption: 'Транзакции' },
                 { id: 'config_categories', caption: 'Категории' },

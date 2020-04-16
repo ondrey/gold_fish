@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from json import loads
+import datetime
 
 from flask import jsonify
 from flask import request
@@ -16,6 +17,62 @@ class Transaction(ObjectAPI, ObjectDb):
     def __init__(self):
         ObjectAPI.__init__(self)
         ObjectDb.__init__(self)
+
+    @isauth
+    def api_add_transaction(self):
+        req = loads(request.form['request'])
+        id_acc = req['id_acc']
+        result = {}
+
+        sqlCheckPerm = u"""
+            select count(*) from Accounts a 
+            where a.id_acc = {0} and (a.id_user_owner = {1} or a.is_public = '1') 
+        """.format(id_acc, session['client_sess']['id_user'])
+
+        cur = self.connect.cursor()
+        cur.execute(sqlCheckPerm)
+        for row in cur.fetchall():
+            if row[0] == 0:
+                result = {
+                    'status': 'error',
+                    'message': u'Счет не существует, или он НЕ является публичным.'
+                }
+            else:
+
+                if not req['record']['date_fact']:
+                    date_plan = req['record']['date_plan']
+                    date_fact = u"NULL"
+                else:
+                    date_plan = req['record']['date_fact']
+                    date_fact = u"'{0}'".format(req['record']['date_fact'])
+
+                price = req['record']['ammount_trans'] * 100
+                if req['record']['id_item']['is_cost'] == '1':
+                    price = 0 - price
+
+                sqlInsertTransaction = u"""
+                insert into Transactions(
+                    id_acc
+                    , id_item
+                    , id_user
+                    , date_plan
+                    , date_fact
+                    , ammount_trans
+                    , comment_trans) 
+                values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}')
+                """.format(
+                    id_acc,
+                    req['record']['id_item']['id'],
+                    session['client_sess']['id_user'],
+                    date_plan, date_fact,
+                    price,
+                    req['record']['comments']
+                )
+                cur.execute(sqlInsertTransaction)
+                result = {'status': 'success'}
+                self.connect.commit()
+
+        return jsonify(result)
 
     @isauth
     def api_del_record(self):
@@ -88,7 +145,7 @@ class Transaction(ObjectAPI, ObjectDb):
                     'addate_trans': rec[3].strftime("%Y-%m-%d %H:%M"),
                     'date_plan': rec[4].strftime("%Y-%m-%d") if rec[4] else None,
                     'date_fact': rec[5].strftime("%Y-%m-%d") if rec[5] else None,
-                    'ammount_trans': rec[6],
+                    'ammount_trans': round(float(rec[6])/100.0, 2),
                     'comment_trans': rec[7],
                     'name_user': rec[8],
                     'recid': rec[9]

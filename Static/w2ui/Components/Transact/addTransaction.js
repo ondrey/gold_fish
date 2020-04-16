@@ -33,16 +33,7 @@ addTransaction = {
 
                     return res
                 },
-                renderDrop(event){
-                    let icon = '<i class="fa fa fa-plus" style="font-size: larger;color: green;"></i>';
-                    if (event.is_cost == "1")
-                        icon = '<i class="fa fa fa-minus" style="font-size: larger;color: red;"></i>';
-                    let style = ""
-                    if (event.is_vertual_item == "1")
-                        style = "color: grey;";
-                    
-                    return '<span style="'+style+'">' + icon + ' ' + event.text + '</span>'
-                }            
+                renderDrop: renderDropCategories,    
             }
         },
          
@@ -55,10 +46,10 @@ addTransaction = {
             html: { caption: 'Комментарий', attr: 'style="height: 90px" cols="40"'  } 
         },
 
-        { name: 'date_plan', type: 'date', hidden:true,
+        { name: 'date_plan', type: 'date', hidden: true,
             html: { caption: 'Плановая дата', attr: 'size="40" maxlength="40"'}
         },
-        { name: 'date_fact', type: 'date', hidden:true,
+        { name: 'date_fact', type: 'date', 
             html: { caption: 'Факт. дата', attr: 'size="40" maxlength="40"'}
         },   
     ],
@@ -71,28 +62,45 @@ addTransaction = {
             { type: 'radio',  id: 'minus',  group: '1', text: 'Расход', icon: 'fa fa-minus'},
             
             { id: 'bt3', type: 'spacer' },
-            { id: 'date', type: 'check', text:'Сегодня', icon: 'fa fa-calendar-check-o', checked: true}
+            { id: 'plan', type: 'radio', group: '2', text:'Планируется', icon: 'fa fa-calendar-check-o'},
+            { id: 'fact', type: 'radio', group: '2', text:'Выполнено', icon: 'fa fa-calendar-check-o', checked: true}
         ],
         onClick: function (event) {
-            if (event.item.id=='date') {
-                w2ui.addTransaction.set('date_plan',{hidden:!event.item.checked});
-                w2ui.addTransaction.set('date_fact',{hidden:!event.item.checked});
+            let cur = new Date();
+            if (event.item.id=='fact') {                
+                w2ui.addTransaction.record['date_fact'] = cur.toISOString().split('T')[0];
+                w2ui.addTransaction.record['date_plan'] = cur.toISOString().split('T')[0];
+                
+                w2ui.addTransaction.set('date_fact',{hidden: false}); 
+                w2ui.addTransaction.set('date_plan',{hidden: true});                
             }
-            if (event.item.id != 'date'){
+            if (event.item.id=='plan') {
+                
+                w2ui.addTransaction.record['date_plan'] = cur.toISOString().split('T')[0];
+                w2ui.addTransaction.record['date_fact'] = '';
+
+                w2ui.addTransaction.set('date_fact',{hidden: true}); 
+                w2ui.addTransaction.set('date_plan',{hidden: false});  
+                
+            }
+
+
+            if (event.item.id != 'plan' && event.item.id != 'fact'){
                 w2ui.addTransaction.record.id_item  = {};
                 w2ui.addTransaction.refresh();
             }
-
-            
         }
     },
     
-    onChange: function (event) {
-        if(event.target == 'date_plan') {
-            w2ui.addTransaction.record['date_fact'] = event.value_new;
-            w2ui.addTransaction.record['date_plan'] = event.value_new;
-            w2ui.addTransaction.refresh();
-        }
+    // onChange: function (event) {
+    //     if(event.target == 'date_plan') {
+    //         w2ui.addTransaction.record['date_fact'] = event.value_new;
+    //         w2ui.addTransaction.record['date_plan'] = event.value_new;
+    //         w2ui.addTransaction.refresh();
+    //     }
+    // },
+    onError: function(event) {
+        console.log(event, 'error');
     },
 
     actions: {        
@@ -101,14 +109,23 @@ addTransaction = {
             var errors = this.validate();
             if (errors.length > 0) return;
             
+            let id_acc = w2ui.config_accounts.getSelection();
             this.save({
                 'record': this.record, 
+                'id_acc': id_acc[0]
                 }, 
                 function(e){
-                    w2ui.config_accounts.reload();                    
-                    w2ui.addTransaction.clear();
-                    w2popup.close();
-                                     
+                    w2confirm('Добавить еще запись?', '',
+                        function(e){
+                            if(e=='No') {
+                                w2ui.transact_grid.reload();
+                                w2ui.addTransaction.clear();
+                                w2popup.close();
+                            } else {
+                                w2ui.addTransaction.clear();
+                            }
+                        }
+                    )                    
                 });
 
             

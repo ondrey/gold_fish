@@ -16,6 +16,9 @@ config_categories = {
 
         columns: [
             { field: 'title_cat', caption: 'Наименование категории', size: '330px' },
+            { field: 'amount_cat', caption: 'Сумма', size: '90px' },
+            { field: 'bujet_cat_in_month', caption: 'На месяц', size: '120px' },
+            { field: 'avg_cat_in_month', caption: 'Среднее', size: '120px' },
             { field: 'name_user', caption: 'Владелец', size: '150px'},
             { field: 'discript_item', caption: 'Описание', size: '100%'},
         ],

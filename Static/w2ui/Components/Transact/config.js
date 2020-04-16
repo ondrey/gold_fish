@@ -1,3 +1,14 @@
+var renderDropCategories = function(event) {
+    let icon = '<i class="fa fa fa-plus" style="font-size: larger;color: green;"></i>';
+    if (event.is_cost == "1")
+        icon = '<i class="fa fa fa-minus" style="font-size: larger;color: red;"></i>';
+    let style = ""
+    if (event.is_vertual_item == "1")
+        style = "color: grey;";
+    
+    return '<span style="'+style+'">' + icon + ' ' + event.text + '</span>'
+}
+
 var transact_grid = {
         name: 'transact_grid',
         url  : {
@@ -61,16 +72,40 @@ var transact_grid = {
 
 
         columns: [
-           
-            { field: 'addate_trans', caption: 'Дата регистрации', size: '120px' },
-            { field: 'date_plan', caption: 'Плановая дата', size: '120px' },
-            { field: 'date_fact', caption: 'Фактическая дата', size: '120px',  render: 'date'},
-
-            { field: 'title_item', caption: 'Категория', size: '50%' },
-            { field: 'ammount_trans', caption: 'Сумма', size: '80px'}, 
+            { field: 'comment_trans', caption: 'Комментарий', size: '200px'},
             
-            { field: 'comment_trans', caption: 'Комментарий', size: '100%'},
+            { field: 'ammount_trans', caption: 'Сумма', size: '80px', searchable: true}, 
+            { field: 'title_item', caption: 'Категория', size: '185px'},
+            { field: 'date_fact', caption: 'Фактическая дата', size: '120px', searchable: true},
+
+            { field: 'date_plan', caption: 'Плановая дата', size: '120px', searchable: true},
+            { field: 'addate_trans', caption: 'Дата регистрации', size: '120px', searchable: true},
             { field: 'name_user', caption: 'Редактор', size: '120px'},
+        ],        
+
+        searches: [
+            { field: 'ammount_trans', caption: 'Сумма', type: 'float', options:{autoFormat: false, currencyPrecision:2, groupSymbol:' '} },
+            { field: 'id_item',   type: 'list', caption: 'Категория',  
+              options: {
+                url: '/categories/get_list_transaction',
+                minLength: 0,
+                match: 'contains',    
+                postData: {
+                    id_acc: -1
+                },
+                onRequest(event){
+                    let sel = w2ui.config_accounts.getSelection();
+                    event.postData.id_acc=sel[0];
+                    return event
+                },
+                renderDrop: renderDropCategories,
+              }
+            },
+
+            { field: 'date_fact', caption: 'Фактическая дата', type: 'date' },
+            { field: 'date_plan', caption: 'Плановая дата', type: 'date' },
+            { field: 'addate_trans', caption: 'Дата регистрации', type: 'date' },
+
         ],
 
         onAdd: function(event) {
@@ -84,7 +119,11 @@ var transact_grid = {
                 body    : '<div id="newtrans"></div>',
                 onOpen  : function (event) {
                     event.onComplete = function () {
-                        $('#newtrans').w2render('addTransaction');
+                        let cur = new Date();
+                        w2ui.addTransaction.record['date_fact'] = cur.toISOString().split('T')[0];
+                        w2ui.addTransaction.record['date_plan'] = cur.toISOString().split('T')[0];
+        
+                        $('#newtrans').w2render('addTransaction');                        
                     };
                 }
             });
