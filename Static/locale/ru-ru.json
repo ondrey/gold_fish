@@ -16,7 +16,7 @@ var ru = {
         "after": "до",
         "Add new record": "Добавить новую запись",
         "Add New": "Добавить",
-        "All Fields": "Все поля",
+        "All Fields": "Поиск",
         "Are you sure you want to delete selected records?": "Вы действительно хотите удалить выделенные записи?",
         "Attach files by dragging and dropping or Click to Select": "Перетащите файлы сюда или нажмите чтобы выбрать",
         "begins with": "начинается с",

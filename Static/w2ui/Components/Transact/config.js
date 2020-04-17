@@ -17,7 +17,7 @@ var transact_grid = {
         },
         method: 'POST', 
         autoLoad: false,
-
+        markSearch: true,
         show: {
             toolbar: true,
             footer: true,
@@ -76,10 +76,10 @@ var transact_grid = {
             
             { field: 'ammount_trans', caption: 'Сумма', size: '80px', searchable: true}, 
             { field: 'title_item', caption: 'Категория', size: '185px'},
-            { field: 'date_fact', caption: 'Фактическая дата', size: '120px', searchable: true},
+            { field: 'date_fact', caption: 'Фактическая дата', size: '120px'},
 
             { field: 'date_plan', caption: 'Плановая дата', size: '120px', searchable: true},
-            { field: 'addate_trans', caption: 'Дата регистрации', size: '120px', searchable: true},
+            { field: 'addate_trans', caption: 'Дата регистрации', size: '120px'},
             { field: 'name_user', caption: 'Редактор', size: '120px'},
         ],        
 
@@ -101,10 +101,8 @@ var transact_grid = {
                 renderDrop: renderDropCategories,
               }
             },
-
-            { field: 'date_fact', caption: 'Фактическая дата', type: 'date' },
             { field: 'date_plan', caption: 'Плановая дата', type: 'date' },
-            { field: 'addate_trans', caption: 'Дата регистрации', type: 'date' },
+            { field: 'comment_trans', caption: 'Комментарий', type:'text'},
 
         ],
 

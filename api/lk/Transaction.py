@@ -10,6 +10,7 @@ from flask import session
 from ..ObjectAPI import ObjectAPI
 from ..ObjectAPI import render_tmp
 from ..ObjectDb import ObjectDb
+from ..ObjectW2UI import search2where
 from ..Auth import isauth
 
 
@@ -80,7 +81,8 @@ class Transaction(ObjectAPI, ObjectDb):
         cur = self.connect.cursor()
         status = 'error'
         if 'selected' in req:
-            cur.execute(u"delete from Transactions where id_trans={0} and id_user={1}".format(
+            cur.execute(u"delete from Transactions where id_trans={0} and "
+                        u"EXISTS (select * from kojima.Accounts a where a.id_user_owner = {1} and a.id_acc = id_acc )".format(
                 req['selected'][0],
                 session['client_sess']['id_user']
             ))
@@ -99,19 +101,11 @@ class Transaction(ObjectAPI, ObjectDb):
         rec_list = []
         total = 0
         if 'id_acc' in req:
-            sqlCount = u"""
-                SELECT 
-                    count(*)
-                FROM Transactions AS ts
-                INNER JOIN Accounts AS ac ON ts.id_acc = ac.id_acc
-                WHERE ts.id_acc = {0} AND ac.id_user_owner = {1}
-            """.format(req['id_acc'], session['client_sess']['id_user'])
-            cur.execute(sqlCount)
-            for r in cur.fetchall():
-                total = r[0]
 
             sql = u"""
                 SELECT 
+                    SQL_CALC_FOUND_ROWS
+                     
                     it.title_item, it.is_vertual_item, it.is_cost,
                     ts.addate_trans,
                     ts.date_plan,
@@ -125,18 +119,25 @@ class Transaction(ObjectAPI, ObjectDb):
                 INNER JOIN Items AS it ON it.id_item = ts.id_item
                 INNER JOIN Users AS us ON us.id_user = ts.id_user
 
-                WHERE ts.id_acc = {0} AND ac.id_user_owner = {1}
+                WHERE ts.date_plan <= current_date AND ts.id_acc = {0} AND ac.id_user_owner = {1} {4}
                 ORDER BY ts.date_plan DESC, ts.date_fact
                 LIMIT {2} OFFSET {3}        
             """.format(
                 req['id_acc'],
                 session['client_sess']['id_user'],
                 req['limit'],
-                req['offset']
+                req['offset'],
+                search2where(req['search'], replase_field={
+                    u'ammount_trans': u'ts.ammount_trans/100',
+                    u'date_plan': u'ts.date_plan',
+                    u'date_fact': u'ts.date_fact',
+                    u'id_item': u'ts.id_item',
+                    u'comment_trans': u'ts.comment_trans',
+                    u'addate_trans': u'ts.addate_trans'
+                }, logic=req['searchLogic']) if 'search' in req else ''
             )
 
             cur.execute(sql)
-
             for rec in cur.fetchall():
                 rec_list.append({
                     'title_item': rec[0],
@@ -150,6 +151,9 @@ class Transaction(ObjectAPI, ObjectDb):
                     'name_user': rec[8],
                     'recid': rec[9]
                 })
+
+            cur.execute(u"SELECT FOUND_ROWS()")
+            total = cur.fetchone()
 
         return jsonify({
             'total': total,
