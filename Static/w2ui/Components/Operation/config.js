@@ -12,35 +12,57 @@ config_operation = {
         show: {
             toolbar: true,
             footer: true,
-            toolbarAdd: true,
-            toolbarDelete: true,
-            toolbarEdit: true,
-            columnHeaders: true
+            toolbarDelete: true
         },
+        toolbar: {
+          items: [
+              { type: 'break' },
+              //{ type: 'spacer' },     
+
+              { type: 'menu', id: 'toggleAcc', caption: 'Новая операция', icon: 'fa fa-plus-square',
+                selected: 'id3',
+                items: [
+                  { id: 'id1', text: 'Пустая', icon: 'fa fa-sticky-note-o' },
+                  { id: 'id2', text: 'Перевод', icon: 'fa fa-exchange' },
+                  { id: 'id3', text: 'Итерация', icon: 'fa fa-history' }
+                ]
+              },
+              
+              
+          ],
+          onClick: function (target, data) {
+            console.log(target);              
+          }
+        },     
+
         columns: [
-            { field: 'recid', caption: 'id', size:"10%"},
-            { field: 'guid_op', caption: 'Код', size:"10%"},
-            { field: 'addate', caption: 'Время регистрации', size:"10%"},
-            { field: 'date_start', caption: 'Начало', size:"10%"},
-            { field: 'date_end', caption: 'Завершение', size:"10%"},
-            { field: 'unit', caption: 'Еденица деления', size:"10%"},
-            { field: 'amount', caption: 'Стоимость деления', size:"10%"}
+            
+            { field: 'addate', caption: 'Время регистрации', size:"150"},
+            { field: 'type_op', caption: 'Тип операции', size:"150"},
+            { field: 'date_end', caption: 'Комментарий', size:"100%"},
+            { field: 'guid_op', caption: 'Код', size:"120", info:true},
         ],
 
         multiSearch: true,
         records: [],
 
-        onAdd: function (event) {
-          let text = "<p>Вы можете выбрать один из предложенных типов операции</p>";
-          text += "<a href='#' style=\"margin-top: 29px;display: block;\">Разделение по счетам </br> <img src='/static/w2ui/Components/Operation/account.jpg' style=\"margin-top: 13px;\"/></a> <br />";
-          text += "<a href='#' style=\"margin-top: 29px;display: block;\">Разделение во времени </br><img src='/static/w2ui/Components/Operation/operation.jpg'  style=\"margin-top: 13px;\" /></a>";
+        onAdd: function(event) {
 
           w2popup.open({
-              body: '<div class="w2ui-centered">'+text+'</div>',
-              color: '#3b798c',
-              height: 450
-           });
+              style:    "padding:8px;",
+              title:'Новая операция',
+              showClose: true,
+              width:550,
+              height: 450,
+              body    : '<div id="newoper"></div>',
+              onOpen  : function (event) {
+                  event.onComplete = function () {      
+                      $('#newoper').w2render('addOper');                        
+                  };
+              }
+          });
 
-        },
+       },     
+      
 
     }

@@ -25,6 +25,7 @@
   <script type="text/javascript" src="/static/w2ui/Components/Transact/editTransaction.js"></script>
   
   <script type="text/javascript" src="/static/w2ui/Components/Operation/config.js"></script>
+  <script type="text/javascript" src="/static/w2ui/Components/Operation/addOper.js"></script>
 
 
 <script type="text/javascript">
@@ -55,11 +56,13 @@ $(function () {
     $().w2form(editTransaction)
     
     
+    
 
     $().w2grid(transact_grid);
 
     $().w2layout(layout_operation);    
     $().w2grid(config_operation);
+    $().w2form(addOper);
 
 
     w2ui.base_layout.content('left', w2ui.sidebar);
