@@ -20,6 +20,39 @@ class Transaction(ObjectAPI, ObjectDb):
         ObjectDb.__init__(self)
 
     @isauth
+    def api_edit_transaction(self):
+        req = loads(request.form['request'])
+        id_tran = req['id_tran']
+        cur = self.connect.cursor()
+        result = {'status': 'success'}
+
+        cur.execute(u"select date_fact, id_user from Transactions where id_trans={0}".format(id_tran))
+        count_rec = cur.fetchone()
+        sql = None
+        if len(count_rec) != 0:
+            result = {'status': 'error', 'message': u""}
+            if count_rec[0]:
+                result = {'status': 'error', 'message': u"Ошибка. Транзакция уже завершена."}
+            elif count_rec[1] != session['client_sess']['id_user']:
+                result = {'status': 'error', 'message': u"Ошибка. Транзакция не пренадлежит Вам."}
+            else:
+
+                sql = u"update Transactions set {0} comment_trans = '{1}' where id_trans={2}".format(
+                    u"date_fact = '"+req['record']['date_fact']+u"', " if req['record']['date_fact'] else u'',
+                    req['record']['comments'],
+                    id_tran
+                )
+                result = {'status': 'success'}
+        else:
+            result = {'status': 'error', 'message': u"Ошибка. Записи не существует."}
+
+        if sql:
+            cur.execute(sql)
+            self.connect.commit()
+
+        return jsonify(result)
+
+    @isauth
     def api_add_transaction(self):
         req = loads(request.form['request'])
         id_acc = req['id_acc']
@@ -79,20 +112,29 @@ class Transaction(ObjectAPI, ObjectDb):
     def api_del_record(self):
         req = loads(request.form['request'])
         cur = self.connect.cursor()
-        status = 'error'
+        result = {}
         if 'selected' in req:
-            cur.execute(u"delete from Transactions where id_trans={0} and "
-                        u"EXISTS (select * from kojima.Accounts a where a.id_user_owner = {1} and a.id_acc = id_acc )".format(
-                req['selected'][0],
-                session['client_sess']['id_user']
-            ))
-            self.connect.commit()
-            status='success'
+            for recid in req['selected']:
+                select = u"select acc.id_user_owner, tr.date_fact, it.is_vertual_item " \
+                         u"from Transactions tr " \
+                         u"inner join Accounts acc on acc.id_acc = tr.id_acc " \
+                         u"inner join Items AS it ON it.id_item = tr.id_item " \
+                         u"where tr.id_trans={0}".format(recid)
 
-        return jsonify({
-            'status': status,
-            'records': req['selected']
-        })
+                cur.execute(select)
+                trans = cur.fetchone()
+                if trans[0] != session['client_sess']['id_user']:
+                    result = {'status': 'error', 'message': u'Ошибка. Вы не можете удалять транзакции в чужих счетах, обратитесь к владельцу счета.'}
+                elif trans[1] and trans[2] != '1':
+                    result = {'status': 'error',
+                              'message': u'Ошибка. Нельзя удалить завершенную транзакцию.'}
+                else:
+                    cur.execute(u"delete from Transactions where id_trans = {0}".format(recid))
+                    result = {'status': 'success'}
+
+        self.connect.commit()
+
+        return jsonify(result)
 
     @isauth
     def api_get_records(self):
@@ -119,8 +161,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 INNER JOIN Items AS it ON it.id_item = ts.id_item
                 INNER JOIN Users AS us ON us.id_user = ts.id_user
 
-                WHERE ts.date_plan <= current_date AND ts.id_acc = {0} AND ac.id_user_owner = {1} {4}
-                ORDER BY ts.date_plan DESC, ts.date_fact
+                WHERE ts.id_acc = {0} AND ac.id_user_owner = {1} {4}
+                ORDER BY ts.date_fact, ts.date_plan DESC
                 LIMIT {2} OFFSET {3}        
             """.format(
                 req['id_acc'],

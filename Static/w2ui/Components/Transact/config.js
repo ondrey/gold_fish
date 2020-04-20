@@ -22,14 +22,18 @@ var transact_grid = {
             toolbar: true,
             footer: true,
             toolbarDelete: true,
-            toolbarAdd: true
+            toolbarAdd: true,
+            toolbarEdit: true
         },
 
         toolbar: {
             items: [
                 //{ type: 'break' },
-                { type: 'spacer' },                
-                { type: 'button', id: 'toggleAcc', caption: '', icon: 'fa fa-chevron-up' }
+                { type: 'spacer' },     
+
+                { type: 'button', id: 'toggleAcc', caption: '', icon: 'fa fa-chevron-up' },
+                
+                
             ],
             onClick: function (target, data) {
                 
@@ -55,6 +59,7 @@ var transact_grid = {
                         data.records[i]['w2ui'] = {'style':'color: grey;'};
                         data.records[i]['title_item'] += ' (Вирт.)'
                     }
+
                     if (Boolean(Number(rec['is_cost']))) {
                         data.records[i]['title_item']
                         = '<i class="fa fa-minus" style="font-size: larger;color: red;"></i> '
@@ -68,11 +73,10 @@ var transact_grid = {
             }
             
             return data;
-        },
-
+        },       
 
         columns: [
-            { field: 'comment_trans', caption: 'Комментарий', size: '200px'},
+            { field: 'comment_trans', caption: 'Комментарий', size: '200px', info: true},
             
             { field: 'ammount_trans', caption: 'Сумма', size: '80px', searchable: true}, 
             { field: 'title_item', caption: 'Категория', size: '185px'},
@@ -127,5 +131,55 @@ var transact_grid = {
             });
  
          },        
+         onDelete(event){
+            
+            let recid = w2ui.transact_grid.getSelection();
+            let record = w2ui.transact_grid.get(recid[0]);
+            console.log(record);
+            if (record.date_fact && record.is_vertual_item != '1') {
+                event.preventDefault();
+                w2ui.layout_account.message('main', {
+                    width: 300,
+                    height: 150,
+                    body: '<div class="w2ui-centered">Нельзя удалить подтвержденную транзакцию.</div>',
+                    buttons: '<button class="w2ui-btn" onclick="w2ui.layout_account.message(\'main\')">Ясно</button>'
+                });
+            }
+         },
+         onEdit(event){
+
+            let selection = w2ui.transact_grid.getSelection()[0];
+            let record = w2ui.transact_grid.get(selection);
+            
+
+            if (record.date_fact) {
+                event.preventDefault();
+                w2ui.layout_account.message('main', {
+                    width: 300,
+                    height: 150,
+                    body: '<div class="w2ui-centered">Нельзя редактировать подтвержденную транзакцию.</div>',
+                    buttons: '<button class="w2ui-btn" onclick="w2ui.layout_account.message(\'main\')">Ясно</button>'
+                });
+            } else {
+                w2popup.open({
+                    style:    "padding:8px;",
+                    title:'Редактировать транзакцию',
+                    showClose: true,
+                    width:550,
+                    height: 330,
+                    body    : '<div id="editrans"></div>',
+                    onOpen  : function (event) {
+                        event.onComplete = function (event) {
+                            w2ui.editTransaction.record['comments'] = record.comment_trans;  
+                            $('#editrans').w2render('editTransaction');
+                        };
+                    }
+                });                  
+            }                 
+
+            
+          
+            
+         },
 
     }
