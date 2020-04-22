@@ -57,7 +57,7 @@ config_accounts = {
             //Назначить фильтр по идентификатору для выбранного счета
             let activ = w2ui.layout_account.get('main').tabs.active;
             w2ui[activ].postData['id_acc'] = event.recid;
-            w2ui[activ].reload();
+            w2ui[activ].reload();            
         },
 
         onAdd: function(event) {
@@ -116,4 +116,26 @@ config_accounts = {
          } 
 
 
+    }
+
+
+config_accounts_selector = {
+        name: 'config_accounts_selector',
+        url  : {
+            get    : '/acc/get_account_list',
+        },
+        method: 'POST',
+        multiSearch: false,
+        show : {
+            toolbar: false,
+            footer: false,
+            
+            toolbarReload   : false,
+            toolbarColumns  : false,
+            toolbarSearch   : false,
+            columnHeaders   : false,
+        },        
+        columns: [
+            { field: 'title_acc', caption: 'Наименование счета', size: '330px' }
+        ],
     }

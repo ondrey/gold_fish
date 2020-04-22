@@ -48,14 +48,15 @@ $(function () {
     // Форма Счетов
     $().w2layout(layout_account);
     $().w2grid(config_accounts);
+    $().w2grid(config_accounts_selector);
+    
     $().w2form(addAccount)
     $().w2form(editAccount)
     $().w2grid(config_categories)
     $().w2form(addCategories)
     $().w2form(addTransaction)
     $().w2form(editTransaction)
-    
-    
+    $().w2layout(addLayoutTransaction)
     
 
     $().w2grid(transact_grid);

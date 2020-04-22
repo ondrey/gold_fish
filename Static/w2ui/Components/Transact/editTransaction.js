@@ -9,7 +9,15 @@ editTransaction = {
 
         { name: 'date_fact', type: 'date',
             html: { caption: 'Факт. дата', attr: 'size="40" maxlength="40"'}
-        },   
+        }, 
+        { name: 'date_plan', type: 'date', required: true,
+            html: { caption: 'Планируемая дата', attr: 'size="40" maxlength="40"'}
+        },         
+        { name: 'ammount_trans', type: 'float', required: true,
+            html: { caption: 'Сумма', attr: 'size="40" maxlength="40"'},
+            options:{autoFormat: false, currencyPrecision:2, groupSymbol:' '}
+
+        },        
     ],
     toolbar: {
         items: [

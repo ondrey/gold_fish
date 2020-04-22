@@ -9,6 +9,7 @@ var renderDropCategories = function(event) {
     return '<span style="'+style+'">' + icon + ' ' + event.text + '</span>'
 }
 
+
 var transact_grid = {
         name: 'transact_grid',
         url  : {
@@ -111,22 +112,48 @@ var transact_grid = {
         ],
 
         onAdd: function(event) {
+            let width = 750
+            if ('id_acc' in this.postData) {
+                width = 550
+                w2ui.addLayoutTransaction.hide('left')
+            } else {
+                // переопределим селект для компонента выбора счета
+                w2ui.addLayoutTransaction.show('left')
+                w2ui.config_accounts_selector.onSelect = function(event) {
+                    
+                    //Назначить фильтр по идентификатору для выбранного счета
+                    
+                    w2ui.transact_grid.postData['id_acc'] = event.recid;                    
+                    w2ui.addTransaction.record.id_item = {}
+                    w2ui.addTransaction.refresh()
 
+                }
+
+            }
+            
             w2popup.open({
                 style:    "padding:8px;",
                 title:'Новая транзакция',
                 showClose: true,
-                width:550,
+                width: width,
                 height: 450,
-                body    : '<div id="newtrans"></div>',
+                body    : '<div id="newtrans" style="height:100%"></div>',
                 onOpen  : function (event) {
                     event.onComplete = function () {
+
                         let cur = new Date();
                         w2ui.addTransaction.record['date_fact'] = cur.toISOString().split('T')[0];
                         w2ui.addTransaction.record['date_plan'] = cur.toISOString().split('T')[0];
-        
-                        $('#newtrans').w2render('addTransaction');                        
+                        
+                        w2ui.addLayoutTransaction.content('left', w2ui.config_accounts_selector);
+                        w2ui.addLayoutTransaction.content('main', w2ui.addTransaction);
+
+                        $('#newtrans').w2render('addLayoutTransaction');
                     };
+                },
+                onClose: function(event){
+                    w2ui.addTransaction.clear();
+                    if (width == 750) w2ui.transact_grid.postData = {};
                 }
             });
  
@@ -166,11 +193,13 @@ var transact_grid = {
                     title:'Редактировать транзакцию',
                     showClose: true,
                     width:550,
-                    height: 330,
+                    height: 400,
                     body    : '<div id="editrans"></div>',
                     onOpen  : function (event) {
                         event.onComplete = function (event) {
-                            w2ui.editTransaction.record['comments'] = record.comment_trans;  
+                            w2ui.editTransaction.record['comments'] = record.comment_trans;
+                            w2ui.editTransaction.record['date_plan'] = record.date_plan;
+                            w2ui.editTransaction.record['ammount_trans'] = record.ammount_trans;  
                             $('#editrans').w2render('editTransaction');
                         };
                     }

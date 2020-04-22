@@ -37,10 +37,15 @@ class Transaction(ObjectAPI, ObjectDb):
                 result = {'status': 'error', 'message': u"Ошибка. Транзакция не пренадлежит Вам."}
             else:
 
-                sql = u"update Transactions set {0} comment_trans = '{1}' where id_trans={2}".format(
-                    u"date_fact = '"+req['record']['date_fact']+u"', " if req['record']['date_fact'] else u'',
-                    req['record']['comments'],
-                    id_tran
+                sql = u"update Transactions set {0} comment_trans = '{1}', ammount_trans={3}*100, date_plan='{4}' " \
+                      u"where id_trans={2}".format(
+
+                        u"date_fact = '"+req['record']['date_fact']+u"', " if req['record']['date_fact'] else u'',
+                        req['record']['comments'],
+                        id_tran,
+                        req['record']['ammount_trans'],
+                        req['record']['date_plan']
+
                 )
                 result = {'status': 'success'}
         else:
@@ -141,61 +146,62 @@ class Transaction(ObjectAPI, ObjectDb):
         req = loads(request.form['request'])
         cur = self.connect.cursor()
         rec_list = []
-        total = 0
+        id_acc = u""
         if 'id_acc' in req:
+            id_acc = u"ts.id_acc = {0} AND ".format(req['id_acc'])
 
-            sql = u"""
-                SELECT 
-                    SQL_CALC_FOUND_ROWS
-                     
-                    it.title_item, it.is_vertual_item, it.is_cost,
-                    ts.addate_trans,
-                    ts.date_plan,
-                    ts.date_fact,
-                    ts.ammount_trans,
-                    ts.comment_trans,
-                    us.name_user,
-                    ts.id_trans
-                FROM Transactions AS ts
-                INNER JOIN Accounts AS ac ON ts.id_acc = ac.id_acc
-                INNER JOIN Items AS it ON it.id_item = ts.id_item
-                INNER JOIN Users AS us ON us.id_user = ts.id_user
+        sql = u"""
+            SELECT 
+                SQL_CALC_FOUND_ROWS
+                 
+                it.title_item, it.is_vertual_item, it.is_cost,
+                ts.addate_trans,
+                ts.date_plan,
+                ts.date_fact,
+                ts.ammount_trans,
+                ts.comment_trans,
+                us.name_user,
+                ts.id_trans
+            FROM Transactions AS ts
+            INNER JOIN Accounts AS ac ON ts.id_acc = ac.id_acc
+            INNER JOIN Items AS it ON it.id_item = ts.id_item
+            INNER JOIN Users AS us ON us.id_user = ts.id_user
 
-                WHERE ts.id_acc = {0} AND ac.id_user_owner = {1} {4}
-                ORDER BY ts.date_fact, ts.date_plan DESC
-                LIMIT {2} OFFSET {3}        
-            """.format(
-                req['id_acc'],
-                session['client_sess']['id_user'],
-                req['limit'],
-                req['offset'],
-                search2where(req['search'], replase_field={
-                    u'ammount_trans': u'ts.ammount_trans/100',
-                    u'date_plan': u'ts.date_plan',
-                    u'date_fact': u'ts.date_fact',
-                    u'id_item': u'ts.id_item',
-                    u'comment_trans': u'ts.comment_trans',
-                    u'addate_trans': u'ts.addate_trans'
-                }, logic=req['searchLogic']) if 'search' in req else ''
-            )
+            WHERE {0} ac.id_user_owner = {1} {4}
+            ORDER BY ts.date_fact, ts.date_plan DESC
+            LIMIT {2} OFFSET {3}        
+        """.format(
+            id_acc,
+            session['client_sess']['id_user'],
+            req['limit'],
+            req['offset'],
+            search2where(req['search'], replase_field={
+                u'ammount_trans': u'ts.ammount_trans/100',
+                u'date_plan': u'ts.date_plan',
+                u'date_fact': u'ts.date_fact',
+                u'id_item': u'ts.id_item',
+                u'comment_trans': u'ts.comment_trans',
+                u'addate_trans': u'ts.addate_trans'
+            }, logic=req['searchLogic']) if 'search' in req else ''
+        )
 
-            cur.execute(sql)
-            for rec in cur.fetchall():
-                rec_list.append({
-                    'title_item': rec[0],
-                    'is_vertual_item':rec[1],
-                    'is_cost': rec[2],
-                    'addate_trans': rec[3].strftime("%Y-%m-%d %H:%M"),
-                    'date_plan': rec[4].strftime("%Y-%m-%d") if rec[4] else None,
-                    'date_fact': rec[5].strftime("%Y-%m-%d") if rec[5] else None,
-                    'ammount_trans': round(float(rec[6])/100.0, 2),
-                    'comment_trans': rec[7],
-                    'name_user': rec[8],
-                    'recid': rec[9]
-                })
+        cur.execute(sql)
+        for rec in cur.fetchall():
+            rec_list.append({
+                'title_item': rec[0],
+                'is_vertual_item':rec[1],
+                'is_cost': rec[2],
+                'addate_trans': rec[3].strftime("%Y-%m-%d %H:%M"),
+                'date_plan': rec[4].strftime("%Y-%m-%d") if rec[4] else None,
+                'date_fact': rec[5].strftime("%Y-%m-%d") if rec[5] else None,
+                'ammount_trans': round(float(rec[6])/100.0, 2),
+                'comment_trans': rec[7],
+                'name_user': rec[8],
+                'recid': rec[9]
+            })
 
-            cur.execute(u"SELECT FOUND_ROWS()")
-            total = cur.fetchone()
+        cur.execute(u"SELECT FOUND_ROWS()")
+        total = cur.fetchone()
 
         return jsonify({
             'total': total,

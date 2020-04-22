@@ -15,16 +15,24 @@ config_operation = {
             toolbarDelete: true
         },
         toolbar: {
+          tooltip: 'bottom',
           items: [
               { type: 'break' },
               //{ type: 'spacer' },     
 
               { type: 'menu', id: 'toggleAcc', caption: 'Новая операция', icon: 'fa fa-plus-square',
                 selected: 'id3',
+                tooltip: 'Операция - логически связывает несколько транзакций.',
                 items: [
-                  { id: 'id1', text: 'Пустая', icon: 'fa fa-sticky-note-o' },
-                  { id: 'id2', text: 'Перевод', icon: 'fa fa-exchange' },
-                  { id: 'id3', text: 'Итерация', icon: 'fa fa-history' }
+                  { id: 'id1', text: 'Пустая операция', icon: 'fa fa-sticky-note-o', 
+                    tooltip: 'Операция для групперовки логически связанных транзакций'
+                  },
+                  { id: 'id2', text: 'Перевод средств', icon: 'fa fa-exchange',
+                    tooltip: 'Перевод средств между счетами'
+                  },
+                  { id: 'id3', text: 'Повторяющаяся операция', icon: 'fa fa-history',
+                    tooltip: 'Повторяющаяся операция - ежедневно, ежемесячно, ежегодно...'
+                  }
                 ]
               },
               
@@ -39,6 +47,7 @@ config_operation = {
             
             { field: 'addate', caption: 'Время регистрации', size:"150"},
             { field: 'type_op', caption: 'Тип операции', size:"150"},
+            { field: 'type_op', caption: 'Статус операции', size:"150"},
             { field: 'date_end', caption: 'Комментарий', size:"100%"},
             { field: 'guid_op', caption: 'Код', size:"120", info:true},
         ],

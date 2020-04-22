@@ -1,9 +1,18 @@
+addLayoutTransaction = {
+        name: 'addLayoutTransaction',
+        padding: 0,
+        panels: [
+          { type: 'left', size: '200',  content: ''},
+          { type: 'main', size:'550', content: ''}
+        ]
+}
+
 addTransaction = {
     name: 'addTransaction',
     style: "height:100%",
-    url      : '/transaction/add_transaction',
+    url      : '/transaction/add_transaction',    
     fields: [
-        { field: 'id_item',   type: 'list',             
+        { field: 'id_item',   type: 'list', required: true,
             html: { caption: 'Категория', attr: 'size="40" maxlength="40"' },
             options: {
                 url: '/categories/get_list_transaction',
@@ -12,9 +21,8 @@ addTransaction = {
                 postData: {
                     id_acc: -1
                 },
-                onRequest(event){
-                    let sel = w2ui.config_accounts.getSelection();
-                    event.postData.id_acc=sel[0];
+                onRequest(event){                    
+                    event.postData.id_acc=w2ui.transact_grid.postData.id_acc;
                     return event
                 },
                 compare(e,r){
@@ -46,7 +54,7 @@ addTransaction = {
             html: { caption: 'Комментарий', attr: 'style="height: 90px" cols="40"'  } 
         },
 
-        { name: 'date_plan', type: 'date', hidden: true,
+        { name: 'date_plan', type: 'date', hidden: true, 
             html: { caption: 'Плановая дата', attr: 'size="40" maxlength="40"'}
         },
         { name: 'date_fact', type: 'date', 
@@ -91,28 +99,20 @@ addTransaction = {
             }
         }
     },
-    
-    // onChange: function (event) {
-    //     if(event.target == 'date_plan') {
-    //         w2ui.addTransaction.record['date_fact'] = event.value_new;
-    //         w2ui.addTransaction.record['date_plan'] = event.value_new;
-    //         w2ui.addTransaction.refresh();
-    //     }
-    // },
-    onError: function(event) {
-        console.log(event, 'error');
-    },
-
     actions: {        
         Reset: function () { this.clear(); },
         Save: function () {
             var errors = this.validate();
             if (errors.length > 0) return;
             
-            let id_acc = w2ui.config_accounts.getSelection();
+            let fact = w2ui.addTransaction_toolbar.get('fact')
+            if(!fact.checked) {
+                w2ui.addTransaction.record['date_fact'] = '';                
+            }
+
             this.save({
                 'record': this.record, 
-                'id_acc': id_acc[0]
+                'id_acc': w2ui.transact_grid.postData.id_acc
                 }, 
                 function(e){
                     w2confirm('Добавить еще запись?', '',
