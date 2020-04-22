@@ -2,8 +2,8 @@
 
 
 def search2where(search=[], replase_field={}, logic=u'AND'):
-    where = u''
-
+    where = []
+    logic = ' ' + logic + ' '
     for field in search:
         name = field['field']
         if name in replase_field:
@@ -11,36 +11,38 @@ def search2where(search=[], replase_field={}, logic=u'AND'):
 
         if field['type'] == 'text':
             if field['operator'] == 'begins':
-                where += u"and {0} like('{1}%') ".format(name, field['value'])
+                where.append(u"{0} like('{1}%')".format(name, field['value']))
             elif field['operator'] == 'is':
-                where += u"and {0}='{1}' ".format(name, field['value'])
+                where.append(u"{0}='{1}'".format(name, field['value']))
             elif field['operator'] == 'contains':
-                where += u"and {0} like('%{1}%') ".format(name, field['value'])
+                where.append(u"{0} like('%{1}%')".format(name, field['value']))
             elif field['operator'] == 'ends':
-                where += u"and {0} like('%{1}') ".format(name, field['value'])
+                where.append(u"{0} like('%{1}')".format(name, field['value']))
 
-        if field['type'] == 'list' and logic == u'AND':
-            where += u'and {0}={1} '.format(name, field['value'])
+        if field['type'] == 'list':
+            where.append(u'{0}={1}'.format(name, field['value']))
 
-        if field['type'] == 'float' and logic == u'AND':
+        if field['type'] == 'float':
             if field['operator'] == 'is':
-                where += u'and {0}={1} '.format(name, field['value'])
+                where.append(u'{0}={1}'.format(name, field['value']))
             elif field['operator'] == 'between':
-                where += u'and {0}>={1} and {0}<={2} '.format(name, field['value'][0], field['value'][1])
+                where.append(u'{0}>={1} and {0}<={2}'.format(name, field['value'][0], field['value'][1]))
             elif field['operator'] == 'less':
-                where += u'and {0}<={1} '.format(name, field['value'])
+                where.append(u'{0}<={1}'.format(name, field['value']))
             elif field['operator'] == 'more':
-                where += u'and {0}>={1} '.format(name, field['value'])
+                where.append(u'{0}>={1}'.format(name, field['value']))
 
-        if field['type'] == 'date' and logic == u'AND':
+        if field['type'] == 'date':
             if field['operator'] == 'is':
-                where += u"and {0}='{1}' ".format(name, field['value'])
+                where.append(u"{0}='{1}'".format(name, field['value']))
             elif field['operator'] == 'between':
-                where += u"and {0} between '{1}' and '{2}' ".format(name, field['value'][0], field['value'][1])
+                where.append(u"{0} between '{1}' and '{2}'".format(name, field['value'][0], field['value'][1]))
 
             elif field['operator'] == 'less':
-                where += u"and {0}<='{1}' ".format(name, field['value'])
+                where.append(u"{0}<='{1}'".format(name, field['value']))
             elif field['operator'] == 'more':
-                where += u"and {0}<='{1}' ".format(name, field['value'])
+                where.append(u"{0}<='{1}'".format(name, field['value']))
 
-    return where
+    if len(where) > 0:
+        return u"({0})".format(logic.join(where))
+    return u""

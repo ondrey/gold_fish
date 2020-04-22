@@ -86,27 +86,30 @@ var transact_grid = {
             { field: 'date_plan', caption: 'Плановая дата', size: '120px', searchable: true},
             { field: 'addate_trans', caption: 'Дата регистрации', size: '120px'},
             { field: 'name_user', caption: 'Редактор', size: '120px'},
+            { field: 'title_acc', caption: 'Счет', size: '120px'},
         ],        
 
         searches: [
             { field: 'ammount_trans', caption: 'Сумма', type: 'float', options:{autoFormat: false, currencyPrecision:2, groupSymbol:' '} },
-            { field: 'id_item',   type: 'list', caption: 'Категория',  
-              options: {
-                url: '/categories/get_list_transaction',
-                minLength: 0,
-                match: 'contains',    
-                postData: {
-                    id_acc: -1
-                },
-                onRequest(event){
-                    let sel = w2ui.config_accounts.getSelection();
-                    event.postData.id_acc=sel[0];
-                    return event
-                },
-                renderDrop: renderDropCategories,
-              }
-            },
+            // { field: 'id_item',   type: 'list', caption: 'Категория',  
+            //   options: {
+            //     url: '/categories/get_list_transaction',
+            //     minLength: 0,
+            //     match: 'contains',    
+            //     postData: {
+            //         id_acc: -1
+            //     },
+            //     onRequest(event){
+            //         let sel = w2ui.config_accounts.getSelection();
+            //         event.postData.id_acc=sel[0];
+            //         return event
+            //     },
+            //     renderDrop: renderDropCategories,
+            //   }
+            // },
             { field: 'date_plan', caption: 'Плановая дата', type: 'date' },
+            { field: 'title_item', caption: 'Категория', type:'text'},
+            { field: 'title_acc', caption: 'Счет', type:'text'},
             { field: 'comment_trans', caption: 'Комментарий', type:'text'},
 
         ],

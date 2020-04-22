@@ -161,13 +161,14 @@ class Transaction(ObjectAPI, ObjectDb):
                 ts.ammount_trans,
                 ts.comment_trans,
                 us.name_user,
-                ts.id_trans
+                ts.id_trans,
+                ac.title_acc
             FROM Transactions AS ts
             INNER JOIN Accounts AS ac ON ts.id_acc = ac.id_acc
             INNER JOIN Items AS it ON it.id_item = ts.id_item
             INNER JOIN Users AS us ON us.id_user = ts.id_user
 
-            WHERE {0} ac.id_user_owner = {1} {4}
+            WHERE {0} ac.id_user_owner = {1} and {4}
             ORDER BY ts.date_fact, ts.date_plan DESC
             LIMIT {2} OFFSET {3}        
         """.format(
@@ -181,8 +182,10 @@ class Transaction(ObjectAPI, ObjectDb):
                 u'date_fact': u'ts.date_fact',
                 u'id_item': u'ts.id_item',
                 u'comment_trans': u'ts.comment_trans',
-                u'addate_trans': u'ts.addate_trans'
-            }, logic=req['searchLogic']) if 'search' in req else ''
+                u'addate_trans': u'ts.addate_trans',
+                u'title_item': u'it.title_item',
+                u'title_acc': u'ac.title_acc'
+            }, logic=req['searchLogic']) if 'search' in req else u'1=1'
         )
 
         cur.execute(sql)
@@ -197,7 +200,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 'ammount_trans': round(float(rec[6])/100.0, 2),
                 'comment_trans': rec[7],
                 'name_user': rec[8],
-                'recid': rec[9]
+                'recid': rec[9],
+                'title_acc': rec[10]
             })
 
         cur.execute(u"SELECT FOUND_ROWS()")
