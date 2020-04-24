@@ -1,20 +1,18 @@
 addOper = {
     name: 'addOper',
     style: "height:100%",
-    url      : '/operations/add_oper',
+    url  : '/operations/add_operation',
     fields: [
-        { field: 'title_oper',   type: 'text', requared: true,
-            html: { caption: 'Наименование', attr: 'style="width: 300px;"', page: 0 }
+        { field: 'amount_op',   type: 'text', requared: true,
+            html: { caption: 'сумма', attr: 'style="width: 300px;"', page: 0 }
         }, 
-        { field: 'discript_oper',   type: 'textarea',
+        { field: 'comment_op',   type: 'textarea',
             html: { caption: 'Описание', attr: 'style="width: 300px; height: 90px"', page: 0 }
-        } 
+        },
+        { field: 'type_op',   type: 'text', requared: true,
+            html: { caption: 'Тип', attr: 'style="width: 300px;"', page: 0 }
+        }, 
     ],    
-    tabs: [
-        { id: 'empty', caption: 'Шаблон' },
-        { id: 'transfer', caption: 'Перевод'},
-        { id: 'return', caption: 'Повтор' }
-    ],
 
     actions: {
         Reset: function () { this.clear(); },
@@ -23,11 +21,10 @@ addOper = {
             if (errors.length > 0) return;
             let clear = this.clear;
             this.save({
-                'record': this.record, 
-                'selection': w2ui.config_accounts.getSelection()
+                'record': this.record
                 }, 
                 function(e){
-                    w2ui.config_categories.reload();                                        
+                    w2ui.config_operation.reload();                                        
                     w2ui.addOper.clear();
                     w2popup.close();
                     
