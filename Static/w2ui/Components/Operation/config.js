@@ -2,8 +2,8 @@ layout_operation = {
   name: 'layout_operation',
   padding: 0,
   panels: [
-    { type: 'main', size: '30%',  content: 'main' },
-    { type: 'preview', size:'70%', content: '7'}
+    { type: 'top', size: '60%',  content: 'main' },
+    { type: 'main', size:'40%', content: '7', resizable: true }
   ]
 }
 
@@ -13,41 +13,50 @@ config_operation = {
           get: '/operations/get_records'
         },
         method: 'POST',
-
+        autoLoad: false,
+        
+        limit: 50,
         show: {
             toolbar: true,
             footer: true,
             toolbarDelete: true
         },
+        onSelect: function(event) {   
+          w2ui.layout_operation.sizeTo('top', '60%');       
+          w2ui.layout_operation.sizeTo('main', '40%');
+          //Назначить фильтр по идентификатору для выбранной операции
+          w2ui.transact_grid.postData['id_op'] = event.recid;
+          w2ui.transact_grid.reload();
+        },
+
+
 
         toolbar: {
           tooltip: 'bottom',
           items: [
               { type: 'break' },
-              //{ type: 'spacer' },     
-
-              { type: 'menu', id: 'toggleAcc', caption: 'Новая операция', icon: 'fa fa-plus-square',
-                selected: 'id3',
-                tooltip: 'Операция - логически связывает несколько транзакций.',
-                items: [
-                  { id: 'id1', text: 'Простая', icon: 'fa fa-sticky-note-o', 
-                    tooltip: 'Операция для групперовки логически связанных транзакций'
-                  },
-                  { id: 'id2', text: 'Перевод средств', icon: 'fa fa-exchange',
-                    tooltip: 'Перевод средств между счетами'
-                  },
-                  { id: 'id3', text: 'Повторяющаяся операция', icon: 'fa fa-history',
-                    tooltip: 'Повторяющаяся операция - ежедневно, ежемесячно, ежегодно...'
-                  }
-                ]
+              
+              { type: 'button',  id: 'AA',  caption: 'Обычная', icon: 'fa fa-sticky-note-o',
+                tooltip: 'Шаблон операции, который используется '+
+                '<br/>для групперовки логически связанных транзакций.'
               },
-              
-              
+
+              { type: 'button',  id: 'AA',  caption: 'Обычная', icon: 'fa fa-sticky-note-o',
+                tooltip: 'Шаблон операции, который используется '+
+                '<br/>для групперовки логически связанных транзакций.'
+              },
+
+              { type: 'button',  id: 'TF',  caption: 'Перевод', icon: 'fa fa-exchange',
+                tooltip: 'Операция для перевода ДС между счетами. Создает транзакцию '+
+                '<br/>расхода на одном счете и транзакцию дохода на другом.'
+              },                            
+              { type: 'button',  id: 'CT',  caption: 'Циклическая', icon: 'fa fa-history',
+                tooltip: 'Создает повтаряющуюся транзакцию, с указанием '+
+                '<br/>отрезка повторения - день, месяц, год.'
+              },              
           ],
           onClick: function (target, data) {
-            console.log(target);      
-
-            if (target == 'toggleAcc:id1') {
+            if (target == 'AA') {
               w2popup.open({
                 style:    "padding:8px;",
                 title:'Новая операция',
@@ -61,16 +70,44 @@ config_operation = {
                     };
                 }
               });
-            }        
-
+            }
 
           }
         },     
 
         columns: [            
-            { field: 'code_op', caption: 'Операция', size:"150"},
+            { field: 'comment_op', caption: 'Коментарий', size:"150"},  
+            { field: 'code_op', caption: 'Операция', size:"150", editable: { type: 'text' }},
+            { field: 'title_typeop', caption: 'Тип', size:"150"},
+            { field: 'addate_op', caption: 'Дата', size:"150"},
+            { field: 'plan', caption: 'Всего', size:"150"},
+            { field: 'fact', caption: 'Остаток', size:"150"},
+            { field: 'dstart_op', caption: 'Начало', size:"150"},
+            { field: 'dfinish_op', caption: 'Завершение', size:"150"}
+            
+        ],        
+        
+        searches : [
+          { field: 'code_op', caption: 'Код операции', type: 'text' },       
         ],
 
-        multiSearch: true,
-        records: [],
+        parser: function (responseText) {
+            
+          var data = $.parseJSON(responseText);
+          if ('records'  in data) {
+
+              // do other things
+              for (let i = 0; i < data.records.length; i++) {
+                  const rec = data.records[i];
+                  data.records[i]['plan'] = (rec['amount_plan_op']/100).toLocaleString()
+                  data.records[i]['fact'] = ((rec['amount_plan_op'] - rec['amount_fact_op'])/100).toLocaleString()
+
+                  if(rec['amount_plan_op'] - rec['amount_fact_op'] != 0) {
+                    data.records[i]['w2ui'] = {'style': 'background-color:#7fda7f;'}
+                  }
+              }
+          }
+          
+          return data;
+      }      
     }

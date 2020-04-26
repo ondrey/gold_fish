@@ -39,7 +39,12 @@ var transact_grid = {
             onClick: function (target, data) {
                 
                 if (target=='toggleAcc') {
-                    w2ui.layout_account.toggle('top');
+                    if (w2ui.layout_operation.box) {
+                        w2ui.layout_operation.toggle('top');
+                    } else {
+                        w2ui.layout_account.toggle('top');
+                    }
+                    
                 }
                 
             }

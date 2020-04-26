@@ -109,11 +109,21 @@ addTransaction = {
             if(!fact.checked) {
                 w2ui.addTransaction.record['date_fact'] = '';                
             }
+            record = {
+                'record': this.record
+            }
+            
+            if ('id_acc' in w2ui.transact_grid.postData) {
+                record['id_acc'] = w2ui.transact_grid.postData.id_acc
+            }
+            
+            if ('id_op' in w2ui.transact_grid.postData) {
+                record['id_op'] = w2ui.transact_grid.postData.id_op
+            }
 
-            this.save({
-                'record': this.record, 
-                'id_acc': w2ui.transact_grid.postData.id_acc
-                }, 
+            this.save(
+                record, 
+
                 function(e){
                     w2confirm('Добавить еще запись?', '',
                         function(e){

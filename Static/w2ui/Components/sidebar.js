@@ -60,13 +60,14 @@ sidebar_config = {
 
             } else if (event.target == 'operation') {
               w2ui.base_layout.content('main', w2ui.layout_operation);
-                w2ui.layout_operation.content('main', w2ui.config_operation);
-                w2ui.layout_operation.content('preview', w2ui.transact_grid);
+                w2ui.layout_operation.content('top', w2ui.config_operation);
+                w2ui.layout_operation.content('main', w2ui.transact_grid);
             }
 
             // Действия совершаемые при каждой смене или обновлении текущего пункта меню.
               // Прячим дочернии справочники счетов
               w2ui.layout_account.sizeTo('top', '100%');
+              w2ui.layout_operation.sizeTo('top', '100%');
               w2ui.transact_grid.postData = {};
 
         }

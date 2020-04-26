@@ -97,15 +97,17 @@ class Transaction(ObjectAPI, ObjectDb):
                     , date_plan
                     , date_fact
                     , ammount_trans
-                    , comment_trans) 
-                values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}')
+                    , comment_trans
+                    , id_op) 
+                values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
                 """.format(
                     id_acc,
                     req['record']['id_item']['id'],
                     session['client_sess']['id_user'],
                     date_plan, date_fact,
                     price,
-                    req['record']['comments']
+                    req['record']['comments'],
+                    req['id_op'] if 'id_op' in req else 'NULL'
                 )
                 cur.execute(sqlInsertTransaction)
                 result = {'status': 'success'}
@@ -149,6 +151,8 @@ class Transaction(ObjectAPI, ObjectDb):
         id_acc = u""
         if 'id_acc' in req:
             id_acc = u"ts.id_acc = {0} AND ".format(req['id_acc'])
+        if 'id_op' in req:
+            id_acc = u"ts.id_op = {0} AND ".format(req['id_op'])
 
         sql = u"""
             SELECT 

@@ -77,18 +77,48 @@ class Operations(ObjectAPI, ObjectDb):
 
     @isauth
     def api_get_records(self):
+        req = loads(request.form['request'])
         cur = self.connect.cursor()
-        cur.execute(u"select SQL_CALC_FOUND_ROWS * from Operations where id_owner_op={0}".format(self.user_id))
+        sql = u"""
+        select SQL_CALC_FOUND_ROWS
+            op.id_op, op.addate_op, op.id_owner_op, op.amount_op, op.code_op, op.comment_op, op.type_op, ot.title_typeop,
+            sum(CASE when tr.date_fact then tr.ammount_trans else 0 END),
+            coalesce(sum(tr.ammount_trans), 0),
+            min(tr.date_plan),
+            max(tr.date_plan),
+            count(tr.date_plan),
+            count(tr.date_fact)
+            from Operations op 
+            join OpType ot on ot.alias_typeop = op.type_op 
+            left join Transactions tr on tr.id_op = op.id_op
+            where op.id_owner_op={0} and {3}
+            group by op.id_op, op.addate_op, op.id_owner_op, op.amount_op, op.code_op, op.comment_op, op.type_op, ot.title_typeop
+            order by (count(tr.date_plan) - count(tr.date_fact)) DESC, op.addate_op DESC
+            LIMIT {1} OFFSET {2}
+        """.format(self.user_id, req['limit'], req['offset'],
+                   search2where(req['search'], replase_field={
+                       u'code_op': u'op.code_op'
+                   }, logic=req['searchLogic']) if 'search' in req else u'1=1'
+                   )
+
+        cur.execute(sql)
         records = []
         for row in cur.fetchall():
             records.append({
                   'recid': row[0]
-                , 'addate_op': row[1]
+                , 'addate_op': row[1].strftime("%d.%m.%Y %H:%M")
                 , 'id_owner_op': row[2]
                 , 'amount_op': row[3]
                 , 'code_op': row[4]
                 , 'comment_op': row[5]
                 , 'type_op': row[6]
+                , 'title_typeop': row[7]
+                , 'amount_fact_op': int(row[8])
+                , 'amount_plan_op': int(row[9])
+                , 'dstart_op': row[10].strftime("%d.%m.%Y") if row[10] else None
+                , 'dfinish_op': row[11].strftime("%d.%m.%Y") if row[11] else None
+                , 'count_plan': row[12]
+                , 'count_fact': row[13]
             })
 
         cur.execute(u"SELECT FOUND_ROWS()")
