@@ -29,18 +29,11 @@ config_operation = {
           w2ui.transact_grid.reload();
         },
 
-
-
         toolbar: {
           tooltip: 'bottom',
           items: [
               { type: 'break' },
               
-              { type: 'button',  id: 'AA',  caption: 'Обычная', icon: 'fa fa-sticky-note-o',
-                tooltip: 'Шаблон операции, который используется '+
-                '<br/>для групперовки логически связанных транзакций.'
-              },
-
               { type: 'button',  id: 'AA',  caption: 'Обычная', icon: 'fa fa-sticky-note-o',
                 tooltip: 'Шаблон операции, который используется '+
                 '<br/>для групперовки логически связанных транзакций.'
@@ -62,7 +55,7 @@ config_operation = {
                 title:'Новая операция',
                 showClose: true,
                 width:550,
-                height: 450,
+                height: 270,
                 body    : '<div id="newoper"></div>',
                 onOpen  : function (event) {
                     event.onComplete = function () {      
@@ -75,20 +68,22 @@ config_operation = {
           }
         },     
 
-        columns: [            
-            { field: 'comment_op', caption: 'Коментарий', size:"150"},  
-            { field: 'code_op', caption: 'Операция', size:"150", editable: { type: 'text' }},
-            { field: 'title_typeop', caption: 'Тип', size:"150"},
-            { field: 'addate_op', caption: 'Дата', size:"150"},
-            { field: 'plan', caption: 'Всего', size:"150"},
-            { field: 'fact', caption: 'Остаток', size:"150"},
+        columns: [
+            { field: 'comment_op', caption: 'Коментарий', size:"150", info:true},  
+            { field: 'amount_op', caption: 'Сумма', size:"88"},  
+            { field: 'code_op', caption: 'Операция', size:"99", editable: { type: 'text' }},
+            { field: 'icon_class_op', caption: 'Тип', size:"26"},
+            { field: 'percent_complate_op', caption: 'Завершение', size:"50", style:"text-align:center"},
+            { field: 'addate_op', caption: 'Дата', size:"150", hidden: true},
+            { field: 'plan', caption: 'Всего', size:"88", hidden: true},
+            { field: 'fact', caption: 'Остаток', size:"88", hidden: true},
             { field: 'dstart_op', caption: 'Начало', size:"150"},
-            { field: 'dfinish_op', caption: 'Завершение', size:"150"}
-            
-        ],        
+            { field: 'dfinish_op', caption: 'Завершение', size:"150"}            
+        ],
         
         searches : [
-          { field: 'code_op', caption: 'Код операции', type: 'text' },       
+          { field: 'code_op', caption: 'Код операции', type: 'text' },   
+          { field: 'comment_op', caption: 'Коментарий', type: 'text' },       
         ],
 
         parser: function (responseText) {
@@ -105,6 +100,13 @@ config_operation = {
                   if(rec['amount_plan_op'] - rec['amount_fact_op'] != 0) {
                     data.records[i]['w2ui'] = {'style': 'background-color:#7fda7f;'}
                   }
+                  
+                  
+                  if (rec.count_plan>0) {
+                    data.records[i]['percent_complate_op'] = Math.abs((rec.count_fact/rec.count_plan)*100) + '%'
+                  }
+
+                  data.records[i]['icon_class_op'] = '<i style="font-size: large" class="'+rec['icon_class_op']+'"></>'
               }
           }
           

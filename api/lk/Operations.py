@@ -80,24 +80,51 @@ class Operations(ObjectAPI, ObjectDb):
         req = loads(request.form['request'])
         cur = self.connect.cursor()
         sql = u"""
-        select SQL_CALC_FOUND_ROWS
-            op.id_op, op.addate_op, op.id_owner_op, op.amount_op, op.code_op, op.comment_op, op.type_op, ot.title_typeop,
-            sum(CASE when tr.date_fact then tr.ammount_trans else 0 END),
-            coalesce(sum(tr.ammount_trans), 0),
-            min(tr.date_plan),
-            max(tr.date_plan),
-            count(tr.date_plan),
-            count(tr.date_fact)
-            from Operations op 
-            join OpType ot on ot.alias_typeop = op.type_op 
-            left join Transactions tr on tr.id_op = op.id_op
-            where op.id_owner_op={0} and {3}
-            group by op.id_op, op.addate_op, op.id_owner_op, op.amount_op, op.code_op, op.comment_op, op.type_op, ot.title_typeop
-            order by (count(tr.date_plan) - count(tr.date_fact)) DESC, op.addate_op DESC
-            LIMIT {1} OFFSET {2}
+        select SQL_CALC_FOUND_ROWS * from
+        (select
+            op.id_op as id,
+            op.addate_op as addate_op,
+            op.id_owner_op as id_owner_op,
+            op.amount_op as amount_op,
+            op.code_op as code_op,
+            op.comment_op as comment_op,
+            op.type_op as type_op,
+            ot.title_typeop as title_typeop,
+            sum(CASE when tr.date_fact then tr.ammount_trans else 0 END) as fact_sum_op,
+            coalesce(sum(tr.ammount_trans), 0) as plan_sum_op,
+            min(tr.date_plan) as min_date_plan,
+            max(tr.date_plan) as max_date_plan,
+            count(tr.date_plan) as count_plan,
+            count(tr.date_fact) as count_fact,
+            ot.icon_class_op as icon
+        from
+            Operations op
+        join OpType ot on
+            ot.alias_typeop = op.type_op
+        left join Transactions tr on
+            tr.id_op = op.id_op
+        where
+            op.id_owner_op = {0}
+        group by
+            op.id_op,
+            op.addate_op,
+            op.id_owner_op,
+            op.amount_op,
+            op.code_op,
+            op.comment_op,
+            op.type_op,
+            ot.title_typeop,
+            ot.icon_class_op
+        order by
+            (count(tr.date_plan) - count(tr.date_fact)) DESC,
+            op.addate_op DESC
+        ) as oper
+        where {3}
+        LIMIT {1} OFFSET {2}
         """.format(self.user_id, req['limit'], req['offset'],
                    search2where(req['search'], replase_field={
-                       u'code_op': u'op.code_op'
+                       u'code_op': u'oper.code_op',
+                       u'comment_op': u'oper.comment_op'
                    }, logic=req['searchLogic']) if 'search' in req else u'1=1'
                    )
 
@@ -119,6 +146,7 @@ class Operations(ObjectAPI, ObjectDb):
                 , 'dfinish_op': row[11].strftime("%d.%m.%Y") if row[11] else None
                 , 'count_plan': row[12]
                 , 'count_fact': row[13]
+                , 'icon_class_op': row[14]
             })
 
         cur.execute(u"SELECT FOUND_ROWS()")
