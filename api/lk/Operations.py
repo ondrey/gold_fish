@@ -22,6 +22,22 @@ class Operations(ObjectAPI, ObjectDb):
         if 'client_sess' in session:
             self.user_id = session['client_sess']['id_user']
 
+    @isauth
+    def api_del_record(self):
+        cur = self.connect.cursor()
+        errors = []
+        req = loads(request.form['request'])
+
+        for id in req['selected']:
+            cur.execute(u"delete from Operations where id_op={0} and id_owner_op={1}".format(id, self.user_id))
+
+        self.connect.commit()
+
+        return jsonify({
+            'status': 'success',
+            'message': u'Запись удалена'
+        })
+
     def add_operation(self, amount_op, comment_op, type_op):
         """
         Регистрация операции
@@ -74,6 +90,47 @@ class Operations(ObjectAPI, ObjectDb):
         code, idrec = self.add_operation(req['record']['amount_op'], req['record']['comment_op'], req['record']['type_op'])
 
         return jsonify({'code': code, 'idrec': idrec, 'status': 'success'})
+
+    @isauth
+    def api_add_transfer_op(self):
+        req = loads(request.form['request'])
+        result = {}
+
+        comment = u"Перевод средств {0} в {1}".format(
+                req['record']['acc_from'], req['record']['acc_to']
+            )
+
+        code, idrec = self.add_operation(
+            req['record']['amount_op'],
+            comment,
+            req['record']['type_op']
+        )
+
+        curDate = datetime.datetime.now()
+        dateOp = datetime.datetime.strptime(req['record']['date_op'], '%Y-%m-%d')
+        fact_date = u"'{0}'".format(req['record']['date_op'])
+        if dateOp>curDate:
+            fact_date = u"NULL"
+
+        price = req['record']['amount_op'] * 100
+
+        cur = self.connect.cursor()
+        cur.execute(u"""insert into Transactions
+                (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
+                values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
+                """.format(req[u'acc_from'], -1, self.user_id, req['record']['date_op'], fact_date, 0-price, comment,
+                           idrec))
+
+        cur.execute(u"""insert into Transactions
+                (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
+                values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
+                """.format(req[u'acc_to'], -2, self.user_id, req['record']['date_op'], fact_date, price, comment,
+                           idrec))
+
+        self.connect.commit()
+
+        return jsonify({'status': 'success'})
+
 
     @isauth
     def api_get_records(self):

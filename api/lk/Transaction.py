@@ -166,11 +166,13 @@ class Transaction(ObjectAPI, ObjectDb):
                 ts.comment_trans,
                 us.name_user,
                 ts.id_trans,
-                ac.title_acc
+                ac.title_acc,
+                op.code_op
             FROM Transactions AS ts
             INNER JOIN Accounts AS ac ON ts.id_acc = ac.id_acc
             INNER JOIN Items AS it ON it.id_item = ts.id_item
             INNER JOIN Users AS us ON us.id_user = ts.id_user
+            LEFT JOIN Operations AS op on op.id_op = ts.id_op
 
             WHERE {0} ac.id_user_owner = {1} and {4}
             ORDER BY ts.date_fact, ts.date_plan DESC
@@ -188,7 +190,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 u'comment_trans': u'ts.comment_trans',
                 u'addate_trans': u'ts.addate_trans',
                 u'title_item': u'it.title_item',
-                u'title_acc': u'ac.title_acc'
+                u'title_acc': u'ac.title_acc',
+                u'code_op': u'op.code_op'
             }, logic=req['searchLogic']) if 'search' in req else u'1=1'
         )
 
@@ -205,7 +208,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 'comment_trans': rec[7],
                 'name_user': rec[8],
                 'recid': rec[9],
-                'title_acc': rec[10]
+                'title_acc': rec[10],
+                'code_op': rec[11]
             })
 
         cur.execute(u"SELECT FOUND_ROWS()")

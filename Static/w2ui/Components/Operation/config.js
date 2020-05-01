@@ -10,7 +10,8 @@ layout_operation = {
 config_operation = {
         name: 'config_operation',
         url: {
-          get: '/operations/get_records'
+          get: '/operations/get_records',
+          remove: '/operations/del_record'
         },
         method: 'POST',
         autoLoad: false,
@@ -39,7 +40,7 @@ config_operation = {
                 '<br/>для групперовки логически связанных транзакций.'
               },
 
-              { type: 'button',  id: 'TF',  caption: 'Перевод', icon: 'fa fa-exchange',
+              { type: 'button',  id: 'TF',  caption: 'Перевод', icon: 'fa fa-share-square-o',
                 tooltip: 'Операция для перевода ДС между счетами. Создает транзакцию '+
                 '<br/>расхода на одном счете и транзакцию дохода на другом.'
               },                            
@@ -64,6 +65,26 @@ config_operation = {
                 }
               });
             }
+            
+            if (target == 'TF') {
+              w2popup.open({
+                style:    "padding:8px;",
+                title:'Перевод',
+                showClose: true,
+                width:480,
+                height: 280,
+                body    : '<div id="newtransfer"  style="height:100%"></div>',
+                onOpen  : function (event) {
+                    event.onComplete = function () {   
+                      w2ui.addLayoutTransfer.content('left', w2ui.config_accounts_selector);
+                      w2ui.addLayoutTransfer.content('main', w2ui.addTransfer);
+
+                      $('#newtransfer').w2render('addLayoutTransfer');
+                    };
+                }
+              });
+            }
+
 
           }
         },     
@@ -75,10 +96,10 @@ config_operation = {
             { field: 'icon_class_op', caption: 'Тип', size:"26"},
             { field: 'percent_complate_op', caption: 'Завершение', size:"50", style:"text-align:center"},
             { field: 'addate_op', caption: 'Дата', size:"150", hidden: true},
-            { field: 'plan', caption: 'Всего', size:"88", hidden: true},
+            { field: 'plan', caption: 'Стоимость операции', size:"88"},
             { field: 'fact', caption: 'Остаток', size:"88", hidden: true},
-            { field: 'dstart_op', caption: 'Начало', size:"150"},
-            { field: 'dfinish_op', caption: 'Завершение', size:"150"}            
+            { field: 'dstart_op', caption: 'Начало', size:"150", hidden: true},
+            { field: 'dfinish_op', caption: 'Завершение', size:"150"},
         ],
         
         searches : [

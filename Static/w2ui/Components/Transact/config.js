@@ -92,6 +92,7 @@ var transact_grid = {
             { field: 'addate_trans', caption: 'Дата регистрации', size: '120px'},
             { field: 'name_user', caption: 'Редактор', size: '120px'},
             { field: 'title_acc', caption: 'Счет', size: '120px'},
+            { field: 'code_op', caption: 'Операция', size: '120px'}
         ],        
 
         searches: [
@@ -116,6 +117,7 @@ var transact_grid = {
             { field: 'title_item', caption: 'Категория', type:'text'},
             { field: 'title_acc', caption: 'Счет', type:'text'},
             { field: 'comment_trans', caption: 'Комментарий', type:'text'},
+            { field: 'code_op', caption: 'Операция', type:'text'},
 
         ],
 
@@ -165,8 +167,8 @@ var transact_grid = {
                 }
             });
  
-         },        
-         onDelete(event){
+        },        
+        onDelete(event){
             
             let recid = w2ui.transact_grid.getSelection();
             let record = w2ui.transact_grid.get(recid[0]);
@@ -180,8 +182,8 @@ var transact_grid = {
                     buttons: '<button class="w2ui-btn" onclick="w2ui.layout_account.message(\'main\')">Ясно</button>'
                 });
             }
-         },
-         onEdit(event){
+        },
+        onEdit(event){
 
             let selection = w2ui.transact_grid.getSelection()[0];
             let record = w2ui.transact_grid.get(selection);
