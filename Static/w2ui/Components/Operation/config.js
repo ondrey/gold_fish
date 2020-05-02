@@ -72,7 +72,7 @@ config_operation = {
                 title:'Перевод',
                 showClose: true,
                 width:480,
-                height: 280,
+                height: 320,
                 body    : '<div id="newtransfer"  style="height:100%"></div>',
                 onOpen  : function (event) {
                     event.onComplete = function () {   
@@ -86,17 +86,37 @@ config_operation = {
             }
 
 
+            if (target == 'CT') {
+              w2popup.open({
+                style:    "padding:8px;",
+                title:'Циклическая',
+                showClose: true,
+                width:480,
+                height: 400,
+                body    : '<div id="newtransfer"  style="height:100%"></div>',
+                onOpen  : function (event) {
+                    event.onComplete = function () {   
+                      w2ui.addLayoutCicle.content('left', w2ui.config_accounts_selector);
+                      w2ui.addLayoutCicle.content('main', w2ui.addCicle);
+
+                      $('#newtransfer').w2render('addLayoutCicle');
+                    };
+                }
+              });
+            }            
+
+
           }
         },     
 
         columns: [
             { field: 'comment_op', caption: 'Коментарий', size:"150", info:true},  
-            { field: 'amount_op', caption: 'Сумма', size:"88"},  
+            { field: 'amount_op', caption: 'Начальная стоимость', size:"88"},  
             { field: 'code_op', caption: 'Операция', size:"99", editable: { type: 'text' }},
             { field: 'icon_class_op', caption: 'Тип', size:"26"},
             { field: 'percent_complate_op', caption: 'Завершение', size:"50", style:"text-align:center"},
             { field: 'addate_op', caption: 'Дата', size:"150", hidden: true},
-            { field: 'plan', caption: 'Стоимость операции', size:"88"},
+            { field: 'plan', caption: 'Сумма по транзакциям', size:"88", hidden: true},
             { field: 'fact', caption: 'Остаток', size:"88", hidden: true},
             { field: 'dstart_op', caption: 'Начало', size:"150", hidden: true},
             { field: 'dfinish_op', caption: 'Завершение', size:"150"},
@@ -118,7 +138,7 @@ config_operation = {
                   data.records[i]['plan'] = (rec['amount_plan_op']/100).toLocaleString()
                   data.records[i]['fact'] = ((rec['amount_plan_op'] - rec['amount_fact_op'])/100).toLocaleString()
 
-                  if(rec['amount_plan_op'] - rec['amount_fact_op'] != 0) {
+                  if(rec.count_plan != rec.count_fact) {
                     data.records[i]['w2ui'] = {'style': 'background-color:#7fda7f;'}
                   }
                   

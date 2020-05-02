@@ -27,6 +27,7 @@
   <script type="text/javascript" src="/static/w2ui/Components/Operation/config.js"></script>
   <script type="text/javascript" src="/static/w2ui/Components/Operation/addOper.js"></script>
   <script type="text/javascript" src="/static/w2ui/Components/Operation/addTransferOper.js"></script>
+  <script type="text/javascript" src="/static/w2ui/Components/Operation/addCicleOper.js"></script>
 
 
 <script type="text/javascript">
@@ -67,7 +68,8 @@ $(function () {
     $().w2form(addOper);
     $().w2form(addTransfer);
     $().w2layout(addLayoutTransfer);
-
+    $().w2form(addCicle);
+    $().w2layout(addLayoutCicle);
 
     w2ui.base_layout.content('left', w2ui.sidebar);
 

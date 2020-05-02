@@ -96,13 +96,11 @@ class Operations(ObjectAPI, ObjectDb):
         req = loads(request.form['request'])
         result = {}
 
-        comment = u"Перевод средств {0} в {1}".format(
-                req['record']['acc_from'], req['record']['acc_to']
-            )
+        comment = req['record']['comment_transact']
 
         code, idrec = self.add_operation(
             req['record']['amount_op'],
-            comment,
+            u"Перевод средств {0} в {1}".format(req['record']['acc_from'], req['record']['acc_to']),
             req['record']['type_op']
         )
 
