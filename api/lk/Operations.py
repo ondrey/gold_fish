@@ -97,8 +97,11 @@ class Operations(ObjectAPI, ObjectDb):
     def api_add_cicle_op(self):
         req = loads(request.form['request'])
         cur = self.connect.cursor()
-        code, idrec = self.add_operation(req['record']['price_op'], req['record']['comment_transact'],
-                                         req['record']['type_op'])
+        if 'id_exists' not in req:
+            code, idrec = self.add_operation(req['record']['price_op'], req['record']['comment_transact'],
+                                             req['record']['type_op'])
+        else:
+            idrec = req['id_exists']
 
         start = datetime.datetime.strptime(req['record']['date_start'], "%Y-%m-%d")
         stop = datetime.datetime.strptime(req['record']['date_finish'], "%Y-%m-%d")
