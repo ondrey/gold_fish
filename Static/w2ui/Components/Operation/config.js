@@ -2,8 +2,8 @@ layout_operation = {
   name: 'layout_operation',
   padding: 0,
   panels: [
-    { type: 'top', size: '60%',  content: 'main' },
-    { type: 'main', size:'40%', content: '7', resizable: true }
+    { type: 'top', size: '50%',  content: 'main', resizable: true },
+    { type: 'main', size:'50%', content: '7', resizable: true }
   ]
 }
 
@@ -23,8 +23,8 @@ config_operation = {
             toolbarDelete: true
         },
         onSelect: function(event) {   
-          w2ui.layout_operation.sizeTo('top', '60%');       
-          w2ui.layout_operation.sizeTo('main', '40%');
+          w2ui.layout_operation.sizeTo('top', '50%');       
+          w2ui.layout_operation.sizeTo('main', '50%');
           //Назначить фильтр по идентификатору для выбранной операции
           w2ui.transact_grid.postData['id_op'] = event.recid;
           w2ui.transact_grid.reload();
@@ -144,7 +144,7 @@ config_operation = {
                   
                   
                   if (rec.count_plan>0) {
-                    data.records[i]['percent_complate_op'] = Math.abs((rec.count_fact/rec.count_plan)*100) + '%'
+                    data.records[i]['percent_complate_op'] = Math.round(Math.abs((rec.count_fact/rec.count_plan)*100)) + '%'
                   }
 
                   data.records[i]['icon_class_op'] = '<i style="font-size: large" class="'+rec['icon_class_op']+'"></>'

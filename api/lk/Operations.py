@@ -2,6 +2,7 @@
 
 from json import loads
 import datetime
+import calendar
 
 from flask import jsonify
 from flask import request
@@ -61,18 +62,18 @@ class Operations(ObjectAPI, ObjectDb):
 
         amount_type = 'E'
         amount_code = int(amount_op)
-        if int(amount_op)/1000 > 0:
+        if int(amount_op) / 1000 > 0:
             amount_type = 'K'
-            amount_code = int(amount_op)/1000
-        if int(amount_op)/1000000 > 0:
+            amount_code = int(amount_op) / 1000
+        if int(amount_op) / 1000000 > 0:
             amount_type = 'M'
             amount_code = int(amount_op) / 1000000
 
         code = u"{0}{1}{2}{3}".format(
             type_op,
-            str(countOperations+1).rjust(6, '0'),
+            str(countOperations + 1).rjust(6, '0'),
             amount_type,
-            str(amount_code).rjust(3,'0')
+            str(amount_code).rjust(3, '0')
         )
 
         cur.execute(u"update Operations set code_op = '{0}' where id_op = {1}".format(
@@ -87,9 +88,94 @@ class Operations(ObjectAPI, ObjectDb):
         req = loads(request.form['request'])
         result = {}
 
-        code, idrec = self.add_operation(req['record']['amount_op'], req['record']['comment_op'], req['record']['type_op'])
+        code, idrec = self.add_operation(req['record']['amount_op'], req['record']['comment_op'],
+                                         req['record']['type_op'])
 
         return jsonify({'code': code, 'idrec': idrec, 'status': 'success'})
+
+    @isauth
+    def api_add_cicle_op(self):
+        req = loads(request.form['request'])
+        cur = self.connect.cursor()
+        code, idrec = self.add_operation(req['record']['price_op'], req['record']['comment_transact'],
+                                         req['record']['type_op'])
+
+        start = datetime.datetime.strptime(req['record']['date_start'], "%Y-%m-%d")
+        stop = datetime.datetime.strptime(req['record']['date_finish'], "%Y-%m-%d")
+        current = start
+        current_week_day = start.isoweekday()
+        transact_days = []
+        while current < stop:
+            if req['record']['unit']['id'] == 'day':
+                count_day = (stop - start).days
+                if count_day > 0:
+                    price = req['record']['price_op']*100
+                    if req['record']['price_for_unit'] == 1:
+                        # Разделить стоимость по колву отрезков
+                        price = req['record']['price_op']/count_day*100
+
+                    cur.execute(u"""insert into Transactions
+                        (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
+                        values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
+                        """.format(req['acc'], req['record']['id_item']['id'], self.user_id, current, 'NULL',
+                        0 - price if req['record']['id_item']['is_cost'] == '1' else price,
+                        req['record']['comment_transact'], idrec))
+                else:
+                    return jsonify({'status': 'error', 'message': u"Указанный период меньше суток."})
+
+            elif req['record']['unit']['id'] == 'week' and current.isoweekday() == current_week_day:
+                count_day = (stop - start).days / 7
+                if count_day > 0:
+                    price = req['record']['price_op'] * 100
+                    if req['record']['price_for_unit'] == 1:
+                        # Разделить стоимость по колву отрезков
+                        price = req['record']['price_op'] / count_day * 100
+
+                    cur.execute(u"""insert into Transactions
+                        (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
+                        values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
+                        """.format(req['acc'], req['record']['id_item']['id'], self.user_id, current, 'NULL',
+                                   0 - price if req['record']['id_item']['is_cost'] == '1' else price,
+                                   req['record']['comment_transact'], idrec))
+                else:
+                    return jsonify({'status': 'error', 'message': u"Указанный период меньше 7 дней."})
+
+            elif req['record']['unit']['id'] == 'month':
+                date_transact = None
+                if current.day == start.day and start.day != calendar.monthrange(start.year,start.month)[1]:
+                    # Если текущий день равен стартовому дню и стартовый день не является последним в своем месяце
+                    date_transact = datetime.date(current.year, current.month, current.day)
+
+                elif start.day == calendar.monthrange(start.year,start.month)[1] \
+                        and current.day == calendar.monthrange(current.year, current.month)[1]:
+                    # если стартовый день это последний день месяца и текущий день равен последнему дню месяца
+                    date_transact = datetime.date(
+                        current.year, current.month, calendar.monthrange(current.year, current.month)[1]
+                    )
+
+                if date_transact:
+                    transact_days.append(date_transact)
+
+            current = current + datetime.timedelta(days=1)
+
+        for date in transact_days:
+            # Сохраним транзакции по месяцам если они есть
+
+            price = req['record']['price_op'] * 100
+            if req['record']['price_for_unit'] == 1:
+                # Разделить стоимость по колву отрезков
+                price = req['record']['price_op'] / len(transact_days) * 100
+
+            cur.execute(u"""insert into Transactions
+                (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
+                values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
+                """.format(req['acc'], req['record']['id_item']['id'], self.user_id, date, 'NULL',
+                           0 - price if req['record']['id_item']['is_cost'] == '1' else price,
+                           req['record']['comment_transact'], idrec))
+
+        self.connect.commit()
+
+        return jsonify({'status': 'success'})
 
     @isauth
     def api_add_transfer_op(self):
@@ -107,7 +193,7 @@ class Operations(ObjectAPI, ObjectDb):
         curDate = datetime.datetime.now()
         dateOp = datetime.datetime.strptime(req['record']['date_op'], '%Y-%m-%d')
         fact_date = u"'{0}'".format(req['record']['date_op'])
-        if dateOp>curDate:
+        if dateOp > curDate:
             fact_date = u"NULL"
 
         price = req['record']['amount_op'] * 100
@@ -116,7 +202,7 @@ class Operations(ObjectAPI, ObjectDb):
         cur.execute(u"""insert into Transactions
                 (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
                 values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
-                """.format(req[u'acc_from'], -1, self.user_id, req['record']['date_op'], fact_date, 0-price, comment,
+                """.format(req[u'acc_from'], -1, self.user_id, req['record']['date_op'], fact_date, 0 - price, comment,
                            idrec))
 
         cur.execute(u"""insert into Transactions
@@ -128,7 +214,6 @@ class Operations(ObjectAPI, ObjectDb):
         self.connect.commit()
 
         return jsonify({'status': 'success'})
-
 
     @isauth
     def api_get_records(self):
@@ -187,7 +272,7 @@ class Operations(ObjectAPI, ObjectDb):
         records = []
         for row in cur.fetchall():
             records.append({
-                  'recid': row[0]
+                'recid': row[0]
                 , 'addate_op': row[1].strftime("%d.%m.%Y %H:%M")
                 , 'id_owner_op': row[2]
                 , 'amount_op': row[3]
