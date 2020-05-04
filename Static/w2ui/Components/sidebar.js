@@ -42,7 +42,6 @@ sidebar_config = {
         },
 
         onClick: function(event) {
-
             // Отображаем меню
             if (event.target == 'account') {
               w2ui.base_layout.content('main', w2ui.layout_account);
@@ -56,8 +55,10 @@ sidebar_config = {
               w2ui.base_layout.content('main', w2ui.transact_grid);
 
             } else if (event.target == 'confirm') {
-              w2ui.base_layout.content('main', w2ui.transact_grid);
-
+              w2ui.base_layout.content('main', w2ui.layout_confirm);
+              w2ui.layout_confirm.content('main', w2ui.transact_grid);
+              w2ui.layout_confirm.content('top', w2ui.editConfirm);
+                            
             } else if (event.target == 'operation') {
               w2ui.base_layout.content('main', w2ui.layout_operation);
                 w2ui.layout_operation.content('top', w2ui.config_operation);
@@ -69,6 +70,8 @@ sidebar_config = {
               w2ui.layout_account.sizeTo('top', '100%');
               w2ui.layout_operation.sizeTo('top', '100%');
               w2ui.transact_grid.postData = {};
+              w2ui.transact_grid.show.toolbar = true;
+              w2ui.transact_grid.show.selectColumn = false;
 
         }
     }

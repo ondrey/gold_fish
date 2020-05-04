@@ -29,6 +29,8 @@
   <script type="text/javascript" src="/static/w2ui/Components/Operation/addTransferOper.js"></script>
   <script type="text/javascript" src="/static/w2ui/Components/Operation/addCicleOper.js"></script>
 
+  <script type="text/javascript" src="/static/w2ui/Components/Confirm/config.js"></script>
+
 
 <script type="text/javascript">
 
@@ -70,6 +72,9 @@ $(function () {
     $().w2layout(addLayoutTransfer);
     $().w2form(addCicle);
     $().w2layout(addLayoutCicle);
+
+    $().w2layout(layout_confirm);
+    $().w2form(editConfirm);
 
     w2ui.base_layout.content('left', w2ui.sidebar);
 
