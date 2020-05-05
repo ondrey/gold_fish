@@ -89,6 +89,9 @@ class Transaction(ObjectAPI, ObjectDb):
                 if req['record']['id_item']['is_cost'] == '1':
                     price = 0 - price
 
+                if req['record']['counts']:
+                    price = price * int(req['record']['counts'])
+
                 sqlInsertTransaction = u"""
                 insert into Transactions(
                     id_acc
@@ -98,8 +101,9 @@ class Transaction(ObjectAPI, ObjectDb):
                     , date_fact
                     , ammount_trans
                     , comment_trans
-                    , id_op) 
-                values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
+                    , id_op
+                    , count_trans) 
+                values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})
                 """.format(
                     id_acc,
                     req['record']['id_item']['id'],
@@ -107,7 +111,8 @@ class Transaction(ObjectAPI, ObjectDb):
                     date_plan, date_fact,
                     price,
                     req['record']['comments'],
-                    req['id_op'] if 'id_op' in req else 'NULL'
+                    req['id_op'] if 'id_op' in req else 'NULL',
+                    req['record']['counts'] if req['record']['counts'] else 1
                 )
                 cur.execute(sqlInsertTransaction)
                 result = {'status': 'success'}
@@ -167,7 +172,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 us.name_user,
                 ts.id_trans,
                 ac.title_acc,
-                op.code_op
+                op.code_op,
+                ts.count_trans
             FROM Transactions AS ts
             INNER JOIN Accounts AS ac ON ts.id_acc = ac.id_acc
             INNER JOIN Items AS it ON it.id_item = ts.id_item
@@ -191,7 +197,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 u'addate_trans': u'ts.addate_trans',
                 u'title_item': u'it.title_item',
                 u'title_acc': u'ac.title_acc',
-                u'code_op': u'op.code_op'
+                u'code_op': u'op.code_op',
+                u'counts': u'ts.count_trans'
             }, logic=req['searchLogic']) if 'search' in req else u'1=1'
         )
 
@@ -209,7 +216,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 'name_user': rec[8],
                 'recid': rec[9],
                 'title_acc': rec[10],
-                'code_op': rec[11]
+                'code_op': rec[11],
+                'count_trans': rec[12]
             })
 
         cur.execute(u"SELECT FOUND_ROWS()")

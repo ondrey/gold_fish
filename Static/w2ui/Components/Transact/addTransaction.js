@@ -45,14 +45,21 @@ addTransaction = {
             }
         },
          
-        { name: 'ammount_trans', type: 'float', required: true,
-            html: { caption: 'Сумма', attr: 'size="40" maxlength="40"'},
-            options:{autoFormat: false, currencyPrecision:2, groupSymbol:' '}
-
-        },
         { field: 'comments',   type: 'textarea', 
             html: { caption: 'Комментарий', attr: 'style="height: 90px" cols="40"'  } 
         },
+        { name: 'ammount_trans', type: 'float', required: true,
+            html: { 
+                caption: 'Сумма', attr: 'size="33" maxlength="40"', 
+                text:' <a href="#" onClick="w2ui.addTransaction.show(\'counts\')">Кол-во</a>'
+            },
+            options:{autoFormat: false, currencyPrecision:2, groupSymbol:' '}
+
+        },
+
+        { field: 'counts',   type: 'int',  hidden: true,
+            html: { caption: 'Кол-во', attr: 'size="40" value="1"'  } 
+        },        
 
         { name: 'date_plan', type: 'date', hidden: true, 
             html: { caption: 'Плановая дата', attr: 'size="40" maxlength="40"'}
@@ -132,7 +139,7 @@ addTransaction = {
                                 w2ui.addTransaction.clear();
                                 w2popup.close();
                             } else {
-                                w2ui.addTransaction.clear();
+                                //w2ui.addTransaction.clear();
                             }
                         }
                     )                    

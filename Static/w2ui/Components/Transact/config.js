@@ -85,6 +85,7 @@ var transact_grid = {
             { field: 'comment_trans', caption: 'Комментарий', size: '200px', info: true},
             
             { field: 'ammount_trans', caption: 'Сумма', size: '80px', searchable: true}, 
+            { field: 'count_trans', caption: 'Кол-во', size: '40px'}, 
             { field: 'title_item', caption: 'Категория', size: '185px'},
             { field: 'date_fact', caption: 'Фактическая дата', size: '120px'},
 
