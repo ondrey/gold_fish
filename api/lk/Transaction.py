@@ -154,10 +154,15 @@ class Transaction(ObjectAPI, ObjectDb):
         cur = self.connect.cursor()
         rec_list = []
         id_acc = u""
+        hot_filter = u""
         if 'id_acc' in req:
             id_acc = u"ts.id_acc = {0} AND ".format(req['id_acc'])
         if 'id_op' in req:
             id_acc = u"ts.id_op = {0} AND ".format(req['id_op'])
+
+        if 'is_hot_filter' in req and req['is_hot_filter']:
+            hot_filter = u"((ts.date_fact is null and ts.date_plan <= CURRENT_DATE()) or " \
+                         u"ts.date_plan between current_date() and CURRENT_DATE() + INTERVAL 7 day) AND "
 
         sql = u"""
             SELECT 
@@ -180,7 +185,7 @@ class Transaction(ObjectAPI, ObjectDb):
             INNER JOIN Users AS us ON us.id_user = ts.id_user
             LEFT JOIN Operations AS op on op.id_op = ts.id_op
 
-            WHERE {0} ac.id_user_owner = {1} and {4}
+            WHERE {0} {5} ac.id_user_owner = {1} and {4}
             ORDER BY ts.date_fact, ts.date_plan DESC
             LIMIT {2} OFFSET {3}        
         """.format(
@@ -199,7 +204,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 u'title_acc': u'ac.title_acc',
                 u'code_op': u'op.code_op',
                 u'counts': u'ts.count_trans'
-            }, logic=req['searchLogic']) if 'search' in req else u'1=1'
+            }, logic=req['searchLogic']) if 'search' in req else u'1=1',
+            hot_filter
         )
 
         cur.execute(sql)

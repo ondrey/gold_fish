@@ -56,6 +56,7 @@ sidebar_config = {
                 w2ui.layout_operation.content('main', w2ui.transact_grid);
             } else if (event.target == 'transactions') {
               w2ui.base_layout.content('main', w2ui.transact_grid);
+              
             }
 
             // Действия совершаемые при каждой смене или обновлении текущего пункта меню.
@@ -65,6 +66,7 @@ sidebar_config = {
               w2ui.transact_grid.postData = {};
               w2ui.transact_grid.show.toolbar = true;
               w2ui.transact_grid.show.selectColumn = false;
+              
 
         }
     }

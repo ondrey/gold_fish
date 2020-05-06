@@ -26,13 +26,24 @@ var transact_grid = {
             toolbarAdd: true,
             toolbarEdit: true
         },
+        onRequest(event){
+            let filter = w2ui.transact_grid_toolbar.get("item1");
+            event.postData['is_hot_filter'] = filter.checked;            
+            return event
+        },
 
         toolbar: {
             items: [
-                //{ type: 'break' },
-                { type: 'spacer' },     
+                { type: 'break' },
+                { id: 'bt4', type: 'button', caption: 'Завершить сейчас', icon: 'fa fa-bolt' },
+                { type: 'spacer' },
+                { 
+                    type: 'check',  id: 'item1', caption: 'Тёплые', 
+                    icon: 'redicon fa fa-free-code-camp', checked: true,
+                    tooltip: "Отображать транзакции за сегодня + неделя планируемых."
+                },
 
-                { type: 'button', id: 'toggleAcc', caption: '', icon: 'fa fa-chevron-up' },
+                // { type: 'button', id: 'toggleAcc', caption: '', icon: 'fa fa-chevron-up' },
                 
                 
             ],
@@ -45,6 +56,10 @@ var transact_grid = {
                         w2ui.layout_account.toggle('top');
                     }
                     
+                } else if (target=='item1') {
+                    data.onComplete = function(){
+                        w2ui.transact_grid.reload();
+                    }
                 }
                 
             }
@@ -60,9 +75,10 @@ var transact_grid = {
                     const rec = data.records[i];
                     let flags = ''
                     data.records[i]['title_item_clear'] = data.records[i]['title_item'];
-
+                    let style_rec = []
                     if (Boolean(Number(rec['is_vertual_item']))) {
-                        data.records[i]['w2ui'] = {'style':'color: grey;'};
+                        style_rec.push('color: grey');
+                        
                         data.records[i]['title_item'] += ' (Вирт.)'
                     }
 
@@ -74,7 +90,15 @@ var transact_grid = {
                         data.records[i]['title_item']
                         = '<i class="fa fa-plus" style="font-size: larger;color: green;"></i> '
                         + data.records[i]['title_item'];
-                    }                         
+                    }  
+                    
+                    // Разукрасим просроченные
+                    
+                    if (new Date(rec.date_plan) < new Date(new Date().toDateString()) && !rec.date_fact) {
+                        data.records[i]['date_fact'] = '<i class="fa fa-bolt" style="font-size: initial; margin-left: 5px;color: brown;"></i>';
+                    } 
+                    
+                    data.records[i]['w2ui'] = {'style': style_rec.join(';')};
                 }
             }
             
@@ -98,22 +122,6 @@ var transact_grid = {
 
         searches: [
             { field: 'ammount_trans', caption: 'Сумма', type: 'float', options:{autoFormat: false, currencyPrecision:2, groupSymbol:' '} },
-            // { field: 'id_item',   type: 'list', caption: 'Категория',  
-            //   options: {
-            //     url: '/categories/get_list_transaction',
-            //     minLength: 0,
-            //     match: 'contains',    
-            //     postData: {
-            //         id_acc: -1
-            //     },
-            //     onRequest(event){
-            //         let sel = w2ui.config_accounts.getSelection();
-            //         event.postData.id_acc=sel[0];
-            //         return event
-            //     },
-            //     renderDrop: renderDropCategories,
-            //   }
-            // },
             { field: 'date_plan', caption: 'Плановая дата', type: 'date' },
             { field: 'title_item', caption: 'Категория', type:'text'},
             { field: 'title_acc', caption: 'Счет', type:'text'},
