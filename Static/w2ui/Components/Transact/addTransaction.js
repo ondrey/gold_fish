@@ -106,7 +106,7 @@ addTransaction = {
             }
         }
     },
-    actions: {        
+    actions: {
         Reset: function () { this.clear(); },
         Save: function () {
             var errors = this.validate();
@@ -139,6 +139,9 @@ addTransaction = {
                                 w2ui.addTransaction.clear();
                                 w2popup.close();
                             } else {
+                                w2ui.addTransaction.record.comments = "";
+                                w2ui.addTransaction.record.ammount_trans = "";
+                                w2ui.addTransaction.refresh();
                                 //w2ui.addTransaction.clear();
                             }
                         }
@@ -147,5 +150,15 @@ addTransaction = {
 
             
         }
-    }
+    },
+    onChange: function (event) {
+        if(event.target == 'id_item') {
+            if (event.value_new.default_price) {
+                w2ui.addTransaction.record['ammount_trans'] = event.value_new.default_price;
+                event.onComplete = function(){
+                    w2ui.addTransaction.refresh();
+                }
+            }
+        }
+    }    
 }

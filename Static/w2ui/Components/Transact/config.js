@@ -34,8 +34,8 @@ var transact_grid = {
 
         toolbar: {
             items: [
-                { type: 'break' },
-                { id: 'bt4', type: 'button', caption: 'Завершить сейчас', icon: 'fa fa-bolt' },
+                //{ type: 'break' },
+                //{ id: 'finish', type: 'button', caption: 'Завершить сейчас', icon: 'fa fa-bolt' },
                 { type: 'spacer' },
                 { 
                     type: 'check',  id: 'item1', caption: 'Тёплые', 
@@ -60,6 +60,8 @@ var transact_grid = {
                     data.onComplete = function(){
                         w2ui.transact_grid.reload();
                     }
+                } else if (target=='finish') {
+                   
                 }
                 
             }
@@ -95,7 +97,8 @@ var transact_grid = {
                     // Разукрасим просроченные
                     
                     if (new Date(rec.date_plan) < new Date(new Date().toDateString()) && !rec.date_fact) {
-                        data.records[i]['date_fact'] = '<i class="fa fa-bolt" style="font-size: initial; margin-left: 5px;color: brown;"></i>';
+                        data.records[i]['info'] = '<i class="fa fa-bolt" style="margin-left: 5px;color: #ff5e00;"></i>';
+                        style_rec.push('background-color:#ffdfcc');
                     } 
                     
                     data.records[i]['w2ui'] = {'style': style_rec.join(';')};
@@ -106,18 +109,19 @@ var transact_grid = {
         },       
 
         columns: [
-            { field: 'comment_trans', caption: 'Комментарий', size: '200px', info: true},
+            { field: 'info', caption: '', size: '40px', info: true},
+            { field: 'comment_trans', caption: 'Комментарий', size: '200px'},
             
             { field: 'ammount_trans', caption: 'Сумма', size: '80px', searchable: true}, 
-            { field: 'count_trans', caption: 'Кол-во', size: '40px'}, 
+            { field: 'count_trans', caption: 'Кол-во', size: '40px', hidden: true}, 
             { field: 'title_item', caption: 'Категория', size: '185px'},
             { field: 'date_fact', caption: 'Фактическая дата', size: '120px'},
 
             { field: 'date_plan', caption: 'Плановая дата', size: '120px', searchable: true},
-            { field: 'addate_trans', caption: 'Дата регистрации', size: '120px'},
-            { field: 'name_user', caption: 'Редактор', size: '120px'},
+            { field: 'addate_trans', caption: 'Дата регистрации', size: '120px', hidden: true},
+            { field: 'name_user', caption: 'Редактор', size: '120px', hidden: true},
             { field: 'title_acc', caption: 'Счет', size: '120px'},
-            { field: 'code_op', caption: 'Операция', size: '120px'}
+            { field: 'code_op', caption: 'Операция', size: '120px', hidden: true}
         ],        
 
         searches: [
@@ -181,16 +185,16 @@ var transact_grid = {
             
             let recid = w2ui.transact_grid.getSelection();
             let record = w2ui.transact_grid.get(recid[0]);
-            console.log(record);
-            if (record.date_fact && record.is_vertual_item != '1') {
-                event.preventDefault();
-                w2ui.layout_account.message('main', {
-                    width: 300,
-                    height: 150,
-                    body: '<div class="w2ui-centered">Нельзя удалить подтвержденную транзакцию.</div>',
-                    buttons: '<button class="w2ui-btn" onclick="w2ui.layout_account.message(\'main\')">Ясно</button>'
-                });
-            }
+            // console.log(record);
+            // if (record.date_fact && record.is_vertual_item != '1') {
+            //     event.preventDefault();
+            //     w2ui.layout_account.message('main', {
+            //         width: 300,
+            //         height: 150,
+            //         body: '<div class="w2ui-centered">Нельзя удалить подтвержденную транзакцию.</div>',
+            //         buttons: '<button class="w2ui-btn" onclick="w2ui.layout_account.message(\'main\')">Ясно</button>'
+            //     });
+            // }
         },
         onEdit(event){
 

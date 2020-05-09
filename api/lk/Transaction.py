@@ -136,10 +136,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 cur.execute(select)
                 trans = cur.fetchone()
                 if trans[0] != session['client_sess']['id_user']:
-                    result = {'status': 'error', 'message': u'Ошибка. Вы не можете удалять транзакции в чужих счетах, обратитесь к владельцу счета.'}
-                elif trans[1] and trans[2] != '1':
-                    result = {'status': 'error',
-                              'message': u'Ошибка. Нельзя удалить завершенную транзакцию.'}
+                    result = {'status': 'error', 'message': u'Ошибка. Вы не можете удалять транзакции в чужих счетах, '
+                                                            u'обратитесь к владельцу счета.'}
                 else:
                     cur.execute(u"delete from Transactions where id_trans = {0}".format(recid))
                     result = {'status': 'success'}

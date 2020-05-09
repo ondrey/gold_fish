@@ -15,11 +15,12 @@ config_categories = {
         },
 
         columns: [
-            { field: 'title_cat', caption: 'Наименование категории', size: '330px' },
-            { field: 'amount_cat', caption: 'Сумма', size: '90px' },
-            { field: 'bujet_cat_in_month', caption: 'На месяц', size: '120px' },
-            { field: 'avg_cat_in_month', caption: 'Среднее', size: '120px' },
-            { field: 'name_user', caption: 'Владелец', size: '150px'},
+            { field: 'title_cat', caption: 'Наименование категории', size: '330px', info:true},
+            { field: 'amount_cat', caption: 'Сумма транзакций', size: '90px' },
+            { field: 'bujet_cat_in_month', caption: 'Бюджет', size: '120px' },
+            { field: 'default_price', caption: 'Стоимость по умолчанию', size: '90px', hidden: true},
+            { field: 'unit_cat', caption: 'Ед.из.', size: '90px' , hidden: true},
+            { field: 'name_user', caption: 'Владелец', size: '150px', hidden: true},
             { field: 'discript_item', caption: 'Описание', size: '100%'},
         ],
 
@@ -103,7 +104,8 @@ config_categories = {
                             'discript_item': curRec['discript_item'],
                             'is_vertual_item': Boolean(Number(curRec['is_vertual_item'])),
                             'is_cost': Boolean(Number(curRec['is_cost'])),
-                            'id_item': curRec['recid']
+                            'id_item': curRec['recid'],
+                            'is_for_sub': Boolean(Number(curRec['is_for_sub']))
 
                         };
 
