@@ -32,11 +32,13 @@ addCategories = {
         },
     ],    
     actions: {
-        Reset: function () { this.clear(); },
+        Reset: function () { 
+            this.clear(); 
+        },
         Save: function () {
             var errors = this.validate();
             if (errors.length > 0) return;
-            let clear = this.clear;
+            
             this.save({
                 'record': this.record, 
                 'selection': w2ui.config_accounts.getSelection()

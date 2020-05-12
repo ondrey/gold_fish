@@ -76,6 +76,7 @@ config_categories = {
                 body    : '<div id="addCat"></div>',
                 onOpen  : function (event) {
                     event.onComplete = function () {
+                        w2ui.addCategories.clear();
                         $('#addCat').w2render('addCategories');
                     };
                 },
@@ -108,7 +109,7 @@ config_categories = {
                             'is_for_sub': Boolean(Number(curRec['is_for_sub']))
 
                         };
-
+                        
                         $('#addCat').w2render('addCategories');
                     };
                 }

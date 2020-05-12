@@ -19,7 +19,7 @@ class Categories(ObjectAPI, ObjectDb):
         ObjectAPI.__init__(self)
         ObjectDb.__init__(self)
 
-    def get_items(self, id_acc, is_for_sub=False):
+    def get_items(self, id_acc):
         rec_list = []
         cur = self.connect.cursor()
         cur.execute(u"""
@@ -34,8 +34,9 @@ class Categories(ObjectAPI, ObjectDb):
                 i.is_for_sub
             from Items as i 
             inner join Users u on u.id_user = i.id_user
-            where i.id_acc = {0} and {1}        
-        """.format(id_acc, u'i.is_for_sub is NULL' if not is_for_sub else u"i.is_for_sub = '1'"))
+            inner join Accounts a on a.id_acc = i.id_acc
+            where i.id_acc = {0} or (a.id_acc_root = i.id_acc_root and i.is_for_sub = '1')    
+        """.format(id_acc))
 
         for rec in cur.fetchall():
             rec_list.append({
@@ -56,11 +57,6 @@ class Categories(ObjectAPI, ObjectDb):
 
         if 'id_acc' in req:
             rec_list = self.get_items(req['id_acc'])
-            cur = self.connect.cursor()
-            cur.execute(u"select id_par_acc from Accounts where id_acc={0}".format(req['id_acc']))
-            id_par = cur.fetchone()
-            if id_par:
-                rec_list += self.get_items(id_par[0], True)
 
         return jsonify({
             "status": "success",
@@ -127,11 +123,16 @@ class Categories(ObjectAPI, ObjectDb):
         cur = self.connect.cursor()
         req = loads(request.form['request'])
 
+
+
         if not 'id_item' in req['record']:
+            cur.execute(u"select id_acc_root from Accounts where id_acc={0}".format(req['selection'][0]))
+            row = cur.fetchone()
+
             sql = u"""
             INSERT INTO Items (title_item, is_vertual_item, id_acc, discript_item, id_user, is_cost, 
-            budget_month_item, default_price_item, unit_price_item, is_for_sub) 
-            VALUES ('{0}', '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})        
+            budget_month_item, default_price_item, unit_price_item, is_for_sub, id_acc_root) 
+            VALUES ('{0}', '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10})        
             """.format(
                 req['record']['title_item'],
                 req['record']['is_vertual_item'],
@@ -142,7 +143,8 @@ class Categories(ObjectAPI, ObjectDb):
                 req['record']['bujet_cat_in_month']*100 if req['record']['bujet_cat_in_month'] else u'NULL',
                 req['record']['default_price']*100 if req['record']['default_price'] else u'NULL',
                 u"'{0}'".format(req['record']['unit_cat']) if req['record']['unit_cat'] else u'NULL',
-                req['record']['is_for_sub']
+                req['record']['is_for_sub'],
+                row[0]
             )
         else:
             sql = u"""

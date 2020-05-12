@@ -42,6 +42,7 @@ config_accounts = {
             toolbarEdit: true,
             columnHeaders: true
         },
+
         columns: [
             { field: 'title_acc', caption: 'Наименование счета', size: '330px' },
 
@@ -52,6 +53,8 @@ config_accounts = {
             { field: 'discription_acc', caption: 'Комментарий', size: '120px', hidden: true},
             { field: 'name_user_owner', caption: 'Владелец', size: '100%'}
         ],
+
+
         onSelect: function(event) {
             w2ui.layout_account.sizeTo('top', '50%');
             //Назначить фильтр по идентификатору для выбранного счета
