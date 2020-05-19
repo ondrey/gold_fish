@@ -35,7 +35,7 @@ class Categories(ObjectAPI, ObjectDb):
             from Items as i 
             inner join Users u on u.id_user = i.id_user
             inner join Accounts a on a.id_acc = i.id_acc
-            where i.id_acc = {0} or (a.id_acc_root = i.id_acc_root and i.is_for_sub = '1')    
+            where i.id_acc = {0} 
         """.format(id_acc))
 
         for rec in cur.fetchall():
@@ -47,8 +47,33 @@ class Categories(ObjectAPI, ObjectDb):
                 'default_price': float(rec[6]) if rec[6] else None
             })
 
-        return rec_list
+        cur.execute(u"""
+            select 
+                i.id_item,
+                i.is_vertual_item,
+                i.title_item,
+                i.discript_item,
+                i.is_cost,
+                u.name_user,
+                i.default_price_item / 100.0,
+                i.is_for_sub
+            from Accounts a
+            inner join Items i on i.id_acc_root = a.id_acc_root and i.is_for_sub = '1'
+            inner join Users u on u.id_user = i.id_user
+            where a.id_acc = {0}
+        """.format(id_acc))
 
+        for rec in cur.fetchall():
+            rec_list.append({
+                'text': rec[2],
+                'id': rec[0],
+                'is_vertual_item': rec[1],
+                'is_cost': rec[4],
+                'default_price': float(rec[6]) if rec[6] else None
+            })
+
+
+        return rec_list
 
     @isauth
     def api_get_list_transaction(self):
@@ -104,10 +129,10 @@ class Categories(ObjectAPI, ObjectDb):
                     'discript_item': rec[3],
                     'is_cost': rec[4],
                     'name_user': rec[5],
-                    'bujet_cat_in_month': float(rec[6]) if rec[6] else rec[6],
-                    'default_price': float(rec[7]) if rec[7] else rec[7],
+                    'bujet_cat_in_month': float(rec[6]) if rec[6] else 0,
+                    'default_price': float(rec[7]) if rec[7] else 0,
                     'unit_cat': rec[8],
-                    'amount_cat': float(rec[9]) if rec[9] else rec[9],
+                    'amount_cat': float(rec[9]) if rec[9] else 0,
                     'is_for_sub': rec[10]
                 })
 

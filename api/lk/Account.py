@@ -2,6 +2,7 @@
 
 
 from json import loads
+import datetime
 
 from flask import jsonify
 from flask import request
@@ -19,52 +20,6 @@ class Account(ObjectAPI, ObjectDb):
         ObjectDb.__init__(self)
         self.groups = {}
 
-    def get_sum_month(self, id_user):
-        sql = u"""
-        SELECT 
-        a.id_acc,
-        sum(t.ammount_trans),
-        sum(case when (t.ammount_trans>0) then  t.ammount_trans else 0 end)
-        from Transactions t 
-            inner join Accounts a on t.id_acc = a.id_acc
-            inner join Items i on i.id_item = t.id_item 
-        where 
-            a.id_user_owner = {0} 
-            and t.date_fact is not null 
-            and i.is_vertual_item != '1'
-            and EXTRACT(year from t.date_fact) = EXTRACT(year from current_date())
-            and EXTRACT(month from t.date_fact) = EXTRACT(month from current_date())
-        group by a.id_acc
-        """.format(id_user)
-        cur = self.connect.cursor()
-        cur.execute(sql)
-        result = {}
-        for row in cur.fetchall():
-            if row[0] not in result:
-                result[row[0]] = {'sum': row[1], 'plus': row[2], 'minus': row[1]-row[2]}
-
-        return result
-
-    def recalculate_sum_month(self):
-        cur = self.connect.cursor()
-
-        cur.execute(u"""
-        SELECT t.id_acc, sum(t.ammount_trans) 
-        from Transactions t 
-        inner join Items i on i.id_item = t.id_item and i.is_vertual_item != '1'
-        inner join Accounts a on a.id_acc = t.id_acc and a.id_user_owner = {0}
-            where t.date_fact < DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01') 
-            and (EXTRACT(month from a.date_last_sum) != EXTRACT(month from current_date()) or a.date_last_sum is NULL)
-            group by t.id_acc
-        """.format(session['client_sess']['id_user']))
-        curup = self.connect.cursor()
-        for row in cur.fetchall():
-            curup.execute(u"update Accounts set date_last_sum = current_date(), sum_month_acc={0} where id_acc={1}".format(
-                row[1], row[0]
-            ))
-        self.connect.commit()
-        pass
-
     def create_account_list(self, id_parent=None):
         cur = self.connect.cursor()
         sql = u"""
@@ -77,14 +32,35 @@ class Account(ObjectAPI, ObjectDb):
                     us.name_user,                
                     acc.is_public,
                     acc.sum_month_acc,
-                    acc.date_last_sum                    
+                    acc.date_last_sum,
+                    sum(case when (i.is_vertual_item = '1') then t.ammount_trans else 0 end) as "sum_vertual",
+                    sum(case when (i.is_vertual_item != '1') then t.ammount_trans else 0 end) as "sum_fact",
+                    sum(case when (i.is_vertual_item = '1' and t.ammount_trans < 0) then t.ammount_trans else 0 end) 
+                        as "sum_vertual_cost",
+                    sum(case when (i.is_vertual_item != '1' and t.ammount_trans < 0) then t.ammount_trans else 0 end) 
+                        as "sum_fact_cost"
                FROM 
                 Accounts as acc
-                left join Users as us 
-                on us.id_user = acc.id_user_owner
+                left join Transactions t on 
+                    t.id_acc = acc.id_acc 
+                    and extract(year from t.date_fact) = extract(year from current_date())
+                    and extract(MONTH from t.date_fact) = extract(month from current_date())
+                left join Items i 
+                    on i.id_item = t.id_item 
+                inner join Users as us 
+                    on us.id_user = acc.id_user_owner
             WHERE 
-            
-            (acc.id_user_owner = {0} or {2}) {1}
+            (acc.id_user_owner = {0} or {2}) {1}        
+            group by                     
+                acc.id_acc,
+                acc.id_par_acc,
+                acc.addate_acc,                          
+                acc.title_acc,                
+                acc.id_user_owner,
+                us.name_user,                
+                acc.is_public,
+                acc.sum_month_acc,
+                acc.date_last_sum               
             """.format(
                 session['client_sess']['id_user'],
                 u"and acc.id_par_acc = {0}".format(id_parent) if id_parent else u'and acc.id_par_acc is NULL',
@@ -95,18 +71,23 @@ class Account(ObjectAPI, ObjectDb):
 
         cur.execute(sql)
         records = []
-        sum_month = self.get_sum_month(session['client_sess']['id_user'])
+        sum_ch = dict(income=0.0, cost=0.0, inp=0.0)
 
         for i in cur.fetchall():
             ch = self.create_account_list(i[0])
             w2ui = {}
 
-            if len(ch) > 0:
-                w2ui.update({'children': ch})
-
-            income = round(float(sum_month[i[0]]['plus'])/100.0, 2) if i[0] in sum_month else 0
-            cost = round(float(sum_month[i[0]]['minus'])/100.0, 2) if i[0] in sum_month else 0
+            income = round(float(i[10] - i[12])/100.0,2)
+            cost = round(float(i[12])/100.0,2)
             inp = round(float(i[7]) / 100.0, 2)
+
+            if len(ch[0]) > 0:
+                w2ui.update({'children': ch[0]})
+
+                income = round(float(i[10] - i[12])/100.0 + ch[1]['income'], 2)
+                cost = round(float(i[12])/100.0 + ch[1]['cost'],2)
+                inp = round(float(i[7]) / 100.0 + ch[1]['inp'], 2)
+
             out = round(inp + (income + cost), 2)
 
             outicon = ''
@@ -134,16 +115,19 @@ class Account(ObjectAPI, ObjectDb):
                 'in': inp,
                 'out': outicon
             })
+            sum_ch['income'] += income
+            sum_ch['cost'] += cost
+            sum_ch['inp'] += inp
 
-        return records
+        return records, sum_ch
 
     @isauth
     def api_get_account_list(self):
-        self.recalculate_sum_month()
+
         res = self.create_account_list()
         return jsonify({
-            'total': len(res),
-            'records': res
+            'total': len(res[0]),
+            'records': res[0]
         })
 
     @isauth

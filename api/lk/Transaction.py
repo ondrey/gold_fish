@@ -92,29 +92,40 @@ class Transaction(ObjectAPI, ObjectDb):
                 if req['record']['counts']:
                     price = price * int(req['record']['counts'])
 
-                sqlInsertTransaction = u"""
-                insert into Transactions(
-                    id_acc
-                    , id_item
-                    , id_user
-                    , date_plan
-                    , date_fact
-                    , ammount_trans
-                    , comment_trans
-                    , id_op
-                    , count_trans) 
-                values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})
-                """.format(
-                    id_acc,
-                    req['record']['id_item']['id'],
-                    session['client_sess']['id_user'],
-                    date_plan, date_fact,
-                    price,
-                    req['record']['comments'],
-                    req['id_op'] if 'id_op' in req else 'NULL',
-                    req['record']['counts'] if req['record']['counts'] else 1
-                )
-                cur.execute(sqlInsertTransaction)
+                comment_split = req['record']['comments'].split('\n')
+                check_list = []
+                for check in comment_split:
+                    check = check.split('=')
+                    if len(check) == 2:
+                        try:
+                            p = int(float(check[1].replace(',', '.')) * 100)
+                            if req['record']['id_item']['is_cost'] == '1':
+                                p = 0 - p
+                            check_list.append({'text': check[0], 'price': p})
+                        except:
+                            pass
+
+                if len(check_list) == 0:
+                    sqlInsertTransaction = u"""
+                    insert into Transactions(id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans
+                        , id_op, count_trans) values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})
+                    """.format(id_acc, req['record']['id_item']['id'], session['client_sess']['id_user'], date_plan,
+                               date_fact, price, req['record']['comments'], req['id_op'] if 'id_op' in req else 'NULL',
+                               req['record']['counts'] if req['record']['counts'] else 1
+                    )
+                    cur.execute(sqlInsertTransaction)
+                else:
+                    for ch in check_list:
+                        sqlInsertTransaction = u"""
+                        insert into Transactions(id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans
+                            , id_op, count_trans) values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})
+                        """.format(id_acc, req['record']['id_item']['id'], session['client_sess']['id_user'], date_plan,
+                                   date_fact, ch['price'], ch['text'],
+                                   req['id_op'] if 'id_op' in req else 'NULL',
+                                   req['record']['counts'] if req['record']['counts'] else 1
+                                   )
+                        cur.execute(sqlInsertTransaction)
+
                 result = {'status': 'success'}
                 self.connect.commit()
 
