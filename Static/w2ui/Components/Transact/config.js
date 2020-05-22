@@ -31,7 +31,7 @@ var transact_grid = {
             event.postData['is_hot_filter'] = filter.checked;            
             return event
         },
-
+        
         toolbar: {
             items: [
                 //{ type: 'break' },

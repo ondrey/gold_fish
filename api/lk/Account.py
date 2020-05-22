@@ -33,18 +33,53 @@ class Account(ObjectAPI, ObjectDb):
                     acc.is_public,
                     acc.sum_month_acc,
                     acc.date_last_sum,
-                    sum(case when (i.is_vertual_item = '1') then t.ammount_trans else 0 end) as "sum_vertual",
-                    sum(case when (i.is_vertual_item != '1') then t.ammount_trans else 0 end) as "sum_fact",
-                    sum(case when (i.is_vertual_item = '1' and t.ammount_trans < 0) then t.ammount_trans else 0 end) 
-                        as "sum_vertual_cost",
-                    sum(case when (i.is_vertual_item != '1' and t.ammount_trans < 0) then t.ammount_trans else 0 end) 
-                        as "sum_fact_cost"
+                    0 as "sum_vertual",
+                    sum(
+                        case when (
+                            i.is_vertual_item != '1' 
+                            and extract(year from t.date_fact) = extract(year from current_date())
+                            and extract(MONTH from t.date_fact) = extract(month from current_date())
+                            ) 
+                        then t.ammount_trans else 0 
+                        end
+                    ) as "sum_fact",
+                    0 as "sum_vertual_cost",
+                    sum(
+                        case when (
+                            i.is_vertual_item != '1' 
+                            and t.ammount_trans < 0 and extract(year from t.date_fact) = extract(year from current_date())
+                            and extract(MONTH from t.date_fact) = extract(month from current_date())) 
+                        then t.ammount_trans else 0 
+                        end
+                    ) as "sum_fact_cost",
+                    sum(
+                        case when(
+                            t.date_plan < DATE_SUB(CURRENT_DATE(),INTERVAL DAYOFMONTH(CURRENT_DATE())-1 DAY) 
+                            and i.is_vertual_item != '1') 
+                        then t.ammount_trans else 0 
+                        end
+                    ) as "plan_all",
+                    sum(
+                        case when(
+                            t.date_fact < DATE_SUB(CURRENT_DATE(),INTERVAL DAYOFMONTH(CURRENT_DATE())-1 DAY) 
+                            and i.is_vertual_item != '1')
+                        then t.ammount_trans else 0 
+                        end
+                    ) as "fact_all",
+                    sum(
+                        case when(
+                            (t.date_plan 
+                                between DATE_SUB(CURRENT_DATE(),INTERVAL DAYOFMONTH(CURRENT_DATE())-1 DAY) 
+                                and LAST_DAY(CURRENT_DATE()))                             
+                            and i.is_vertual_item != '1')
+                        then t.ammount_trans else 0 
+                        end
+                    ) as "plan_month"                    
+                                   
                FROM 
                 Accounts as acc
                 left join Transactions t on 
-                    t.id_acc = acc.id_acc 
-                    and extract(year from t.date_fact) = extract(year from current_date())
-                    and extract(MONTH from t.date_fact) = extract(month from current_date())
+                    t.id_acc = acc.id_acc
                 left join Items i 
                     on i.id_item = t.id_item 
                 inner join Users as us 
@@ -71,7 +106,7 @@ class Account(ObjectAPI, ObjectDb):
 
         cur.execute(sql)
         records = []
-        sum_ch = dict(income=0.0, cost=0.0, inp=0.0)
+        sum_ch = dict(income=0.0, cost=0.0, inp=0.0, plan=0.0)
 
         for i in cur.fetchall():
             ch = self.create_account_list(i[0])
@@ -79,14 +114,16 @@ class Account(ObjectAPI, ObjectDb):
 
             income = round(float(i[10] - i[12])/100.0,2)
             cost = round(float(i[12])/100.0,2)
-            inp = round(float(i[7]) / 100.0, 2)
+            inp = round(float(i[14]) / 100.0, 2)
+            plan = round(float(i[15]) / 100.0, 2)
 
             if len(ch[0]) > 0:
                 w2ui.update({'children': ch[0]})
 
                 income = round(float(i[10] - i[12])/100.0 + ch[1]['income'], 2)
                 cost = round(float(i[12])/100.0 + ch[1]['cost'],2)
-                inp = round(float(i[7]) / 100.0 + ch[1]['inp'], 2)
+                inp = round(float(i[14]) / 100.0 + ch[1]['inp'], 2)
+                plan = round(float(i[15]) / 100.0 + ch[1]['plan'], 2)
 
             out = round(inp + (income + cost), 2)
 
@@ -113,11 +150,13 @@ class Account(ObjectAPI, ObjectDb):
                 'income': income,
                 'cost': cost,
                 'in': inp,
-                'out': outicon
+                'out': outicon,
+                'plan': plan
             })
             sum_ch['income'] += income
             sum_ch['cost'] += cost
             sum_ch['inp'] += inp
+            sum_ch['plan'] += plan
 
         return records, sum_ch
 

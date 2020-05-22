@@ -44,14 +44,15 @@ config_accounts = {
         },
 
         columns: [
-            { field: 'title_acc', caption: 'Наименование счета', size: '330px' },
+            { field: 'title_acc', caption: 'Наименование счета', size: '330px', expand:true },
 
             { field: 'in', caption: 'Входящий', size: '120px' },
             { field: 'income', caption: 'Приход', size: '120px' },
             { field: 'cost', caption: 'Расход', size: '120px' },
             { field: 'out', caption: 'Исходящий', size: '120px' },
+            { field: 'plan', caption: 'План до конца месяца', size: '150px' },
             { field: 'discription_acc', caption: 'Комментарий', size: '120px', hidden: true},
-            { field: 'name_user_owner', caption: 'Владелец', size: '100%'}
+            { field: 'name_user_owner', caption: 'Владелец', size: '100%', hidden: true}
         ],
 
 

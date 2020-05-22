@@ -58,7 +58,7 @@ class Categories(ObjectAPI, ObjectDb):
                 i.default_price_item / 100.0,
                 i.is_for_sub
             from Accounts a
-            inner join Items i on i.id_acc_root = a.id_acc_root and i.is_for_sub = '1'
+            inner join Items i on i.id_acc_root = a.id_acc_root and i.is_for_sub = '1' and i.id_acc != a.id_acc
             inner join Users u on u.id_user = i.id_user
             where a.id_acc = {0}
         """.format(id_acc))
@@ -194,7 +194,7 @@ class Categories(ObjectAPI, ObjectDb):
                 req['record']['bujet_cat_in_month']*100 if req['record']['bujet_cat_in_month'] else u'NULL',
                 req['record']['default_price']*100 if req['record']['default_price'] else u'NULL',
                 u"'{0}'".format(req['record']['unit_cat']) if req['record']['unit_cat'] else u'NULL',
-                req['record']['is_for_sub']
+                str(req['record']['is_for_sub'])
             )
 
         cur.execute(sql)
