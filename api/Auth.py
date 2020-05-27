@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 from hashlib import md5
 from random import choice
@@ -12,9 +12,10 @@ from flask import redirect, url_for
 from flask import current_app as app
 from flask_mail import Mail
 
-from ObjectAPI import ObjectAPI
-from ObjectAPI import render_tmp
-from ObjectDb import ObjectDb
+
+from api.ObjectAPI import render_tmp
+from api.ObjectDb import ObjectDb
+from api.ObjectAPI import ObjectAPI
 
 
 def isauth(f):
@@ -65,7 +66,7 @@ class Auth(ObjectAPI, ObjectDb):
         if 'user_mail' in request.form and 'user_password' in request.form:
             password = request.form['user_password']
             try:
-                password = md5(password).hexdigest()
+                password = md5(password.encode()).hexdigest()
             except:
                 return render_tmp('auth/login.html', mess=u"Пароль может состоять из символов латинского алфавита, цифр и знаков. Проверте раскладку!")
 
@@ -140,14 +141,14 @@ class Auth(ObjectAPI, ObjectDb):
                 if 'repass_code' in session and 'repass_email' in session:
 
                     try:
-                        md5(request.form['repass']).hexdigest()
+                        md5(request.form['repass'].encode()).hexdigest()
                     except:
                         return render_tmp('auth/repassword2.html', code=request.values['code'],
                                           mess=u"Пароль может содержать только латинские буквы, символы и цыфры.")
 
                     cur = self.connect.cursor()
                     cur.execute(u"update Users set password_user=%s where email_user=%s", (
-                        md5(request.form['repass']).hexdigest(), session['repass_email']))
+                        md5(request.form['repass'].encode()).hexdigest(), session['repass_email']))
                     self.connect.commit()
                     return render_tmp('auth/login.html', mess=u"Вы успешно сменили пароль. Попробуйте войти теперь.")
                 else:
@@ -168,16 +169,14 @@ class Auth(ObjectAPI, ObjectDb):
                 if request.form['user_password1'] != request.form['user_password2']:
                     error.append(u"Пароли не совпадают.")
                 else:
-                    try:
-                        md5(request.form['user_password1']).hexdigest()
 
-                        cur = self.connect.cursor()
-                        cur.execute(u"select * from Users where email_user=%s", (request.form['user_mail']))
+                    md5(request.form['user_password1'].encode()).hexdigest()
 
-                        for row in cur.fetchall():
-                            error.append(u"Пользователь с таким email уже зарегистрирован.")
-                    except:
-                        error.append(u"Пароль может содерать только символы латинского алфавита!")
+                    cur = self.connect.cursor()
+                    cur.execute(u"select * from Users where email_user=%s", (request.form['user_mail']))
+
+                    for row in cur.fetchall():
+                        error.append(u"Пользователь с таким email уже зарегистрирован.")
         else:
             error.append(u"Не хватает параметров.")
 
@@ -201,7 +200,7 @@ class Auth(ObjectAPI, ObjectDb):
             code = uuid4().hex
 
             cur.execute(sql, (
-                md5(request.form['user_password1']).hexdigest()
+                md5(request.form['user_password1'].encode()).hexdigest()
                 , request.form['user_mail']
                 , code
                 , request.form['name'],

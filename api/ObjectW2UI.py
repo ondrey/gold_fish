@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 
 def search2where(search=[], replase_field={}, logic=u'AND'):

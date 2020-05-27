@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 from datetime import timedelta
 
 
 class Config(object):
-    NAME_PROGECT = u"APIrator"
+    NAME_PROGECT = "Kojima.su"
     DEBUG = False
     SECRET_KEY = '\x00\xf1\x00Bv\x990\\1\x04\xe1\xe3g'
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=1000)
@@ -12,7 +11,17 @@ class Config(object):
 
 class ProductionConfig(Config):
     DEBUG = False
-    PERMANENT_SESSION_LIFETIME = timedelta(minutes=120)
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=180)
+    DB_CONNECT = dict(db='u1061027_kojima', user='u1061027_kojima', passwd='1V4a7R0u', host='31.31.196.104', port=3306,
+                      charset='cp1251')
+    # email server
+    MAIL_SERVER = 'mail.kojima.su'
+    MAIL_PORT = 465
+    #    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = 'info@kojima.su'
+    MAIL_PASSWORD = '6D5s9Y3s'
+    MAIL_DEFAULT_SENDER = ('Kojima.su', 'info@kojima.su')
 
 
 class DevelopmentConfig(Config):
@@ -26,20 +35,20 @@ class DevelopmentConfig(Config):
     }
 
 
+
 class TestingConfig(Config):
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=120)
     DEBUG = True
 
-
 class DevelopmentTemplateConfig(Config):
-
     DEBUG = True
     SECRET_KEY = '\x00\xf1\x00Bv\x97\x97K\x11w\xd0vJ\xcfL\xf2\xcf\x90\\1\x04\xe1\xe3g'
 
     DB_CONNECT = dict(db='kojima', user='prokat', passwd='prokatmysql', host='89.108.99.136', port=3306, charset='cp1251')
+    # DB_CONNECT = dict(db='kojima', user='kujimamysql', passwd='lmKDxPSy8sx0QQRv', host='194.58.90.103', port=3306, charset='cp1251')
 
     ADMINS = ['square.wind@yandex.ru', ]
-    ERROR_COMMENT = u"При возникновении сложностей, свяжитесь с администратором по телефону: +7 (967) 667 67 91."
+    ERROR_COMMENT = "При возникновении сложностей, свяжитесь с администратором по телефону: +7 (967) 667 67 91."
     TELEGRAM = "407030035:AAErYfnXpoVydKj3LGdH-gQuh91q7g-"
     SAVE_FILE_PATH = 'C:\\Users\\andrey\\Файлы апиратора'
     API_KEY = '1U6iWrABx0qBBOjwG5xrFyaASig6N0xpn9BP'
@@ -51,4 +60,4 @@ class DevelopmentTemplateConfig(Config):
     MAIL_USE_SSL = True
     MAIL_USERNAME = 'mag.ondrei@gmail.com'
     MAIL_PASSWORD = 'bdabilpfrtwnoijx'
-    MAIL_DEFAULT_SENDER = (u'Макрушин Андрей', 'mag.ondrei@gmail.com')
+    MAIL_DEFAULT_SENDER = ('Макрушин Андрей', 'mag.ondrei@gmail.com')

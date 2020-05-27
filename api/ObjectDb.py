@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 import pymysql
 from flask import current_app as app
 
