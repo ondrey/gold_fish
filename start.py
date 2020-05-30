@@ -6,7 +6,7 @@ from flask import redirect
 import api
 
 application = Flask(__name__)
-application.config.from_object('config.ProductionConfig')
+application.config.from_object('config.DevelopmentTemplateConfig')
 
 
 @application.route('/<api_group>/<method_api>', methods=["GET", "POST"])

@@ -67,6 +67,7 @@ sidebar_config = {
               w2ui.layout_account.sizeTo('top', '100%');
               w2ui.layout_operation.sizeTo('top', '100%');
               w2ui.transact_grid.postData = {};
+              w2ui.transact_grid.searchReset();
               w2ui.transact_grid.show.toolbar = true;
               w2ui.transact_grid.show.selectColumn = false;
               

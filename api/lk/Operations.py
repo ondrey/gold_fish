@@ -30,7 +30,7 @@ class Operations(ObjectAPI, ObjectDb):
         req = loads(request.form['request'])
 
         for id in req['selected']:
-            cur.execute(u"delete from Operations where id_op={0} and id_owner_op={1}".format(id, self.user_id))
+            cur.execute("delete from Operations where id_op={0} and id_owner_op={1}".format(id, self.user_id))
 
         self.connect.commit()
 
@@ -45,38 +45,38 @@ class Operations(ObjectAPI, ObjectDb):
         :return:
         """
         cur = self.connect.cursor()
-        cur.execute(u"insert into Operations (id_owner_op, amount_op, comment_op, type_op) "
-                    u"values ({0}, {1}, '{2}', '{3}')".format(
+        cur.execute("insert into Operations (id_owner_op, amount_op, comment_op, type_op) "
+                    "values ({0}, {1}, '{2}', '{3}')".format(
             self.user_id,
             amount_op,
             comment_op,
             type_op
         ))
         self.connect.commit()
-        cur.execute(u"SELECT LAST_INSERT_ID()")
+        cur.execute("SELECT LAST_INSERT_ID()")
         id_rec = cur.fetchone()[0]
-        cur.execute(u"select count(*) from Operations where type_op='{0}' and id_owner_op={1}".format(
+        cur.execute("select count(*) from Operations where type_op='{0}' and id_owner_op={1}".format(
             type_op, self.user_id
         ))
         countOperations = cur.fetchone()[0]
 
         amount_type = 'E'
         amount_code = int(amount_op)
-        if int(amount_op) / 1000 > 0:
+        if int(int(amount_op) / 1000) > 0:
             amount_type = 'K'
-            amount_code = int(amount_op) / 1000
-        if int(amount_op) / 1000000 > 0:
+            amount_code = int(int(amount_op) / 1000)
+        if int(int(amount_op) / 1000000) > 0:
             amount_type = 'M'
-            amount_code = int(amount_op) / 1000000
+            amount_code = int(int(amount_op) / 1000000)
 
-        code = u"{0}{1}{2}{3}".format(
+        code = "{0}{1}{2}{3}".format(
             type_op,
             str(countOperations + 1).rjust(6, '0'),
             amount_type,
             str(amount_code).rjust(3, '0')
         )
 
-        cur.execute(u"update Operations set code_op = '{0}' where id_op = {1}".format(
+        cur.execute("update Operations set code_op = '{0}' where id_op = {1}".format(
             code, id_rec
         ))
         self.connect.commit()
@@ -117,14 +117,14 @@ class Operations(ObjectAPI, ObjectDb):
                         # Разделить стоимость по колву отрезков
                         price = req['record']['price_op']/count_day*100
 
-                    cur.execute(u"""insert into Transactions
+                    cur.execute("""insert into Transactions
                         (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
                         values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
                         """.format(req['acc'], req['record']['id_item']['id'], self.user_id, current, 'NULL',
                         0 - price if req['record']['id_item']['is_cost'] == '1' else price,
                         req['record']['comment_transact'], idrec))
                 else:
-                    return jsonify({'status': 'error', 'message': u"Указанный период меньше суток."})
+                    return jsonify({'status': 'error', 'message': "Указанный период меньше суток."})
 
             elif req['record']['unit']['id'] == 'week' and current.isoweekday() == current_week_day:
                 count_day = (stop - start).days / 7
@@ -134,14 +134,14 @@ class Operations(ObjectAPI, ObjectDb):
                         # Разделить стоимость по колву отрезков
                         price = req['record']['price_op'] / count_day * 100
 
-                    cur.execute(u"""insert into Transactions
+                    cur.execute("""insert into Transactions
                         (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
                         values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
                         """.format(req['acc'], req['record']['id_item']['id'], self.user_id, current, 'NULL',
                                    0 - price if req['record']['id_item']['is_cost'] == '1' else price,
                                    req['record']['comment_transact'], idrec))
                 else:
-                    return jsonify({'status': 'error', 'message': u"Указанный период меньше 7 дней."})
+                    return jsonify({'status': 'error', 'message': "Указанный период меньше 7 дней."})
 
             elif req['record']['unit']['id'] == 'month':
                 date_transact = None
@@ -169,7 +169,7 @@ class Operations(ObjectAPI, ObjectDb):
                 # Разделить стоимость по колву отрезков
                 price = req['record']['price_op'] / len(transact_days) * 100
 
-            cur.execute(u"""insert into Transactions
+            cur.execute("""insert into Transactions
                 (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
                 values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
                 """.format(req['acc'], req['record']['id_item']['id'], self.user_id, date, 'NULL',
@@ -189,26 +189,26 @@ class Operations(ObjectAPI, ObjectDb):
 
         code, idrec = self.add_operation(
             req['record']['amount_op'],
-            u"Перевод средств {0} в {1}".format(req['record']['acc_from'], req['record']['acc_to']),
+            "Перевод средств {0} в {1}".format(req['record']['acc_from'], req['record']['acc_to']),
             req['record']['type_op']
         )
 
         curDate = datetime.datetime.now()
         dateOp = datetime.datetime.strptime(req['record']['date_op'], '%Y-%m-%d')
-        fact_date = u"'{0}'".format(req['record']['date_op'])
+        fact_date = "'{0}'".format(req['record']['date_op'])
         if dateOp > curDate:
-            fact_date = u"NULL"
+            fact_date = "NULL"
 
         price = req['record']['amount_op'] * 100
 
         cur = self.connect.cursor()
-        cur.execute(u"""insert into Transactions
+        cur.execute("""insert into Transactions
                 (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
                 values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
                 """.format(req[u'acc_from'], -1, self.user_id, req['record']['date_op'], fact_date, 0 - price, comment,
                            idrec))
 
-        cur.execute(u"""insert into Transactions
+        cur.execute("""insert into Transactions
                 (id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans, id_op)
                 values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
                 """.format(req[u'acc_to'], -2, self.user_id, req['record']['date_op'], fact_date, price, comment,
@@ -222,7 +222,7 @@ class Operations(ObjectAPI, ObjectDb):
     def api_get_records(self):
         req = loads(request.form['request'])
         cur = self.connect.cursor()
-        sql = u"""
+        sql = """
         select SQL_CALC_FOUND_ROWS * from
         (select
             op.id_op as id,
@@ -292,7 +292,7 @@ class Operations(ObjectAPI, ObjectDb):
                 , 'icon_class_op': row[14]
             })
 
-        cur.execute(u"SELECT FOUND_ROWS()")
+        cur.execute("SELECT FOUND_ROWS()")
         total = cur.fetchone()
 
         return jsonify({

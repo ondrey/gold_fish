@@ -50,7 +50,7 @@ class ExcelExport(ObjectAPI, ObjectDb):
                     on ou.id_user = op.id_owner_op 
                 left join OpType opt 
                     on opt.alias_typeop = op.type_op 
-            where u.id_user = 34        
+            where u.id_user = {0}        
         """.format(session['client_sess']['id_user'])
         cur = self.connect.cursor()
         cur.execute(sql)
@@ -93,4 +93,4 @@ class ExcelExport(ObjectAPI, ObjectDb):
 
         workbook.close()
         output.seek(0)
-        return send_file(output, attachment_filename="testing.xlsx", as_attachment=True)
+        return send_file(output, attachment_filename="{}-транзакции.xlsx".format(session['client_sess']['name_user']), as_attachment=True)
