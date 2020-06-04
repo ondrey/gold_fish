@@ -110,7 +110,7 @@ var transact_grid = {
 
         columns: [
             { field: 'info', caption: '', size: '40px', info: true},
-            { field: 'comment_trans', caption: 'Комментарий', size: '200px'},
+            { field: 'comment_trans', caption: 'Комментарий', size: '460px'},
             
             { field: 'ammount_trans', caption: 'Сумма', size: '80px', searchable: true}, 
             { field: 'count_trans', caption: 'Кол-во', size: '40px', hidden: true}, 

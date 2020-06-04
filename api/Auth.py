@@ -1,7 +1,6 @@
-
-
+import string
 from hashlib import md5
-from random import choice
+from random import choice, randint
 from uuid import uuid4
 
 from flask import jsonify
@@ -59,7 +58,8 @@ class Auth(ObjectAPI, ObjectDb):
             session['client_sess']['name_user'] = request.form['user_name']
             self.connect.commit()
 
-        return render_tmp('auth/userinfo.html', code_emploey=session['client_sess']['guid_user'])
+        return render_tmp('auth/userinfo.html', code_emploey=session['client_sess']['guid_user'],
+                          code_session=session['client_sess']['code_session'])
 
     def api_login(self):
 
@@ -83,12 +83,21 @@ class Auth(ObjectAPI, ObjectDb):
                 session['client_sess']['name_user'] = row[2]
                 session['client_sess']['id_manager_user'] = row[3]
                 session['client_sess']['guid_user'] = row[4]
+                session['client_sess']['code_session'] = self.update_session(row[0])
 
                 return redirect("/app")
 
             return render_tmp('auth/login.html', mess=u"Ошибка! Такого сочетания логина и пароля, не зарегистрированно.")
         else:
             return render_tmp('auth/login.html', mess=u"Не передан один из параметров")
+
+    def update_session(self, id_user):
+        cur = self.connect.cursor()
+        code_session = ''.join([string.digits[randint(0, 9)] for i in range(4)])
+        cur.execute("update Users set telegram_add_code = {0} where id_user = {1}".format(code_session, id_user))
+        self.connect.commit()
+        return code_session
+
 
     def api_logout(self):
         """

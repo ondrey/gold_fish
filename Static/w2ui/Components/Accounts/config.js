@@ -42,11 +42,21 @@ config_accounts = {
             toolbarEdit: true,
             columnHeaders: true
         },
+        onLoad: function(event) {
+            event.onComplete = function(ev){                
+                w2ui.config_accounts.records.forEach(el => {                    
+                    if ('children' in el.w2ui) {      
+                        w2ui.config_accounts.expand(el.recid);
+                    }
+                });
+            }
+        },
+     
 
         columns: [
-            { field: 'title_acc', caption: 'Наименование счета', size: '330px', expand:true },
+            { field: 'title_acc', caption: 'Наименование счета', size: '330px'},
 
-            { field: 'balance', caption: 'Баланс', size: '120px' },
+            { field: 'balance', caption: 'Баланс', size: '120px'},
             { field: 'cost_day', caption: 'Расход на сегодня', size: '120px' },
             { field: 'income_day', caption: 'Приход на сегодня', size: '120px' },
             { field: 'cost_month', caption: 'Расход за месяц', size: '120px' },

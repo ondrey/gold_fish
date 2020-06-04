@@ -113,11 +113,11 @@ class Account(ObjectAPI, ObjectDb):
                 'is_public': i[6],
                 'w2ui': w2ui,
                 'title_acc_clear': i[3],
-                'balance': balance,
-                'cost_month': cost_month,
-                'cost_day': cost_day,
-                'income_month': income_month,
-                'income_day': income_day
+                'balance': '{:,}'.format(round(balance, 2)).replace(',', ' '),
+                'cost_month': '{:,}'.format(round(cost_month, 2)).replace(',', ' '),
+                'cost_day': '{:,}'.format(round(cost_day, 2)).replace(',', ' '),
+                'income_month': '{:,}'.format(round(income_month, 2)).replace(',', ' '),
+                'income_day': '{:,}'.format(round(income_day, 2)).replace(',', ' ')
             })
             balance_ch['balance'] += balance
             balance_ch['cost_month'] += cost_month
