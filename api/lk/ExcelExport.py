@@ -38,7 +38,7 @@ class ExcelExport(ObjectAPI, ObjectDb):
             inner join Transactions t 
                 on t.id_user = u.id_user 		
             inner join Items i 
-                on i.id_acc = t.id_acc		
+                on i.id_item = t.id_item		
                 inner join Users iu 
                     on i.id_user = iu.id_user 
             inner join Accounts a 
@@ -57,7 +57,13 @@ class ExcelExport(ObjectAPI, ObjectDb):
 
         output = BytesIO()
         workbook = xlsxwriter.Workbook(output)
+
+        formatdict = {'num_format': 'mm/dd/yyyy'}
+        fmt = workbook.add_format(formatdict)
+
         worksheet = workbook.add_worksheet()
+        worksheet.set_column(0, 3, None, fmt)
+
         row_id = 0
         worksheet.write(row_id, 0, u'Дата регистрации')
         worksheet.write(row_id, 1, u'Плановая дата')

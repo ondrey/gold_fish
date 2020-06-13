@@ -222,7 +222,8 @@ var transact_grid = {
                         event.onComplete = function (event) {
                             w2ui.editTransaction.record['comments'] = record.comment_trans;
                             w2ui.editTransaction.record['date_plan'] = record.date_plan;
-                            w2ui.editTransaction.record['ammount_trans'] = record.ammount_trans;  
+                            w2ui.editTransaction.record['ammount_trans'] = record.ammount_trans; 
+                            w2ui.editTransaction.record['id_item'] = {id: record.id_item, text: record.title_item_clear};
                             $('#editrans').w2render('editTransaction');
                         };
                     }

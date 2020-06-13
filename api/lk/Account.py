@@ -56,7 +56,7 @@ class Account(ObjectAPI, ObjectDb):
                 left join Transactions t on 
                     t.id_acc = acc.id_acc
                 left join Items i 
-                    on i.id_item = t.id_item 
+                    on i.id_item = t.id_item and i.is_vertual_item = 0
                 inner join Users as us 
                     on us.id_user = acc.id_user_owner
             WHERE 
