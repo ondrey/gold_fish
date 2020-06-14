@@ -26,9 +26,9 @@ var transact_grid = {
             toolbarAdd: true,
             toolbarEdit: true
         },
-        onRequest(event){
+        onRequest(event){            
             let filter = w2ui.transact_grid_toolbar.get("item1");
-            event.postData['is_hot_filter'] = filter.checked;            
+            event.postData['is_hot_filter'] = filter.checked;   
             return event
         },
         
@@ -36,19 +36,30 @@ var transact_grid = {
             items: [
                 //{ type: 'break' },
                 //{ id: 'finish', type: 'button', caption: 'Завершить сейчас', icon: 'fa fa-bolt' },
+                
                 { type: 'spacer' },
+                
+                { type: 'menu',   id: 'menu_transact', caption: 'Действия', 
+                    items: [
+                        { id: 'cut', text: 'Вырезать', icon: 'fa fa-scissors' }, 
+                        { id: 'paste', text: 'Вставить', icon: 'fa fa-clipboard', count: 0, cut: [] }
+                    ]
+                },
+                
                 { 
                     type: 'check',  id: 'item1', caption: 'Тёплые', 
                     icon: 'redicon fa fa-free-code-camp', checked: true,
                     tooltip: "Отображать транзакции за сегодня + неделя планируемых."
                 },
+                
+
 
                 // { type: 'button', id: 'toggleAcc', caption: '', icon: 'fa fa-chevron-up' },
                 
                 
             ],
             onClick: function (target, data) {
-                
+
                 if (target=='toggleAcc') {
                     if (w2ui.layout_operation.box) {
                         w2ui.layout_operation.toggle('top');
@@ -62,6 +73,45 @@ var transact_grid = {
                     }
                 } else if (target=='finish') {
                    
+                } else if (target=='menu_transact') {
+                                        
+                    if (w2ui.transact_grid.getSelection().length) {
+                        w2ui.transact_grid_toolbar.set('menu_transact:cut', { disabled: false})
+                    } else {
+                        w2ui.transact_grid_toolbar.set('menu_transact:cut', { disabled: true})
+                    }
+                    let paste = w2ui.transact_grid_toolbar.get('menu_transact:paste')
+                    if (paste.count>0) {
+                        w2ui.transact_grid_toolbar.set('menu_transact:paste', { disabled: false})
+                    } else {
+                        w2ui.transact_grid_toolbar.set('menu_transact:paste', { disabled: true})
+                    }
+                    
+                } else if (target=='menu_transact:cut') {
+                    w2ui.transact_grid_toolbar.set('menu_transact:paste', {
+                        disabled: false, 
+                        cut: w2ui.transact_grid.getSelection(),
+                        count: w2ui.transact_grid.getSelection().length
+                    })
+                } else if (target=='menu_transact:paste') {
+                    let paste = w2ui.transact_grid_toolbar.get('menu_transact:paste')
+                    let id_new_acc = w2ui.config_accounts.getSelection()
+
+                    if (id_new_acc.length) {
+                        $.post("/transaction/paste_in_account", {
+                            data: JSON.stringify({id_trans: paste.cut, id_new_acc: id_new_acc[0]})
+                        }, function(result){
+                            if(result['ok']) {
+                                w2ui.transact_grid.reload()
+                            }                            
+                          });
+                    }
+
+                    w2ui.transact_grid_toolbar.set('menu_transact:paste', {
+                        disabled: true, 
+                        cut: [],
+                        count: 0
+                    })
                 }
                 
             }
@@ -233,6 +283,5 @@ var transact_grid = {
             
           
             
-         },
-
+         } 
     }

@@ -31,7 +31,8 @@ class Categories(ObjectAPI, ObjectDb):
                 i.is_cost,
                 u.name_user,
                 i.default_price_item / 100.0,
-                i.is_for_sub
+                i.is_for_sub,
+                i.for_telegramm
             from Items as i 
             inner join Users u on u.id_user = i.id_user
             inner join Accounts a on a.id_acc = i.id_acc
@@ -44,7 +45,8 @@ class Categories(ObjectAPI, ObjectDb):
                 'id': rec[0],
                 'is_vertual_item': rec[1],
                 'is_cost': rec[4],
-                'default_price': float(rec[6]) if rec[6] else None
+                'default_price': float(rec[6]) if rec[6] else None,
+                'for_telegramm': rec[8]
             })
 
         cur.execute(u"""
@@ -109,13 +111,14 @@ class Categories(ObjectAPI, ObjectDb):
                     i.default_price_item / 100.0,
                     i.unit_price_item, 
                     sum(ts.ammount_trans ) / 100.0,
-                    i.is_for_sub
+                    i.is_for_sub,
+                    i.for_telegramm
                 from Items as i 
                 inner join Users u on u.id_user = i.id_user
                 left join Transactions ts on ts.id_item = i.id_item and ts.date_fact >= '{1}'
                 where i.id_acc = {0}
                 group by i.id_item, i.is_vertual_item, i.title_item, i.discript_item, i.is_cost, 
-                u.name_user, i.budget_month_item, i.default_price_item, i.unit_price_item, i.is_for_sub      
+                u.name_user, i.budget_month_item, i.default_price_item, i.unit_price_item, i.is_for_sub, i.for_telegramm      
             """.format(
                 req['id_acc'],
                 cur_date.strftime("%Y-%m-%d")
@@ -133,7 +136,8 @@ class Categories(ObjectAPI, ObjectDb):
                     'default_price': float(rec[7]) if rec[7] else 0,
                     'unit_cat': rec[8],
                     'amount_cat': float(rec[9]) if rec[9] else 0,
-                    'is_for_sub': rec[10]
+                    'is_for_sub': rec[10],
+                    'for_telegramm': rec[11]
                 })
 
         return jsonify({
@@ -156,8 +160,8 @@ class Categories(ObjectAPI, ObjectDb):
 
             sql = u"""
             INSERT INTO Items (title_item, is_vertual_item, id_acc, discript_item, id_user, is_cost, 
-            budget_month_item, default_price_item, unit_price_item, is_for_sub, id_acc_root) 
-            VALUES ('{0}', '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10})        
+            budget_month_item, default_price_item, unit_price_item, is_for_sub, id_acc_root, for_telegramm) 
+            VALUES ('{0}', '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})        
             """.format(
                 req['record']['title_item'],
                 req['record']['is_vertual_item'],
@@ -169,7 +173,8 @@ class Categories(ObjectAPI, ObjectDb):
                 req['record']['default_price']*100 if req['record']['default_price'] else u'NULL',
                 u"'{0}'".format(req['record']['unit_cat']) if req['record']['unit_cat'] else u'NULL',
                 req['record']['is_for_sub'],
-                row[0]
+                row[0],
+                req['record']['for_telegramm']
             )
         else:
             sql = u"""
@@ -181,7 +186,8 @@ class Categories(ObjectAPI, ObjectDb):
                 budget_month_item={6}, 
                 default_price_item={7}, 
                 unit_price_item={8},
-                is_for_sub={9}
+                is_for_sub={9},
+                for_telegramm={10}
             WHERE 
                 id_item={4} and id_user={5}
             """.format(
@@ -194,7 +200,8 @@ class Categories(ObjectAPI, ObjectDb):
                 req['record']['bujet_cat_in_month']*100 if req['record']['bujet_cat_in_month'] else u'NULL',
                 req['record']['default_price']*100 if req['record']['default_price'] else u'NULL',
                 u"'{0}'".format(req['record']['unit_cat']) if req['record']['unit_cat'] else u'NULL',
-                str(req['record']['is_for_sub'])
+                str(req['record']['is_for_sub']),
+                str(req['record']['for_telegramm'])
             )
 
         cur.execute(sql)

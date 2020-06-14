@@ -245,3 +245,21 @@ class Transaction(ObjectAPI, ObjectDb):
             'total': total,
             'records': rec_list
         })
+
+    @isauth
+    def api_paste_in_account(self):
+        req = loads(request.form['data'])
+
+        if 'id_trans' in req and 'id_new_acc' in req:
+            cur = self.connect.cursor()
+
+            for id in req['id_trans']:
+                cur.execute("update Transactions set id_acc = {0} where id_trans = {1} and id_user={2}".format(
+                    req['id_new_acc'], id, session['client_sess']['id_user']
+                ))
+            self.connect.commit()
+
+        return jsonify({
+            'total': len(req['id_trans']),
+            'ok': True
+        })

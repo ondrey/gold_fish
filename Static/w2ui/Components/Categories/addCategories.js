@@ -13,6 +13,10 @@ addCategories = {
         { field: 'is_cost', type: 'checkbox',
             html: { caption: ' ', attr: 'style="width: auto;"', text:' Статья расхода' }
         },
+        { field: 'for_telegramm', type: 'checkbox',
+            html: { caption: ' ', attr: 'style="width: auto;"', text:' Регистрация из телеграмм' }
+        },
+
         { field: 'is_for_sub', type: 'checkbox',
             html: { caption: ' ', attr: 'style="width: auto;"', text:' Общий для дочерних счетов' }
         },

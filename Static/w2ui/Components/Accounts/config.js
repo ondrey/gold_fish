@@ -50,6 +50,7 @@ config_accounts = {
                     }
                 });
             }
+            w2ui.transact_grid_toolbar.set('menu_transact', { disabled: false});
         },
      
 
