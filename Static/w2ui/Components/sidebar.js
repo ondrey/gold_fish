@@ -39,8 +39,8 @@ sidebar_config = {
             },
 
         onRender: function(event) {
-                this.click('account');
-                this.select('account');
+                this.click('transactions');
+                this.select('transactions');
         },
 
         onClick: function(event) {

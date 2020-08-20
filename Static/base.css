@@ -158,20 +158,25 @@ input[type="submit"] {
 }
 
 .lindex {
-    display: flex;
-    margin-top: 80px;
-    color: #777777;
-    font-size: x-large;
+	font-size: xx-large;
+    text-align: end;
+	color: #b1b1b1;
+	margin-top: 45px;
 }
-.lindex .fa {
-    font-size: xx-large;
-    margin: 10px;
-    color: #32819e;    
+.lindex div{
+	color: #32819e;
+    font-size: medium;
+    text-align: left;    
+    padding: 15px;
+    box-shadow: 2px 2px 5px;
+	border-radius: 4px;
+	display: flex;
+	margin-top: 25px;
 }
 
+
 .lindex img {
-    margin-left: 15px;
-	margin-right: 15px;
-	border-style: outset;
+    border-radius: 6px;
+    margin-right: 10px;
 }
 

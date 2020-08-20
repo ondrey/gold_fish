@@ -171,7 +171,7 @@ class Transaction(ObjectAPI, ObjectDb):
 
         if 'is_hot_filter' in req and req['is_hot_filter']:
             hot_filter = u"((ts.date_fact is null and ts.date_plan <= CURRENT_DATE()) or " \
-                         u"ts.date_plan between current_date() and CURRENT_DATE() + INTERVAL 7 day) AND "
+                         u"ts.date_plan between current_date() and CURRENT_DATE() + INTERVAL 2 day) AND "
 
         sql = u"""
             SELECT 

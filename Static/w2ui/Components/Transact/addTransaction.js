@@ -68,8 +68,8 @@ addTransaction = {
 
             { type: 'check',  id: 'virt',  text: 'Виртуальная', icon: 'fa fa-low-vision'},
             { id: 'breakv', type: 'break' },
-            { type: 'radio',  id: 'plus',  group: '1', text: 'Доход', icon: 'fa fa-plus', checked: true},
-            { type: 'radio',  id: 'minus',  group: '1', text: 'Расход', icon: 'fa fa-minus'},
+            { type: 'radio',  id: 'plus',  group: '1', text: 'Доход', icon: 'fa fa-plus'},
+            { type: 'radio',  id: 'minus',  group: '1', text: 'Расход', icon: 'fa fa-minus', checked: true},
             
             { id: 'bt3', type: 'spacer' },
             { id: 'plan', type: 'radio', group: '2', text:'Планируется', icon: 'fa fa-calendar-check-o'},
