@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from flask import abort
 from flask import render_template
 from json import dumps
@@ -41,7 +41,7 @@ class ObjectAPI:
             api_function = getattr(self, fnm)
             try:
                 return api_function()
-            except ErrorAPI, ex:
+            except ErrorAPI as ex:
                 return dumps(dict(user_mess=ex.message, type_mess=ex.errors), ensure_ascii=True)
 
         abort(404)

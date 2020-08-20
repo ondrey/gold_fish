@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 from io import BytesIO
 import xlsxwriter
@@ -38,8 +38,8 @@ class ExcelExport(ObjectAPI, ObjectDb):
             inner join Transactions t 
                 on t.id_user = u.id_user 		
             inner join Items i 
-                on i.id_acc = t.id_acc		
-                inner join Users iu 
+                on i.id_item = t.id_item		
+                left join Users iu 
                     on i.id_user = iu.id_user 
             inner join Accounts a 
                 on a.id_acc = t.id_acc or (a.is_public = '1' and a.id_user_owner = u.id_manager_user)		 
@@ -50,14 +50,20 @@ class ExcelExport(ObjectAPI, ObjectDb):
                     on ou.id_user = op.id_owner_op 
                 left join OpType opt 
                     on opt.alias_typeop = op.type_op 
-            where u.id_user = 34        
+            where u.id_user = {0}        
         """.format(session['client_sess']['id_user'])
         cur = self.connect.cursor()
         cur.execute(sql)
 
         output = BytesIO()
         workbook = xlsxwriter.Workbook(output)
+
+        formatdict = {'num_format': 'mm/dd/yyyy'}
+        fmt = workbook.add_format(formatdict)
+
         worksheet = workbook.add_worksheet()
+        worksheet.set_column(0, 3, None, fmt)
+
         row_id = 0
         worksheet.write(row_id, 0, u'Дата регистрации')
         worksheet.write(row_id, 1, u'Плановая дата')
@@ -93,4 +99,4 @@ class ExcelExport(ObjectAPI, ObjectDb):
 
         workbook.close()
         output.seek(0)
-        return send_file(output, attachment_filename="testing.xlsx", as_attachment=True)
+        return send_file(output, attachment_filename="{}-транзакции.xlsx".format(session['client_sess']['name_user']), as_attachment=True)

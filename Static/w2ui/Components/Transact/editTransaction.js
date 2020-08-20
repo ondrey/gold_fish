@@ -17,7 +17,27 @@ editTransaction = {
             html: { caption: 'Сумма', attr: 'size="40" maxlength="40"'},
             options:{autoFormat: false, currencyPrecision:2, groupSymbol:' '}
 
+        }, 
+        
+        { field: 'id_item',   type: 'list', required: true,
+            html: { caption: 'Категория', attr: 'size="40" maxlength="40"' },
+            options: {
+                url: '/categories/get_list_transaction',
+                minLength: 0,
+                match: 'contains',    
+                postData: {
+                    id_acc: -1
+                },
+                onRequest(event){                    
+                    event.postData.id_acc=w2ui.transact_grid.postData.id_acc;
+                    return event
+                },
+                
+                renderDrop: renderDropCategories,    
+            }
         },        
+
+
     ],
     toolbar: {
         items: [

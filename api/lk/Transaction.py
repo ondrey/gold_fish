@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 from json import loads
 import datetime
@@ -24,27 +24,27 @@ class Transaction(ObjectAPI, ObjectDb):
         req = loads(request.form['request'])
         id_tran = req['id_tran']
         cur = self.connect.cursor()
-        result = {'status': 'success'}
 
         cur.execute(u"select date_fact, id_user from Transactions where id_trans={0}".format(id_tran))
         count_rec = cur.fetchone()
         sql = None
         if len(count_rec) != 0:
-            result = {'status': 'error', 'message': u""}
             if count_rec[0]:
                 result = {'status': 'error', 'message': u"Ошибка. Транзакция уже завершена."}
             elif count_rec[1] != session['client_sess']['id_user']:
                 result = {'status': 'error', 'message': u"Ошибка. Транзакция не пренадлежит Вам."}
             else:
 
-                sql = u"update Transactions set {0} comment_trans = '{1}', ammount_trans={3}*100, date_plan='{4}' " \
+                sql = u"update Transactions set {0} comment_trans = '{1}', ammount_trans={3}*100, date_plan='{4}', " \
+                      u"id_item={5} " \
                       u"where id_trans={2}".format(
 
                         u"date_fact = '"+req['record']['date_fact']+u"', " if req['record']['date_fact'] else u'',
                         req['record']['comments'],
                         id_tran,
                         req['record']['ammount_trans'],
-                        req['record']['date_plan']
+                        req['record']['date_plan'],
+                        req['record']['id_item']['id']
 
                 )
                 result = {'status': 'success'}
@@ -187,7 +187,8 @@ class Transaction(ObjectAPI, ObjectDb):
                 ts.id_trans,
                 ac.title_acc,
                 op.code_op,
-                ts.count_trans
+                ts.count_trans,
+                it.id_item
             FROM Transactions AS ts
             INNER JOIN Accounts AS ac ON ts.id_acc = ac.id_acc
             INNER JOIN Items AS it ON it.id_item = ts.id_item
@@ -232,7 +233,9 @@ class Transaction(ObjectAPI, ObjectDb):
                 'recid': rec[9],
                 'title_acc': rec[10],
                 'code_op': rec[11],
-                'count_trans': rec[12]
+                'count_trans': rec[12],
+                'id_item': rec[13],
+                'title_item_clear': rec[0]
             })
 
         cur.execute(u"SELECT FOUND_ROWS()")
@@ -241,4 +244,22 @@ class Transaction(ObjectAPI, ObjectDb):
         return jsonify({
             'total': total,
             'records': rec_list
+        })
+
+    @isauth
+    def api_paste_in_account(self):
+        req = loads(request.form['data'])
+
+        if 'id_trans' in req and 'id_new_acc' in req:
+            cur = self.connect.cursor()
+
+            for id in req['id_trans']:
+                cur.execute("update Transactions set id_acc = {0} where id_trans = {1} and id_user={2}".format(
+                    req['id_new_acc'], id, session['client_sess']['id_user']
+                ))
+            self.connect.commit()
+
+        return jsonify({
+            'total': len(req['id_trans']),
+            'ok': True
         })

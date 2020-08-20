@@ -42,15 +42,26 @@ config_accounts = {
             toolbarEdit: true,
             columnHeaders: true
         },
+        onLoad: function(event) {
+            event.onComplete = function(ev){                
+                w2ui.config_accounts.records.forEach(el => {                    
+                    if ('children' in el.w2ui) {      
+                        w2ui.config_accounts.expand(el.recid);
+                    }
+                });
+            }
+            w2ui.transact_grid_toolbar.set('menu_transact', { disabled: false});
+        },
+     
 
         columns: [
-            { field: 'title_acc', caption: 'Наименование счета', size: '330px', expand:true },
+            { field: 'title_acc', caption: 'Наименование счета', size: '330px'},
 
-            { field: 'in', caption: 'Входящий', size: '120px' },
-            { field: 'income', caption: 'Приход', size: '120px' },
-            { field: 'cost', caption: 'Расход', size: '120px' },
-            { field: 'out', caption: 'Исходящий', size: '120px' },
-            { field: 'plan', caption: 'План до конца месяца', size: '150px' },
+            { field: 'balance', caption: 'Баланс', size: '120px'},
+            { field: 'cost_day', caption: 'Расход на сегодня', size: '120px' },
+            { field: 'income_day', caption: 'Приход на сегодня', size: '120px' },
+            { field: 'cost_month', caption: 'Расход за месяц', size: '120px' },
+            { field: 'income_month', caption: 'Доход за месяц', size: '150px' },
             { field: 'discription_acc', caption: 'Комментарий', size: '120px', hidden: true},
             { field: 'name_user_owner', caption: 'Владелец', size: '100%', hidden: true}
         ],

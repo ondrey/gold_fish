@@ -106,7 +106,12 @@ config_categories = {
                             'is_vertual_item': Boolean(Number(curRec['is_vertual_item'])),
                             'is_cost': Boolean(Number(curRec['is_cost'])),
                             'id_item': curRec['recid'],
-                            'is_for_sub': Boolean(Number(curRec['is_for_sub']))
+                            'is_for_sub': Boolean(Number(curRec['is_for_sub'])),
+                            'for_telegramm': Boolean(Number(curRec['for_telegramm'])),
+
+                            'bujet_cat_in_month': curRec['bujet_cat_in_month'],
+                            'default_price': curRec['default_price'],
+                            'unit_cat': curRec['unit_cat']
 
                         };
                         

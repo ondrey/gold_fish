@@ -40,11 +40,11 @@ sidebar_config = {
 
         onRender: function(event) {
                 this.click('account');
-                this.select('account');                
+                this.select('account');
         },
 
         onClick: function(event) {
-            // Отображаем меню
+          // Отображаем меню
             if (event.target == 'account') {
               w2ui.base_layout.content('main', w2ui.layout_account);
               w2ui.layout_account.content('top', w2ui.config_accounts);
@@ -55,21 +55,21 @@ sidebar_config = {
                 w2ui.layout_operation.content('top', w2ui.config_operation);
                 w2ui.layout_operation.content('main', w2ui.transact_grid);
             } else if (event.target == 'transactions') {
-              w2ui.base_layout.content('main', w2ui.transact_grid);              
+              w2ui.base_layout.content('main', w2ui.transact_grid);                
             }
             else if (event.target == 'xlsx') {
               w2ui.base_layout.content('main', '<a href="/xlsx/get_all_report" style="display: block;margin: 150px auto;background-color: #8ab54c;width: 239px;text-align: center;padding: 15px;border-radius: 6px;color: aliceblue;">Скачать файл <i class="fa fa-file-excel-o" aria-hidden="true"></i></a>');
               
-            }            
-
+            } 
             // Действия совершаемые при каждой смене или обновлении текущего пункта меню.
               // Прячим дочернии справочники счетов
               w2ui.layout_account.sizeTo('top', '100%');
               w2ui.layout_operation.sizeTo('top', '100%');
               w2ui.transact_grid.postData = {};
+              w2ui.transact_grid.searchReset();
               w2ui.transact_grid.show.toolbar = true;
-              w2ui.transact_grid.show.selectColumn = false;
-              
+              w2ui.transact_grid.show.selectColumn = false;  
+              w2ui.transact_grid_toolbar.set('menu_transact', { disabled: true});
 
         }
     }
