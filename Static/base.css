@@ -158,10 +158,9 @@ input[type="submit"] {
 }
 
 .lindex {
-	font-size: xx-large;
     text-align: end;
-	color: #b1b1b1;
 	margin-top: 45px;
+	font-style: oblique;
 }
 .lindex div{
 	color: #32819e;
