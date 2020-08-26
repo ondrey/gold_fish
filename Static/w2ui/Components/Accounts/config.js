@@ -54,6 +54,35 @@ config_accounts = {
         },
      
 
+        toolbar: {
+            items: [
+                { type: 'spacer' },
+                
+                { type: 'menu-radio', id: 'item2', icon: 'fa fa-balance-scale',
+                text: function (item) {
+                    var text = item.selected;
+                    var el   = this.get('item2:' + item.selected);
+                    return 'Остаток: ' + el.text;
+                },
+                selected: 'month',
+                items: [
+                    { id: 'day', text: 'Сегодня'},
+                    { id: 'month', text: 'Месяц' }
+                ]
+            },
+            ],
+            onClick: function (target, data) {
+                console.log(target);
+                w2ui.config_accounts.postData["filter"] = target
+
+
+                if (target == 'item2:day' || target == 'item2:month') {
+                    w2ui.config_accounts.reload();
+                }
+                
+            }
+        },        
+
         columns: [
             { field: 'title_acc', caption: 'Наименование счета', size: '330px'},
 
