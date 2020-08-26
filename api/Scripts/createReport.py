@@ -1,4 +1,6 @@
-
+"""
+Отчет для графика по категориям - ежедневная проверка зарегистрированных транзакций по категории.
+"""
 from config import DevelopmentTemplateConfig as config
 import pymysql
 
