@@ -33,34 +33,22 @@ class Account(ObjectAPI, ObjectDb):
                     acc.is_public,
                     acc.sum_month_acc,
                     acc.date_last_sum,
-                    /*Баланс на текущий момент*/
-                    sum(case when (date(t.date_fact) <= CURRENT_DATE()) then t.ammount_trans else 0 end) as "balance",
-                    /*Расходы с начала месяца*/
-                    sum(case when (
-                                date(t.date_fact) <= CURRENT_DATE() 
-                                and date(t.date_fact) >= DATE_SUB(CURRENT_DATE(),INTERVAL DAYOFMONTH(CURRENT_DATE())-1 DAY)
-                                and t.ammount_trans < 0
-                            ) then t.ammount_trans else 0 end) as "costs_month",
-                    /*Расходы за сегодня*/
-                    sum(case when (date(t.date_fact) = CURRENT_DATE() and t.ammount_trans < 0) then t.ammount_trans else 0 end) as "costs_day",
-                    /*Доходы с начала месяца*/
-                    sum(case when (
-                                date(t.date_fact) <= CURRENT_DATE() 
-                                and date(t.date_fact) >= DATE_SUB(CURRENT_DATE(),INTERVAL DAYOFMONTH(CURRENT_DATE())-1 DAY)
-                                and t.ammount_trans > 0
-                            ) then t.ammount_trans else 0 end) as "income_month",
-                    /*Доходы за сегодня*/
-                    sum(case when (date(t.date_fact) = CURRENT_DATE() and t.ammount_trans > 0) then t.ammount_trans else 0 end) as "income_day"      
+                    sum(
+                        case when (t.ammount_trans > 0) then t.ammount_trans else 0 end
+                    ),
+                    sum(
+                        case when (t.ammount_trans < 0) then t.ammount_trans else 0 end
+                    )  
                FROM 
                 Accounts as acc
                 left join Transactions t on 
-                    t.id_acc = acc.id_acc
+                    t.id_acc = acc.id_acc and t.date_fact >= %s 
                 left join Items i 
                     on i.id_item = t.id_item and i.is_vertual_item = 0
                 inner join Users as us 
                     on us.id_user = acc.id_user_owner
             WHERE 
-            (acc.id_user_owner = {0} or {2}) {1}        
+            (acc.id_user_owner = {0} or {2}) {1}                   
             group by                     
                 acc.id_acc,
                 acc.id_par_acc,
@@ -79,27 +67,41 @@ class Account(ObjectAPI, ObjectDb):
                 ) if session['client_sess']['id_manager_user'] else u'1!=1'
             )
 
-        cur.execute(sql)
+        req = loads(request.form['request'])
+        date_start = datetime.datetime.now().date()
+        if req['filter'] == 'item2:month':
+            date_start = datetime.date(date_start.year, date_start.month, 1)
+
+        cur.execute(sql, (date_start, ))
         records = []
-        balance_ch = dict(balance=0, cost_month=0, cost_day=0, income_month=0, income_day=0)
+        balance_ch = dict(inp=0, cost=0, income=0, out=0)
+        cur2 = self.connect.cursor()
         for i in cur.fetchall():
+
             ch, b = self.create_account_list(i[0])
             w2ui = {}
 
-            balance = float(round(i[9] / 100, 2))
-            cost_month = float(round(i[10] / 100, 2))
-            cost_day = float(round(i[11] / 100, 2))
-            income_month = float(round(i[12] / 100, 2))
-            income_day = float(round(i[13] / 100, 2))
+            cur2.execute("select coalesce(tdr.sum_total, 0) from TotalDayReport tdr "
+                         "where tdr.date_total <= %s and tdr.id_acc = %s "
+                         "order by tdr.date_total DESC limit 1", (date_start, i[0]))
+            sum_total = cur2.fetchone()
+            if sum_total:
+                inp = float(round(sum_total[0] / 100, 2))
+            else:
+                inp = float(0)
+
+            income = float(round(i[9] / 100, 2))
+            cost = float(round(i[10] / 100, 2))
+
+            out = float(round(inp + income + cost, 2))
 
             if len(ch) > 0:
                 w2ui.update({'children': ch})
                 # Добавим дочернии суммы если они есть
-                balance += b['balance']
-                cost_month += b['cost_month']
-                cost_day += b['cost_day']
-                income_month += b['income_month']
-                income_day += b['income_day']
+                inp += b['inp']
+                cost += b['cost']
+                income += b['income']
+                out += b['out']
 
             records.append({
                 'recid': i[0],
@@ -113,17 +115,15 @@ class Account(ObjectAPI, ObjectDb):
                 'is_public': i[6],
                 'w2ui': w2ui,
                 'title_acc_clear': i[3],
-                'balance': '{:,}'.format(round(balance, 2)).replace(',', ' '),
-                'cost_month': '{:,}'.format(round(cost_month, 2)).replace(',', ' '),
-                'cost_day': '{:,}'.format(round(cost_day, 2)).replace(',', ' '),
-                'income_month': '{:,}'.format(round(income_month, 2)).replace(',', ' '),
-                'income_day': '{:,}'.format(round(income_day, 2)).replace(',', ' ')
+                'inp': '{:,}'.format(round(inp, 2)).replace(',', ' '),
+                'cost': '{:,}'.format(round(cost, 2)).replace(',', ' '),
+                'income': '{:,}'.format(round(income, 2)).replace(',', ' '),
+                'out': '{:,}'.format(round(out, 2)).replace(',', ' ')
             })
-            balance_ch['balance'] += balance
-            balance_ch['cost_month'] += cost_month
-            balance_ch['cost_day'] += cost_day
-            balance_ch['income_month'] += income_month
-            balance_ch['income_day'] += income_day
+            balance_ch['inp'] += inp
+            balance_ch['cost'] += cost
+            balance_ch['income'] += income
+            balance_ch['out'] += out
 
         return records, balance_ch
 

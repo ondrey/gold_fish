@@ -52,7 +52,10 @@ config_accounts = {
             }
             w2ui.transact_grid_toolbar.set('menu_transact', { disabled: false});
         },
-     
+        
+        postData: {
+            'filter': 'item2:month'
+        },
 
         toolbar: {
             items: [
@@ -75,7 +78,6 @@ config_accounts = {
                 console.log(target);
                 w2ui.config_accounts.postData["filter"] = target
 
-
                 if (target == 'item2:day' || target == 'item2:month') {
                     w2ui.config_accounts.reload();
                 }
@@ -86,11 +88,10 @@ config_accounts = {
         columns: [
             { field: 'title_acc', caption: 'Наименование счета', size: '330px'},
 
-            { field: 'balance', caption: 'Баланс', size: '120px'},
-            { field: 'cost_day', caption: 'Расход на сегодня', size: '120px' },
-            { field: 'income_day', caption: 'Приход на сегодня', size: '120px' },
-            { field: 'cost_month', caption: 'Расход за месяц', size: '120px' },
-            { field: 'income_month', caption: 'Доход за месяц', size: '150px' },
+            { field: 'inp', caption: 'Входящий остаток', size: '120px'},
+            { field: 'cost', caption: 'Расход', size: '120px' },
+            { field: 'income', caption: 'Приход', size: '120px' },
+            { field: 'out', caption: 'Баланс', size: '120px' },            
             { field: 'discription_acc', caption: 'Комментарий', size: '120px', hidden: true},
             { field: 'name_user_owner', caption: 'Владелец', size: '100%', hidden: true}
         ],
