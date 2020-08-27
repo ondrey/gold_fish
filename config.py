@@ -8,7 +8,7 @@ class Config(object):
     SECRET_KEY = '\x00\xf1\x00Bv\x990\\1\x04\xe1\xe3g'
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=1000)
     ADMIN_ACCOUNT = {}
-
+    TASKS_KEY = "1U6iWrABx0qBBOjwG5xrFyaASig6N0xpn9BP"
 
 class ProductionConfig(Config):
     DEBUG = False

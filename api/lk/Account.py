@@ -82,7 +82,7 @@ class Account(ObjectAPI, ObjectDb):
             w2ui = {}
 
             cur2.execute("select coalesce(tdr.sum_total, 0) from TotalDayReport tdr "
-                         "where tdr.date_total <= %s and tdr.id_acc = %s "
+                         "where date(tdr.date_total) <= %s and tdr.id_acc = %s "
                          "order by tdr.date_total DESC limit 1", (date_start, i[0]))
             sum_total = cur2.fetchone()
             if sum_total:

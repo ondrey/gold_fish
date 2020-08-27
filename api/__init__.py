@@ -7,6 +7,7 @@ from api.lk.Transaction import Transaction as transaction
 from api.lk.Operations import Operations as operations
 from api.lk.ExcelExport import ExcelExport as xlsx
 from api.Telegram import Telegram as tg
+from api.Tasks import Tasks as tasks
 
 from api.ObjectAPI import ObjectAPI
 from api.ObjectAPI import render_tmp
