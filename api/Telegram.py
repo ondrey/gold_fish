@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import current_app as app
 from flask import request
 from flask_mail import Mail
@@ -5,11 +6,6 @@ from api.ObjectAPI import ObjectAPI
 from api.ObjectDb import ObjectDb
 from flask import jsonify
 import re
-import json
-
-import pathlib
-from urllib.request import urlopen
-
 
 
 class Telegram(ObjectAPI, ObjectDb):

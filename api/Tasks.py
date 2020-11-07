@@ -4,11 +4,7 @@ from flask_mail import Mail
 from api.ObjectAPI import ObjectAPI
 from api.ObjectDb import ObjectDb
 from flask import jsonify
-import re
-import json
 import datetime
-import pathlib
-from urllib.request import urlopen
 
 
 class Tasks(ObjectAPI, ObjectDb):

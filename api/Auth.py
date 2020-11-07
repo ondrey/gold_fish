@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import string
 from hashlib import md5
 from random import choice, randint
