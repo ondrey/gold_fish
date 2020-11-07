@@ -28,7 +28,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=120)
-    DEBUG = True
+    DEBUG = False
 
 
 class DevelopmentTemplateConfig(Config):
