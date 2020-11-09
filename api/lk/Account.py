@@ -13,122 +13,85 @@ from ..ObjectDb import ObjectDb
 from ..Auth import isauth
 
 
+# class Acc:
+#     def __init__(self, sqlres):
+#         self.id_acc = sqlres[0],
+#         self.id_par_acc = sqlres[1],
+#         self.addate_acc = sqlres[2],
+#         self.title_acc = sqlres[3],
+#         self.id_user_owner = sqlres[4],
+#         self.owner_name = sqlres[5],
+#         self.is_public = sqlres[6],
+#         self.is_all_transact = sqlres[7],
+#         self.is_mod_transact = sqlres[8],
+#         self.notify_mod = sqlres[9]
+
 class Account(ObjectAPI, ObjectDb):
     def __init__(self):
         ObjectAPI.__init__(self)
         ObjectDb.__init__(self)
         self.groups = {}
 
-    def create_account_list(self, id_parent=None):
+    def my_accounts(self, parent_id=None):
         cur = self.connect.cursor()
-        sql = u"""
-               select 
-                    acc.id_acc,
-                    acc.id_par_acc,
-                    acc.addate_acc,                          
-                    acc.title_acc,                
-                    acc.id_user_owner,
-                    us.name_user,                
-                    acc.is_public,
-                    acc.sum_month_acc,
-                    acc.date_last_sum,
-                    sum(
-                        case when (t.ammount_trans > 0) then t.ammount_trans else 0 end
-                    ),
-                    sum(
-                        case when (t.ammount_trans < 0) then t.ammount_trans else 0 end
-                    )  
-               FROM 
-                Accounts as acc
-                left join Transactions t on 
-                    t.id_acc = acc.id_acc and t.date_fact >= %s 
-                left join Items i 
-                    on i.id_item = t.id_item and i.is_vertual_item = 0
-                inner join Users as us 
-                    on us.id_user = acc.id_user_owner
-            WHERE 
-            (acc.id_user_owner = {0} or {2}) {1}                   
-            group by                     
-                acc.id_acc,
-                acc.id_par_acc,
-                acc.addate_acc,                          
-                acc.title_acc,                
-                acc.id_user_owner,
-                us.name_user,                
-                acc.is_public,
-                acc.sum_month_acc,
-                acc.date_last_sum               
+        cur.execute(
+            """
+            SELECT 
+                ac.id_acc, 
+                ac.id_par_acc, 
+                ac.addate_acc, 
+                ac.title_acc,
+                ac.id_user_owner,
+                us.name_user AS owner_name
+            FROM kojima.Accounts ac 
+            INNER JOIN kojima.Users us ON ac.id_user_owner = us.id_user
+            WHERE ac.id_user_owner = %(id_user_owner)s AND ac.id_par_acc {0}        
             """.format(
-                session['client_sess']['id_user'],
-                u"and acc.id_par_acc = {0}".format(id_parent) if id_parent else u'and acc.id_par_acc is NULL',
-                u"(acc.id_user_owner = {0} and acc.is_public='1')".format(
-                    session['client_sess']['id_manager_user']
-                ) if session['client_sess']['id_manager_user'] else u'1!=1'
-            )
+                ' = ' + str(parent_id) if parent_id else ' is NULL'
+            ), {'id_user_owner': session['client_sess']['id_user']})
+
+        return cur.fetchall()
+
+    def get_balanse(self, date_start, id_acc):
+        cur = self.connect.cursor()
+        cur.execute("""
+        SELECT 
+            SUM(tr.ammount_trans) AS balance,
+            SUM(case when (tr.ammount_trans < 0) then tr.ammount_trans ELSE 0 END) AS cost,
+            SUM(case when (tr.ammount_trans > 0) then tr.ammount_trans ELSE 0 END) AS income
+            from kojima.Transactions tr 
+            WHERE tr.id_acc = %s AND date(tr.date_fact) >= %s
+        """, (id_acc, date_start))
+
+
+    def create_account_list(self, id_parent=None):
+        records, balance_ch = [], {}
 
         req = loads(request.form['request'])
+
         date_start = datetime.datetime.now().date()
         if req['filter'] == 'item2:month':
             date_start = datetime.date(date_start.year, date_start.month, 1)
 
-        cur.execute(sql, (date_start, ))
-        records = []
-        balance_ch = dict(inp=0, cost=0, income=0, out=0)
-        cur2 = self.connect.cursor()
-        for i in cur.fetchall():
+        for acc in self.my_accounts(id_parent):
 
-            ch, b = self.create_account_list(i[0])
-            w2ui = {}
-
-            cur2.execute("select coalesce(tdr.sum_total, 0) from TotalDayReport tdr "
-                         "where date(tdr.date_total) <= %s and tdr.id_acc = %s "
-                         "order by tdr.date_total DESC limit 1", (date_start, i[0]))
-            sum_total = cur2.fetchone()
-            if sum_total:
-                inp = float(round(sum_total[0] / 100, 2))
-            else:
-                inp = float(0)
-
-            income = float(round(i[9] / 100, 2))
-            cost = float(round(i[10] / 100, 2))
-
-            out = float(round(inp + income + cost, 2))
-
-            if len(ch) > 0:
-                w2ui.update({'children': ch})
-                # Добавим дочернии суммы если они есть
-                inp += b['inp']
-                cost += b['cost']
-                income += b['income']
-                out += b['out']
+            children = self.create_account_list(acc[0])
 
             records.append({
-                'recid': i[0],
-                'id_par_acc': i[1],
-                'addate_acc': i[2],
-                'title_acc': u"{0} {1}".format(
-                    i[3],
-                    '<i class="fa fa-wifi iconaccount" aria-hidden="true"></i>' if i[6] == "1" else ''),
-                'id_user_owner': i[4],
-                'name_user_owner': i[5],
-                'is_public': i[6],
-                'w2ui': w2ui,
-                'title_acc_clear': i[3],
-                'inp': '{:,}'.format(round(inp, 2)).replace(',', ' '),
-                'cost': '{:,}'.format(round(cost, 2)).replace(',', ' '),
-                'income': '{:,}'.format(round(income, 2)).replace(',', ' '),
-                'out': '{:,}'.format(round(out, 2)).replace(',', ' ')
+                'recid': acc[0],
+                'id_par_acc': acc[1],
+                'addate_acc': acc[2],
+                'title_acc': acc[3],
+                'id_user_owner': acc[4],
+                'name_user_owner': acc[5],
+                'w2ui': {'children': children[0]},
+                'title_acc_clear': acc[3],
             })
-            balance_ch['inp'] += inp
-            balance_ch['cost'] += cost
-            balance_ch['income'] += income
-            balance_ch['out'] += out
 
         return records, balance_ch
 
     @isauth
     def api_get_account_list(self):
-
         res = self.create_account_list()
         return jsonify({
             'total': len(res[0]),
