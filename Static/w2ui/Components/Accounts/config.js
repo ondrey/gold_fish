@@ -87,11 +87,15 @@ config_accounts = {
 
         columns: [
             { field: 'title_acc', caption: 'Наименование счета', size: '330px'},
-
-            { field: 'inp', caption: 'Входящий остаток', size: '120px'},
+            
+            { field: 'input', caption: 'Входящий остаток', size: '120px' },
+            
             { field: 'cost', caption: 'Расход', size: '120px' },
             { field: 'income', caption: 'Приход', size: '120px' },
-            { field: 'out', caption: 'Баланс', size: '120px' },            
+            { field: 'balance', caption: 'Баланс', size: '120px' },
+            { field: 'start_dt', caption: 'От', size: '120px', hidden: true },
+
+            
             { field: 'discription_acc', caption: 'Комментарий', size: '120px', hidden: true},
             { field: 'name_user_owner', caption: 'Владелец', size: '100%', hidden: true}
         ],

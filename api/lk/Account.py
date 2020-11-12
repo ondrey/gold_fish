@@ -13,19 +13,6 @@ from ..ObjectDb import ObjectDb
 from ..Auth import isauth
 
 
-# class Acc:
-#     def __init__(self, sqlres):
-#         self.id_acc = sqlres[0],
-#         self.id_par_acc = sqlres[1],
-#         self.addate_acc = sqlres[2],
-#         self.title_acc = sqlres[3],
-#         self.id_user_owner = sqlres[4],
-#         self.owner_name = sqlres[5],
-#         self.is_public = sqlres[6],
-#         self.is_all_transact = sqlres[7],
-#         self.is_mod_transact = sqlres[8],
-#         self.notify_mod = sqlres[9]
-
 class Account(ObjectAPI, ObjectDb):
     def __init__(self):
         ObjectAPI.__init__(self)
@@ -56,13 +43,20 @@ class Account(ObjectAPI, ObjectDb):
         cur = self.connect.cursor()
         cur.execute("""
         SELECT 
-            SUM(tr.ammount_trans) AS balance,
-            SUM(case when (tr.ammount_trans < 0) then tr.ammount_trans ELSE 0 END) AS cost,
-            SUM(case when (tr.ammount_trans > 0) then tr.ammount_trans ELSE 0 END) AS income
+            SUM(case when (date(tr.date_fact) < %(date_start)s) then tr.ammount_trans else 0 end) AS balance,
+            SUM(case when (tr.ammount_trans < 0 and date(tr.date_fact) >= %(date_start)s) then tr.ammount_trans ELSE 0 END) AS cost,
+            SUM(case when (tr.ammount_trans > 0 and date(tr.date_fact) >= %(date_start)s) then tr.ammount_trans ELSE 0 END) AS income
             from kojima.Transactions tr 
-            WHERE tr.id_acc = %s AND date(tr.date_fact) >= %s
-        """, (id_acc, date_start))
+            WHERE tr.id_acc = %(id)s 
+            having SUM(tr.ammount_trans)!=0
+        """, {'id': id_acc, 'date_start': date_start})
 
+        result = cur.fetchone()
+        if result:
+            return {'input': float(result[0])/100.0, 'cost': float(result[1])/100.0, 'income': float(result[2])/100.0,
+                    'balance': (float(result[1]) + float(result[2]))/100.0}
+
+        return {'balance': 0.0, 'cost': 0.0, 'income': 0.0, 'input':0.0}
 
     def create_account_list(self, id_parent=None):
         records, balance_ch = [], {}
@@ -75,6 +69,9 @@ class Account(ObjectAPI, ObjectDb):
 
         for acc in self.my_accounts(id_parent):
 
+            # запросим баланс и расходы
+            balance_acc = self.get_balanse(date_start, acc[0])
+
             children = self.create_account_list(acc[0])
 
             records.append({
@@ -86,6 +83,13 @@ class Account(ObjectAPI, ObjectDb):
                 'name_user_owner': acc[5],
                 'w2ui': {'children': children[0]},
                 'title_acc_clear': acc[3],
+
+                'balance': balance_acc['balance'],
+                'income': balance_acc['income'],
+                'cost': balance_acc['cost'],
+                'input': balance_acc['input'],
+
+                'start_dt': "{0}.{1}.{2}".format(date_start.year, date_start.month, date_start.day)
             })
 
         return records, balance_ch
