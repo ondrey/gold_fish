@@ -92,10 +92,10 @@ class Account(ObjectAPI, ObjectDb):
 
                 accont.update({
                     'balance': "<span style=\"color: #338a98;font-size: larger;\">{0}</span>".format(
-                        balance_acc['balance']),
-                    'income': balance_acc['income'],
-                    'cost': balance_acc['cost'],
-                    'input': balance_acc['input'],
+                        round(balance_acc['balance'], 2)),
+                    'income': round(balance_acc['income'], 2),
+                    'cost': round(balance_acc['cost'], 2),
+                    'input': round(balance_acc['input'], 2),
                     'start_dt': "{0}.{1}.{2}".format(date_start.year, date_start.month, date_start.day)
                 })
 
