@@ -22,11 +22,6 @@ sidebar_config = {
                 { id: 'transactions', text: 'Транзакции', icon: 'fa fa-puzzle-piece' },
               ]
           },
-
-          { id: 'report', text: 'Отчеты', img: 'icon-folder', expanded: true, group: true,
-            nodes: [ 
-              { id: 'xlsx', text: 'Экспортировать в xlsx', icon: 'fa fa-file-excel-o' },
-            ]}
           ],
 
         onFlat: function (event) {

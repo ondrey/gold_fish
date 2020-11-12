@@ -54,8 +54,6 @@ addTransaction = {
 
         },
 
-        { field: 'counts',   type: 'int', html: { caption: 'Кол-во', attr: 'size="40" value="1"'  } },
-
         { name: 'date_plan', type: 'date', hidden: true, 
             html: { caption: 'Плановая дата', attr: 'size="40" maxlength="40"'}
         },

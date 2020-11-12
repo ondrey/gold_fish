@@ -134,8 +134,8 @@ input[type="submit"] {
 
 
 .content {
-    max-width:580px;
-    margin:0px auto;
+	margin: 64px auto;
+	width: 50%;
 }
 .content .title {
     color: #32819e;
@@ -157,20 +157,14 @@ input[type="submit"] {
 	font-size: medium !important;
 }
 
-.lindex {
-    text-align: end;
-	margin-top: 45px;
-	font-style: oblique;
+.lindex {    
+	margin-top: 45px;		
 }
 .lindex div{
 	color: #32819e;
     font-size: medium;
     text-align: left;    
-    padding: 15px;
-    box-shadow: 2px 2px 5px;
-	border-radius: 4px;
 	display: flex;
-	margin-top: 25px;
 }
 
 

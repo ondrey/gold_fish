@@ -89,9 +89,6 @@ class Transaction(ObjectAPI, ObjectDb):
                 if req['record']['id_item']['is_cost'] == '1':
                     price = 0 - price
 
-                if req['record']['counts']:
-                    price = price * int(req['record']['counts'])
-
                 comment_split = req['record']['comments'].split('\n')
                 check_list = []
                 for check in comment_split:
@@ -108,10 +105,9 @@ class Transaction(ObjectAPI, ObjectDb):
                 if len(check_list) == 0:
                     sqlInsertTransaction = u"""
                     insert into Transactions(id_acc, id_item, id_user, date_plan, date_fact, ammount_trans, comment_trans
-                        , id_op, count_trans) values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})
+                        , id_op) values ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', {7})
                     """.format(id_acc, req['record']['id_item']['id'], session['client_sess']['id_user'], date_plan,
-                               date_fact, price, req['record']['comments'], req['id_op'] if 'id_op' in req else 'NULL',
-                               req['record']['counts'] if req['record']['counts'] else 1
+                               date_fact, price, req['record']['comments'], req['id_op'] if 'id_op' in req else 'NULL'
                     )
                     cur.execute(sqlInsertTransaction)
                 else:

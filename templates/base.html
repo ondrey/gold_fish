@@ -39,10 +39,11 @@
 
 <div class="menus">
   <a href="/about">О программе</a>
-  <a href="/static/kojima-instruction.pdf">Инструкция</a>
 
   {% if user_name %}
     <span style="background-color: azure; padding: 3px;">
+      
+      <a href="/xlsx/get_all_report"> <i class="fa fa-file-excel-o" aria-hidden="true"></i> Экспортировать в xlsx </a>
       <a href="/app"> <i class="fa fa-money" aria-hidden="true"></i> Бухгалтерия</a>
       <a href="/auth/userinfo"> <i class="fa fa-user-circle" aria-hidden="true"></i> {{user_name}}</a>
       <a href="/auth/logout"><i class="fa fa-sign-out" id="name_user"></i> Выход</a>
