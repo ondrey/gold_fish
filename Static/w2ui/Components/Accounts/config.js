@@ -10,7 +10,7 @@ layout_account = {
                 { id: 'transact_grid', caption: 'Транзакции' },
                 { id: 'config_categories', caption: 'Категории' },
                 // { id: 'config_files', caption: 'Файлы' },
-                //{ id: 'edit_account', caption: 'Настройки счета' }
+                // { id: 'edit_account', caption: 'Настройки счета' }
             ],
             onClick: function (event) {
                 w2ui.config_categories.toolbar.disable('addTrans');

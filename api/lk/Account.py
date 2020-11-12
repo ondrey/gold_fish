@@ -29,12 +29,18 @@ class Account(ObjectAPI, ObjectDb):
                 ac.addate_acc, 
                 ac.title_acc,
                 ac.id_user_owner,
-                us.name_user AS owner_name
+                us.name_user AS owner_name,
+                ac.is_public 
             FROM kojima.Accounts ac 
             INNER JOIN kojima.Users us ON ac.id_user_owner = us.id_user
-            WHERE ac.id_user_owner = %(id_user_owner)s AND ac.id_par_acc {0}        
+            WHERE (ac.id_user_owner = %(id_user_owner)s or {1}) AND ac.id_par_acc {0}
             """.format(
-                ' = ' + str(parent_id) if parent_id else ' is NULL'
+                ' = ' + str(parent_id) if parent_id else ' is NULL',
+
+                # Проверка общедоступных счетов
+                "(acc.id_user_owner = {0} and acc.is_public='1')".format(session['client_sess']['id_manager_user'])
+                if session['client_sess']['id_manager_user'] else u'1!=1'
+
             ), {'id_user_owner': session['client_sess']['id_user']})
 
         return cur.fetchall()
@@ -54,43 +60,46 @@ class Account(ObjectAPI, ObjectDb):
         result = cur.fetchone()
         if result:
             return {'input': float(result[0])/100.0, 'cost': float(result[1])/100.0, 'income': float(result[2])/100.0,
-                    'balance': (float(result[1]) + float(result[2]))/100.0}
+                    'balance': (float(result[1]) + float(result[2])) + float(result[0])/100.0}
 
-        return {'balance': 0.0, 'cost': 0.0, 'income': 0.0, 'input':0.0}
+        return {'balance': 0.0, 'cost': 0.0, 'income': 0.0, 'input': 0.0}
 
     def create_account_list(self, id_parent=None):
         records, balance_ch = [], {}
 
         req = loads(request.form['request'])
 
-        date_start = datetime.datetime.now().date()
-        if req['filter'] == 'item2:month':
-            date_start = datetime.date(date_start.year, date_start.month, 1)
-
         for acc in self.my_accounts(id_parent):
-
-            # запросим баланс и расходы
-            balance_acc = self.get_balanse(date_start, acc[0])
-
             children = self.create_account_list(acc[0])
-
-            records.append({
+            accont = {
                 'recid': acc[0],
                 'id_par_acc': acc[1],
                 'addate_acc': acc[2],
-                'title_acc': acc[3],
+                'title_acc': "<i class=\"fa fa-wifi\"></i> {0}".format(acc[3]) if acc[6] == '1' else acc[3],
                 'id_user_owner': acc[4],
                 'name_user_owner': acc[5],
                 'w2ui': {'children': children[0]},
                 'title_acc_clear': acc[3],
 
-                'balance': balance_acc['balance'],
-                'income': balance_acc['income'],
-                'cost': balance_acc['cost'],
-                'input': balance_acc['input'],
+            }
+            if 'filter' in req:
+                # запросим баланс и расходы
+                date_start = datetime.datetime.now().date()
+                if req['filter'] == 'item2:month':
+                    date_start = datetime.date(date_start.year, date_start.month, 1)
 
-                'start_dt': "{0}.{1}.{2}".format(date_start.year, date_start.month, date_start.day)
-            })
+                balance_acc = self.get_balanse(date_start, acc[0])
+
+                accont.update({
+                    'balance': "<span style=\"color: #338a98;font-size: larger;\">{0}</span>".format(
+                        balance_acc['balance']),
+                    'income': balance_acc['income'],
+                    'cost': balance_acc['cost'],
+                    'input': balance_acc['input'],
+                    'start_dt': "{0}.{1}.{2}".format(date_start.year, date_start.month, date_start.day)
+                })
+
+            records.append(accont)
 
         return records, balance_ch
 
