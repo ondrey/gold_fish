@@ -22,52 +22,63 @@
 
 <body>
 
+<div style="display: flex; width: 940px; margin: 10px auto; height: 100%;">
+  <div style="width: 350px; border-right-style: inset; text-align: end; padding-right: 10px; border-right-width: thin;">
+  <!-- left menu -->
+  
+    <div class="logo">
+      <a href="/" style="text-decoration: none;"><h1>Kojima</h1></a>
+      <p><span style="color: #32819e;">Программа учета финансов</span> <span style="font-size: smaller;font-style: oblique;">Учет затрат, бюджетирование, амортизация и планирование.</span></p>
+    </div>
+
+    <div class="menus">
+      
+
+      <a href="/about">О программе</a>
+
+      {% if user_name %}
+          
+        <a href="/xlsx/get_all_report">Экспортировать в xlsx <i class="fa fa-file-excel-o" aria-hidden="true"></i></a> 
+        <a href="/app">Бухгалтерия <i class="fa fa-money" aria-hidden="true"></i></a>
+        <a href="/auth/userinfo">{{user_name}} <i class="fa fa-user-circle" aria-hidden="true"></i></a>
+        <a href="/auth/logout">Выход <i class="fa fa-sign-out" id="name_user"></i> </a>
+      {% else %}
+      <form action="/auth/login" id="login" method="post">
+        <p>Авторизация</p>
+        {% if mess %}
+            <p style="color: #000000; background-color: darkorange; border-radius: 3px; padding: 2px;">{{ mess }}</p>
+        {% endif %}
+        <input type="email" placeholder="Ваш email..." name="user_mail"  required=required>
+        <input type="password" placeholder="Пароль" name="user_password" required=required>
+        <input type="submit" name="authorisation" value="Войти">
+        <a href="/auth/page_newuser">Регистрация</a> 
+        <a href="/auth/page_repass">Востановление доступа</a>     
+      </form>
+
+      {% endif %}      
+
+    </div>
+    
+  </div>
+
+  <div style="">
+    <!-- Содержимое страницы -->
+  <p><img src="/static/kusya.jpg" alt="" width="95"> <span style="color:  darkorange; font-size: xx-large;">{{title}}</span></p>   
+    <div style="margin-left:30px">
+      {% block content %}{% endblock %}  
+    </div>
+  
+  </div>
+  
+</div>
+<p style="text-align: center; font-size: small;">© Макрушин А.Г	2020</p>
 
 {% if not mini %}
-  <div id="header">
-  <div class="logo">
-    <a href="/" style="text-decoration: none;"><h1>Kojima</h1></a>
-    <p><span style="color: #32819e;">Программа учета финансов</span> <span style="font-size: smaller;font-style: oblique;">Учет затрат, бюджетирование, амортизация и планирование.</span></p>
-  </div>
+2
   {% else %}
-  <div>
-  <div class="menus" style="float:left">
-  <a href="/"><strong> <i class="fa fa-home" aria-hidden="true"></i>
-   Kojima</strong> на главную</a>
-  </div>
+1
  {% endif %}
 
-<div class="menus">
-  <a href="/about">О программе</a>
-
-  {% if user_name %}
-    <span style="background-color: azure; padding: 3px;">
-      
-      <a href="/xlsx/get_all_report"> <i class="fa fa-file-excel-o" aria-hidden="true"></i> Экспортировать в xlsx </a>
-      <a href="/app"> <i class="fa fa-money" aria-hidden="true"></i> Бухгалтерия</a>
-      <a href="/auth/userinfo"> <i class="fa fa-user-circle" aria-hidden="true"></i> {{user_name}}</a>
-      <a href="/auth/logout"><i class="fa fa-sign-out" id="name_user"></i> Выход</a>
-    </span>
-  {% else %}
-    <span style="background-color: azure; padding: 3px;">
-      <a href="/auth/page_login"><i class="fa fa-sign-in"></i> Вход</a>
-    </span>
-  {% endif %}
-
-  {% if not mini %}
-    <!-- <p>Страницы проекта в соцсетях</p>
-    <div class="button_list">
-      <a href="#" ><i class="fa fa-vk fabutton"></i></a>
-      <a href="#" ><i class="fa fa-telegram fabutton"></i></a>
-      <a href="#" ><i class="fa fa-facebook-official"></i></a>
-    </div> -->
-  {% endif %}
-
-</div>
-</div>
-
-
-{% block content %}{% endblock %}
 
 </body>
 

@@ -1,14 +1,23 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Kojima</title>
 
-<div id="content" >
-</div>
+  <link rel="stylesheet" href="/static/w2ui/w2ui-1.5.rc1.min.css">
+  <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.css">
+  <link rel="stylesheet" href="/static/base.css">
 
 
-{% endblock %}
+  <script type="text/javascript" src="/static/jquery.min.js"></script>
 
-{% block script %}
+
+  <script type="text/javascript" src="/static/w2ui/w2ui-1.5.rc1.js"></script>
+  <script id="rdivocale" type="text/javascript" src="/static/locale/ru-ru.json"></script>
+
 
   <script type="text/javascript" src="/static/w2ui/Components/sidebar.js"></script>
 
@@ -31,6 +40,14 @@
 
   <script type="text/javascript" src="/static/w2ui/Components/Confirm/config.js"></script>
   <!-- <script type="text/javascript" src="/static/w2ui/Components/Forms/config.js"></script> -->
+
+</head>
+
+<body>
+  <div id="content" >
+  </div>
+</body>
+</html>
 
 
 <script type="text/javascript">
@@ -84,6 +101,3 @@ $(function () {
 });
 
 </script>
-
-
-{% endblock %}

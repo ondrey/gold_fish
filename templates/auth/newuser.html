@@ -1,56 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<style>
-#login {
-	width: 350px;
-	margin: 0px auto;
-	text-align: center;
-}
-
-#login input {
-	width: 250px;
-}
-
-</style>
+<div class="content">
 
 {% if finish %}
 
-<p style="margin: 0 auto; width: 60%;text-align: center; color: #3281a4;background-color: #f9f9f9;border-radius: 4px;box-shadow: 1px 1px 3px #919191;margin-top: 120px;padding: 10px;">
+<p style="margin: 0 auto; text-align: center; border-radius: 4px;box-shadow: 1px 1px 3px #919191;padding: 10px;">
 	{{ finish }}
 </p>
 
 {% else %}
-  <form action="/auth/create_user" id="login" method="post">
-	<p>Регистрация</p>
-    <input type="email" placeholder="Ваш email..." name="user_mail" required=required>
-	<input type="text" placeholder="Ваше имя или назване организации" name="name" required=required>
+
+	<form action="/auth/create_user" class="form_content" method="post">
+	
+		<input type="email" placeholder="Ваш email..." name="user_mail" required=required> <br>
+		<input type="text" placeholder="Ваше имя или назване организации" name="name" required=required> <br>
+	
+	
+		<div style="background-color: #f2f2f2;border-radius: 9px;">
+			<input type="password" placeholder="Пароль" name="user_password1" required=required> <br>
+			<input type="password" placeholder="Пароль еще раз" name="user_password2" required=required>
+		</div>
+	
+	
+		<p style="font-size: small;color: #7b7b7b;margin: 5px;">
+			Идентификационный код проекта к которому Вы желаете присоеденится (Вы сможете создавать общие счета с владельцем проекта)<br>
+		<input type="text" placeholder="Код проекта" name="ref"> </p>
+	
+	
+		<input type="submit" name="authorisation" value="Зарегистрировать">
+			<ul style="text-align: start;font-size: smaller;color: red;">
+			{% for item in errors %}
+				<li> {{ item }} </li>
+			{% endfor %}
+			</ul>
+	
+			<hr>
+			<p>Нажимая кнопку "Зарегистрировать", Вы даете своё согласие на хранение и обработку персональных данных.</p>
+	  </form>
 
 
-	<div style="background-color: #f2f2f2;border-radius: 9px;">
-		<input type="password" placeholder="Пароль" name="user_password1" required=required>
-		<input type="password" placeholder="Пароль еще раз" name="user_password2" required=required>
-	</div>
-
-
-	<p style="font-size: small;color: #7b7b7b;margin: 5px;">
-		Идентификационный код проекта к которому Вы желаете присоеденится (Вы сможете создавать общие счета с владельцем проекта)</p>
-	<input type="text" placeholder="Код проекта" name="ref">
-
-
-	<input type="submit" name="authorisation" value="Зарегистрировать">
-		<ul style="text-align: start;font-size: smaller;color: red;">
-		{% for item in errors %}
-        	<li> {{ item }} </li>
-    	{% endfor %}
-		</ul>
-
-		<hr>
-		<p>Нажимая кнопку "Зарегистрировать", Вы даете своё согласие на хранение и обработку персональных данных.</p>
-  </form>
+  
 {% endif %}
 
+</div>
 
 <script type="text/javascript">
 

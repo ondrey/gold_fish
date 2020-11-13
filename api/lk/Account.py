@@ -60,7 +60,7 @@ class Account(ObjectAPI, ObjectDb):
         result = cur.fetchone()
         if result:
             return {'input': float(result[0])/100.0, 'cost': float(result[1])/100.0, 'income': float(result[2])/100.0,
-                    'balance': (float(result[1]) + float(result[2])) + float(result[0])/100.0}
+                    'balance': ((float(result[1]) + float(result[2])) + float(result[0]))/100.0}
 
         return {'balance': 0.0, 'cost': 0.0, 'income': 0.0, 'input': 0.0}
 

@@ -35,7 +35,6 @@ a:hover {
 	width: 230px;
 	display: inline-block;
 	font-size: revert;
-  margin-left: 150px;
 }
 
 .logo h1 {
@@ -47,11 +46,17 @@ a:hover {
 }
 
 .menus {
-	float: right;
-	margin: 10px 20px;
 	font-style: initial;
-	font-size: smaller;
-    text-align: end;
+	font-size: smaller;    
+}
+
+.menus a i{
+	font-size: larger;
+}
+
+.menus a{
+	display: block;
+	margin: 5px;
 }
 
 .button_list i {
@@ -106,7 +111,7 @@ input, textarea, select {
   padding: 6px;
   text-align: center;
   border-color: #e3e3e3;
-  width: 100%;
+  width: 230px;
 }
 
 textarea {
@@ -134,13 +139,24 @@ input[type="submit"] {
 
 
 .content {
-	margin: 64px auto;
-	width: 50%;
+	margin: 64px;	
+	min-width: 510px;
 }
-.content .title {
+.lindex {
+	margin-bottom: 25px;
+}
+.lindex .desc {
+	font-size: small;
+}
+
+.lindex .title {
     color: #32819e;
-    font-size: larger;
+	font-size: larger;
+	margin-bottom: 4px;
+    display: list-item;
 }
+
+
 
 .iconaccount {
     color: cornflowerblue;
@@ -157,19 +173,6 @@ input[type="submit"] {
 	font-size: medium !important;
 }
 
-.lindex {    
-	margin-top: 45px;		
+.form_content {
+	text-align: center;
 }
-.lindex div{
-	color: #32819e;
-    font-size: medium;
-    text-align: left;    
-	display: flex;
-}
-
-
-.lindex img {
-    border-radius: 6px;
-    margin-right: 10px;
-}
-
