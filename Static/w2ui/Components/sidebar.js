@@ -1,5 +1,6 @@
 sidebar_config = {
         name: 'sidebar',
+        topHTML: 'some text',
         flatButton: true,
         nodes: [
           // { id: 'tools', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
@@ -14,6 +15,7 @@ sidebar_config = {
           //       ,comment:"Не подтвержденные транзакции у которых дата выполнения уже прошла."}
           //   ]
           // },
+          { id: 'index', text: 'На главную', icon: 'fa fa-home' },          
 
           { id: 'balance', text: 'Справочники', img: 'icon-folder', expanded: true, group: true,
               nodes: [ 
@@ -22,6 +24,8 @@ sidebar_config = {
                 { id: 'transactions', text: 'Транзакции', icon: 'fa fa-puzzle-piece' },
               ]
           },
+          { id: 'xlsx', text: 'Скачать транзакции', icon: 'fa fa-download' },
+          
           ],
 
         onFlat: function (event) {
@@ -52,10 +56,12 @@ sidebar_config = {
             } else if (event.target == 'transactions') {
               w2ui.base_layout.content('main', w2ui.transact_grid);                
             }
-            else if (event.target == 'xlsx') {
-              w2ui.base_layout.content('main', '<a href="/xlsx/get_all_report" style="display: block;margin: 150px auto;background-color: #8ab54c;width: 239px;text-align: center;padding: 15px;border-radius: 6px;color: aliceblue;">Скачать файл <i class="fa fa-file-excel-o" aria-hidden="true"></i></a>');
-              
-            } 
+            else if (event.target == 'xlsx') {   
+              let isBoss = confirm("Скачать файл ?"); 
+              if (isBoss) window.open("/xlsx/get_all_report", target="_blank");
+            } else if (event.target == 'index') {   
+              window.location.replace("/");
+            }
             // Действия совершаемые при каждой смене или обновлении текущего пункта меню.
               // Прячим дочернии справочники счетов
               w2ui.layout_account.sizeTo('top', '100%');
