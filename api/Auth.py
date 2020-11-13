@@ -43,10 +43,10 @@ class Auth(ObjectAPI, ObjectDb):
         return render_tmp('auth/login.html')
 
     def api_page_newuser(self):
-        return render_tmp('auth/newuser.html', title="Регистрация")
+        return render_tmp('auth/newuser.html', title=u"Регистрация")
 
     def api_page_repass(self):
-        return render_tmp('auth/repassword.html', title="Востановление пароля")
+        return render_tmp('auth/repassword.html', title=u"Востановление пароля")
 
     @isauth
     def api_userinfo(self):
@@ -69,7 +69,7 @@ class Auth(ObjectAPI, ObjectDb):
             try:
                 password = md5(password.encode()).hexdigest()
             except:
-                return render_tmp('index.html' , title="Базовые возможности", mess=u"Пароль может состоять из символов латинского алфавита, цифр и знаков. Проверте раскладку!")
+                return render_tmp('index.html' , title=u"Базовые возможности", mess=u"Пароль может состоять из символов латинского алфавита, цифр и знаков. Проверте раскладку!")
 
             cur = self.connect.cursor()
             cur.execute(u"""
@@ -88,9 +88,9 @@ class Auth(ObjectAPI, ObjectDb):
 
                 return redirect("/app")
 
-            return render_tmp('index.html', title="Базовые возможности",  mess=u"Ошибка! Такого сочетания логина и пароля, не зарегистрированно.")
+            return render_tmp('index.html', title=u"Базовые возможности",  mess=u"Ошибка! Такого сочетания логина и пароля, не зарегистрированно.")
         else:
-            return render_tmp('index.html', title="Базовые возможности", mess=u"Не передан один из параметров")
+            return render_tmp('index.html', title=u"Базовые возможности", mess=u"Не передан один из параметров")
 
     def update_session(self, id_user):
         cur = self.connect.cursor()
@@ -123,7 +123,7 @@ class Auth(ObjectAPI, ObjectDb):
         cur = self.connect.cursor()
         cur.execute(u"UPDATE Users SET code_activ_user = NULL WHERE code_activ_user = %s ", (code,))
         self.connect.commit()
-        return render_tmp('index.html', title="Базовые возможности", mess=u"Пользователь активирован, попробуйте авторизоваться!")
+        return render_tmp('index.html', title=u"Базовые возможности", mess=u"Пользователь активирован, попробуйте авторизоваться!")
 
     def api_re_access(self):
         if 'user_mail' in request.form:
@@ -138,14 +138,14 @@ class Auth(ObjectAPI, ObjectDb):
                                   html=render_tmp('email_tmp/reaccess.html',
                                                        host=request.host, code=session['repass_code']))
 
-                return render_tmp('auth/repassword.html', title="Востановление пароля", mess=u"На указанный email отправленна ссылка для "
+                return render_tmp('auth/repassword.html', title=u"Востановление пароля", mess=u"На указанный email отправленна ссылка для "
                                                                u"востановления доступа. Проверьте почтовый ящик.")
 
-            return render_tmp('auth/repassword.html', title="Востановление пароля", mess=u"Пользователь с такими данными не зарегистрирован в базе.")
+            return render_tmp('auth/repassword.html', title=u"Востановление пароля", mess=u"Пользователь с такими данными не зарегистрирован в базе.")
 
     def api_re_pass(self):
         if 'code_mail' in request.values:
-            return render_tmp('auth/repassword2.html', title="Востановление пароля", code=request.values['code_mail'])
+            return render_tmp('auth/repassword2.html', title=u"Востановление пароля", code=request.values['code_mail'])
         elif 'code' in request.form:
             if request.form['pass'] == request.form['repass']:
                 if 'repass_code' in session and 'repass_email' in session:
@@ -153,20 +153,20 @@ class Auth(ObjectAPI, ObjectDb):
                     try:
                         md5(request.form['repass'].encode()).hexdigest()
                     except:
-                        return render_tmp('auth/repassword2.html', code=request.values['code'], title="Востановление пароля",
+                        return render_tmp('auth/repassword2.html', code=request.values['code'], title=u"Востановление пароля",
                                           mess=u"Пароль может содержать только латинские буквы, символы и цыфры.")
 
                     cur = self.connect.cursor()
                     cur.execute(u"update Users set password_user=%s where email_user=%s", (
                         md5(request.form['repass'].encode()).hexdigest(), session['repass_email']))
                     self.connect.commit()
-                    return render_tmp('index.html', title="Базовые возможности", mess=u"Вы успешно сменили пароль. Попробуйте войти теперь.")
+                    return render_tmp('index.html', title=u"Базовые возможности", mess=u"Вы успешно сменили пароль. Попробуйте войти теперь.")
                 else:
-                    return render_tmp('auth/repassword.html', title="Востановление пароля", mess=u"Срок действия кода востановления истёк.")
+                    return render_tmp('auth/repassword.html', title=u"Востановление пароля", mess=u"Срок действия кода востановления истёк.")
             else:
-                return render_tmp('auth/repassword2.html', title="Востановление пароля", code=request.values['code'], mess=u"Пароли не совпадают")
+                return render_tmp('auth/repassword2.html', title=u"Востановление пароля", code=request.values['code'], mess=u"Пароли не совпадают")
         else:
-            return render_tmp('auth/repassword.html', title="Востановление пароля")
+            return render_tmp('auth/repassword.html', title=u"Востановление пароля")
 
     def api_create_user(self):
         error = []

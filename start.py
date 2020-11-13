@@ -21,7 +21,7 @@ def run_api_method(api_group, method_api):
 
 @app.route('/')
 def index():
-    return api.render_tmp('index.html', title="Базовые возможности")
+    return api.render_tmp('index.html', title=u"Базовые возможности")
 
 
 @app.route('/app')
@@ -34,7 +34,7 @@ def demo():
 
 @app.route('/about')
 def about():
-    return api.render_tmp('about.html', title="О программе")
+    return api.render_tmp('about.html', title=u"О программе")
 
 
 @app.route('/applications')
