@@ -1,6 +1,6 @@
 sidebar_config = {
         name: 'sidebar',
-        topHTML: 'some text',
+        
         flatButton: true,
         nodes: [
           // { id: 'tools', text: 'Инструменты', img: 'icon-folder', expanded: true, group: true,
@@ -23,9 +23,7 @@ sidebar_config = {
                 { id: 'operation', text: 'Операции', icon: 'fa fa-tasks' },
                 { id: 'transactions', text: 'Транзакции', icon: 'fa fa-puzzle-piece' },
               ]
-          },
-          { id: 'xlsx', text: 'Скачать транзакции', icon: 'fa fa-download' },
-          
+          }          
           ],
 
         onFlat: function (event) {
