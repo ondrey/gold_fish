@@ -21,7 +21,7 @@ def run_api_method(api_group, method_api):
 
 @app.route('/')
 def index():
-    return api.render_tmp('index.html')
+    return api.render_tmp('index.html', title="Базовые возможности")
 
 
 @app.route('/app')
@@ -29,12 +29,12 @@ def demo():
     if 'client_sess' in session:
         return api.render_tmp('demo.html', mini=True)
     else:
-        return redirect("/auth/page_login")
+        return redirect("/")
 
 
 @app.route('/about')
 def about():
-    return api.render_tmp('about.html')
+    return api.render_tmp('about.html', title="О программе")
 
 
 @app.route('/applications')

@@ -2,37 +2,24 @@
 
 {% block content %}
 
-<style>
-#login {
-	width: 400px;
-	margin: 0px auto;
-	text-align: center;
-}
-
-#login input {
-	width: 250px;
-}
-
-</style>
-
-
-
-<form action="/auth/userinfo" id="login" method="post">
-	<p>Информация профиля</p>
-    {% if mess %}
-        <p style="color: #dd796f;">{{ mess }}</p>
-    {% endif %}
-    <input type="text" placeholder="Имя или наименование" name="user_name" value="{{user_name}}" required=required>
-    <input type="submit" name="authorisation" value="Сохранить">
-    <hr>
-    <p>Ваш партнерский код: <strong style="color: #5ba5da;">{{code_emploey}}</strong></p>
-    <p>Используйте код при регистрации своих сотрудников или членов семьи. Это позволит создовать совместные счета под Вашим контролем.</p>
-    <hr>
+<div class="content">
+    <form class="form_content" action="/auth/userinfo" method="post">        
+        {% if mess %}
+            <p style="color: #dd796f;">{{ mess }}</p>
+        {% endif %}
+        <input type="text" placeholder="Имя или наименование" name="user_name" value="{{user_name}}" required=required>
+        <input type="submit" name="authorisation" value="Сохранить">
+        <hr>
+        <p>Ваш партнерский код: <strong style="color: #5ba5da;">{{code_emploey}}</strong></p>
+        <p>Используйте код при регистрации своих сотрудников или членов семьи. Это позволит создовать совместные счета под Вашим контролем.</p>
+        <hr>
+        
+        <p>Для того чтобы привязать телеграмм бота пройдите по ссылке <a href="tg://resolve?domain=kojimasubot&start={{code_session}}">@kojimasubot</a> и нажмите <strong style="color: #5ba5da;">Cтарт</strong></p>
+        <p>Вы также можете привязать бота, если отправите <br> ему команду <strong style="color: #5ba5da;">/start {{code_session}}</strong></p>
     
-    <p>Для того чтобы привязать телеграмм бота пройдите по ссылке <a href="tg://resolve?domain=kojimasubot&start={{code_session}}">@kojimasubot</a> и нажмите <strong style="color: #5ba5da;">/старт</strong></p>
-    <p>Вы также можете привязать бота, если отправите ему команду <strong style="color: #5ba5da;">/start {{code_session}}</strong></p>
+        <hr>
+    </form>
+</div>
 
-    <hr>
-</form>
 
 {% endblock %}
