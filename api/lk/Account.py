@@ -31,8 +31,8 @@ class Account(ObjectAPI, ObjectDb):
                 ac.id_user_owner,
                 us.name_user AS owner_name,
                 ac.is_public 
-            FROM kojima.Accounts ac 
-            INNER JOIN kojima.Users us ON ac.id_user_owner = us.id_user
+            FROM Accounts ac 
+            INNER JOIN Users us ON ac.id_user_owner = us.id_user
             WHERE (ac.id_user_owner = %(id_user_owner)s or {1}) AND ac.id_par_acc {0}
             """.format(
                 ' = ' + str(parent_id) if parent_id else ' is NULL',
@@ -52,7 +52,7 @@ class Account(ObjectAPI, ObjectDb):
             SUM(case when (date(tr.date_fact) < %(date_start)s) then tr.ammount_trans else 0 end) AS balance,
             SUM(case when (tr.ammount_trans < 0 and date(tr.date_fact) >= %(date_start)s) then tr.ammount_trans ELSE 0 END) AS cost,
             SUM(case when (tr.ammount_trans > 0 and date(tr.date_fact) >= %(date_start)s) then tr.ammount_trans ELSE 0 END) AS income
-            from kojima.Transactions tr 
+            from Transactions tr 
             WHERE tr.id_acc = %(id)s 
             having SUM(tr.ammount_trans)!=0
         """, {'id': id_acc, 'date_start': date_start})
@@ -65,17 +65,18 @@ class Account(ObjectAPI, ObjectDb):
         return {'balance': 0.0, 'cost': 0.0, 'income': 0.0, 'input': 0.0}
 
     def create_account_list(self, id_parent=None):
-        records, balance_ch = [], {}
+        records, balance_ch = [], {'balance': 0, 'income': 0, 'cost': 0, 'input': 0}
 
         req = loads(request.form['request'])
 
         for acc in self.my_accounts(id_parent):
             children = self.create_account_list(acc[0])
+
             accont = {
                 'recid': acc[0],
                 'id_par_acc': acc[1],
                 'addate_acc': acc[2],
-                'title_acc': "<i class=\"fa fa-wifi\"></i> {0}".format(acc[3]) if acc[6] == '1' else acc[3],
+                'title_acc': u"<i class=\"fa fa-wifi\"></i> {0}".format(acc[3]) if acc[6] == '1' else acc[3],
                 'id_user_owner': acc[4],
                 'name_user_owner': acc[5],
                 'w2ui': {'children': children[0]},
@@ -91,13 +92,18 @@ class Account(ObjectAPI, ObjectDb):
                 balance_acc = self.get_balanse(date_start, acc[0])
 
                 accont.update({
-                    'balance': "<span style=\"color: #338a98;font-size: larger;\">{0}</span>".format(
-                        round(balance_acc['balance'], 2)),
-                    'income': round(balance_acc['income'], 2),
-                    'cost': round(balance_acc['cost'], 2),
-                    'input': round(balance_acc['input'], 2),
+                    'balance': u"<span style=\"color: #338a98;font-size: larger;\">{0}</span>".format(
+                        round(balance_acc['balance'] + children[1]['balance'], 2)),
+                    'income': round(balance_acc['income'] + children[1]['income'], 2),
+                    'cost': round(balance_acc['cost'] + children[1]['cost'], 2),
+                    'input': round(balance_acc['input'] + children[1]['input'], 2),
                     'start_dt': "{0}.{1}.{2}".format(date_start.year, date_start.month, date_start.day)
                 })
+
+                balance_ch['balance'] += balance_acc['balance']
+                balance_ch['income'] += balance_acc['income']
+                balance_ch['cost'] += balance_acc['cost']
+                balance_ch['input'] += balance_acc['input']
 
             records.append(accont)
 
@@ -105,7 +111,12 @@ class Account(ObjectAPI, ObjectDb):
 
     @isauth
     def api_get_account_list(self):
-        res = self.create_account_list()
+        import traceback
+        try:
+            res = self.create_account_list()
+        except Exception as e:
+            return traceback.format_exc()
+
         return jsonify({
             'total': len(res[0]),
             'records': res[0]
@@ -116,6 +127,7 @@ class Account(ObjectAPI, ObjectDb):
         req = loads(request.form['request'])
         cur = self.connect.cursor()
         for idrec in req['selected']:
+            # Переместить транзакции в родительский счет
             cur.execute(u"delete from Accounts where id_acc = {0}".format(idrec))
 
         self.connect.commit()
