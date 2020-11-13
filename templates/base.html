@@ -32,14 +32,16 @@
     </div>
 
     <div class="menus">
-      <a href="/about">О программе</a><br>
+      
+
+      <a href="/about">О программе</a>
 
       {% if user_name %}
           
-        <a href="/xlsx/get_all_report">Экспортировать в xlsx <i class="fa fa-file-excel-o" aria-hidden="true"></i></a> <br>
-        <a href="/app">Бухгалтерия <i class="fa fa-money" aria-hidden="true"></i></a><br>
-        <a href="/auth/userinfo">{{user_name}} <i class="fa fa-user-circle" aria-hidden="true"></i></a><br>
-        <a href="/auth/logout">Выход <i class="fa fa-sign-out" id="name_user"></i> </a><br>
+        <a href="/xlsx/get_all_report">Экспортировать в xlsx <i class="fa fa-file-excel-o" aria-hidden="true"></i></a> 
+        <a href="/app">Бухгалтерия <i class="fa fa-money" aria-hidden="true"></i></a>
+        <a href="/auth/userinfo">{{user_name}} <i class="fa fa-user-circle" aria-hidden="true"></i></a>
+        <a href="/auth/logout">Выход <i class="fa fa-sign-out" id="name_user"></i> </a>
       {% else %}
       <form action="/auth/login" id="login" method="post">
         <p>Авторизация</p>

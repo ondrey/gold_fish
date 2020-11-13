@@ -50,6 +50,15 @@ a:hover {
 	font-size: smaller;    
 }
 
+.menus a i{
+	font-size: larger;
+}
+
+.menus a{
+	display: block;
+	margin: 5px;
+}
+
 .button_list i {
 	font-size: x-large;
 	float: right;
