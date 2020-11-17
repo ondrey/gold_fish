@@ -18,7 +18,7 @@ layout_account = {
                 if (w2ui.config_accounts.getSelection()) {
                     w2ui[event.target].postData['id_acc'] = w2ui.config_accounts.getSelection()[0];
                     this.owner.content('main', w2ui[event.target]);
-                    w2ui.config_categories.reload();
+                    w2ui[event.target].reload();
                 }
                 
                 

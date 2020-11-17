@@ -3,7 +3,26 @@ layout_operation = {
   padding: 0,
   panels: [
     { type: 'top', size: '50%',  content: 'main', resizable: true },
-    { type: 'main', size:'50%', content: '7', resizable: true }
+    { type: 'main', size:'50%', content: '7', resizable: true,
+
+      tabs: {
+        active: 'transact_grid',
+        tabs: [
+            { id: 'transact_grid', caption: 'Транзакции' },
+            { id: 'config_files', caption: 'Файлы' }
+        ],
+        onClick: function (event) {
+            // w2ui.config_categories.toolbar.disable('addTrans');
+            
+            if (w2ui.config_operation.getSelection()) {
+                w2ui[event.target].postData['id_acc'] = w2ui.config_operation.getSelection()[0];
+                this.owner.content('main', w2ui[event.target]);
+                w2ui[event.target].reload();
+            }
+        }
+    }
+
+  }
   ]
 }
 
