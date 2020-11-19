@@ -52,9 +52,10 @@ class Account(ObjectAPI, ObjectDb):
             SUM(case when (date(tr.date_fact) < %(date_start)s) then tr.ammount_trans else 0 end) AS balance,
             SUM(case when (tr.ammount_trans < 0 and date(tr.date_fact) >= %(date_start)s) then tr.ammount_trans ELSE 0 END) AS cost,
             SUM(case when (tr.ammount_trans > 0 and date(tr.date_fact) >= %(date_start)s) then tr.ammount_trans ELSE 0 END) AS income
-            from Transactions tr 
-            WHERE tr.id_acc = %(id)s 
+            from Transactions tr inner join Items i on i.id_item = tr.id_item
+            WHERE tr.id_acc = %(id)s and tr.date_fact is not null and i.is_vertual_item != '1'
             having SUM(tr.ammount_trans)!=0
+            
         """, {'id': id_acc, 'date_start': date_start})
 
         result = cur.fetchone()
