@@ -3,7 +3,14 @@
 from json import loads
 import datetime
 import calendar
+import os
 
+
+from werkzeug.utils import secure_filename
+
+from flask import current_app as app
+from flask import redirect
+from flask import url_for
 from flask import jsonify
 from flask import request
 from flask import session
@@ -13,6 +20,11 @@ from ..ObjectAPI import render_tmp
 from ..ObjectDb import ObjectDb
 from ..ObjectW2UI import search2where
 from ..Auth import isauth
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config.get('ALLOWED_EXTENSIONS')
 
 
 class Operations(ObjectAPI, ObjectDb):
@@ -92,6 +104,18 @@ class Operations(ObjectAPI, ObjectDb):
                                          req['record']['type_op'])
 
         return jsonify({'code': code, 'idrec': idrec, 'status': 'success'})
+
+    @isauth
+    def api_add_files(self):
+
+        if request.method == 'POST':
+            req = loads(request.form['request'])
+            if len(req['record']['files']) > 0:
+
+                pass
+
+
+        return jsonify({'status': 'success'})
 
     @isauth
     def api_add_cicle_op(self):

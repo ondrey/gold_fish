@@ -9,6 +9,10 @@ class Config(object):
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=1000)
     ADMIN_ACCOUNT = {}
     TASKS_KEY = "1U6iWrABx0qBBOjwG5xrFyaASig6N0xpn9BP"
+    UPLOAD_FOLDER = '/uploads'
+    ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+
 
 class ProductionConfig(Config):
     DEBUG = False

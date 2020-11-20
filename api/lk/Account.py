@@ -93,7 +93,7 @@ class Account(ObjectAPI, ObjectDb):
                 balance_acc = self.get_balanse(date_start, acc[0])
 
                 accont.update({
-                    'balance': u"<span style=\"color: #338a98;font-size: larger;\">{0}</span>".format(
+                    'balance': u"<span style=\"font-weight: bold; color: crimson; font-size: larger;\">{0}</span>".format(
                         round(balance_acc['balance'] + children[1]['balance'], 2)),
                     'income': round(balance_acc['income'] + children[1]['income'], 2),
                     'cost': round(balance_acc['cost'] + children[1]['cost'], 2),

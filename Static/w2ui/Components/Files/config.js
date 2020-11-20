@@ -18,8 +18,7 @@ config_files = {
     columns: [
         { field: 'name_file', caption: 'Наименование файла', size:"150"},  
         { field: 'link_file', caption: 'Ссылка на файл', size:"150"},  
-        { field: 'date_file', caption: 'Дата регистрации', size:"90"},  
-        { field: 'access_file', caption: 'Открытый доступ', size:"90"}
+        { field: 'date_file', caption: 'Дата регистрации', size:"90"}
     ],   
     
     onAdd: function(event) {
@@ -61,39 +60,32 @@ config_files = {
 addFileForm = {
     name: 'addFileForm',
     style: "height:100%",
-    url  : '/files/add',
+    url  : '/operations/add_files',
     fields: [
         { name: 'files', type: 'file',
             html: { caption: 'Загрузка файла', attr: 'style="width:300px"'}
         },
         { name: 'name', type: 'text',
             html: {caption: 'Наименование', attr: 'size="45" maxlength="40"'},            
-        },
-        { name: 'public', type: 'checkbox',
-            html: {caption: 'Доступен из вне'},            
-        },                
-
+        }
     ],    
 
     actions: {
         Reset: function () { this.clear(); },
         Save: function () {
-            // var errors = this.validate();
-            // if (errors.length > 0) return;
-            // let clear = this.clear;
+            var errors = this.validate();
+            if (errors.length > 0) return;
+            let clear = this.clear;
 
-            // this.record['type_op'] = 'AA'
-            // this.record['amount_op'] = 0
-
-            // this.save({
-            //     'record': this.record
-            //     }, 
-            //     function(e){
-            //         w2ui.config_operation.reload();                                        
-            //         w2ui.addOper.clear();
-            //         w2popup.close();
+            this.save({
+                'record': this.record
+                }, 
+                function(e){
+                    w2ui.config_files.reload();                                        
+                    w2ui.addFileForm.clear();
+                    w2popup.close();
                     
-            //     });
+                });
         }
     }
 }
