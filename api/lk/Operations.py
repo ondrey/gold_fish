@@ -105,7 +105,8 @@ class Operations(ObjectAPI, ObjectDb):
             if len(req['record']['files']) > 0:
                 cur_file = Files()
                 for file in req['record']['files']:
-                    cur_file.create_file(file)
+                    tmp_path = cur_file.create_file(file)
+
                 pass
 
 
