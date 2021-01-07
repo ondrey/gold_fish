@@ -4,7 +4,7 @@ html {
 
 body {
   margin: 0px;
-  height:100%;
+  min-height: 100%;
   font-family: arial;
 }
 
@@ -142,18 +142,23 @@ input[type="submit"] {
 	margin: 64px;	
 	min-width: 510px;
 }
+.content>h2{
+    color: #32819e45;
+    font-weight: 800;
+}
+
 .lindex {
 	margin-bottom: 25px;
 }
 .lindex .desc {
 	font-size: small;
+	color: #b1b1b1;
 }
 
 .lindex .title {
     color: #32819e;
 	font-size: larger;
 	margin-bottom: 4px;
-    display: list-item;
 }
 
 

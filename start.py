@@ -21,7 +21,7 @@ def run_api_method(api_group, method_api):
 
 @app.route('/')
 def index():
-    return api.render_tmp('index.html', title=u"Базовые возможности")
+    return api.render_tmp('index.html', title=u"О программе")
 
 
 @app.route('/app')
