@@ -7,6 +7,7 @@ from flask import session
 from flask import redirect
 import api
 
+
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentTemplateConfig')
 
@@ -30,11 +31,6 @@ def demo():
         return api.render_tmp('demo.html', mini=True)
     else:
         return redirect("/")
-
-
-@app.route('/about')
-def about():
-    return api.render_tmp('about.html', title=u"О программе")
 
 
 @app.route('/applications')

@@ -1,25 +1,17 @@
-# -*- coding: utf-8 -*-
-
 from json import loads
 import datetime
 import calendar
-import os
-
-
-from werkzeug.utils import secure_filename
 
 from flask import current_app as app
-from flask import redirect
-from flask import url_for
 from flask import jsonify
 from flask import request
 from flask import session
 
 from ..ObjectAPI import ObjectAPI
-from ..ObjectAPI import render_tmp
 from ..ObjectDb import ObjectDb
 from ..ObjectW2UI import search2where
 from ..Auth import isauth
+from ..Files import Files
 
 
 def allowed_file(filename):
@@ -111,7 +103,9 @@ class Operations(ObjectAPI, ObjectDb):
         if request.method == 'POST':
             req = loads(request.form['request'])
             if len(req['record']['files']) > 0:
-
+                cur_file = Files()
+                for file in req['record']['files']:
+                    cur_file.create_file(file)
                 pass
 
 

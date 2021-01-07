@@ -1,6 +1,5 @@
 
 
-
 def search2where(search=[], replase_field={}, logic=u'AND'):
     where = []
     logic = ' ' + logic + ' '
