@@ -106,9 +106,8 @@ class Operations(ObjectAPI, ObjectDb):
                 cur_file = Files()
                 for file in req['record']['files']:
                     tmp_path = cur_file.create_file(file)
-
+                    cur_file.save_file(tmp_path, session['client_sess']['guid_user'], file['name'])
                 pass
-
 
         return jsonify({'status': 'success'})
 

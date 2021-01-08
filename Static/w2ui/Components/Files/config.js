@@ -63,10 +63,10 @@ addFileForm = {
     url  : '/operations/add_files',
     fields: [
         { name: 'files', type: 'file',
-            html: { caption: 'Загрузка файла', attr: 'style="width:300px"'}
+            html: { caption: 'Загрузка файла', attr: 'style="width:300px"', required: true}
         },
         { name: 'name', type: 'text',
-            html: {caption: 'Наименование', attr: 'size="45" maxlength="40"'},            
+            html: {caption: 'Наименование', attr: 'size="45" maxlength="40"', required: true},
         }
     ],    
 
@@ -78,7 +78,8 @@ addFileForm = {
             let clear = this.clear;
 
             this.save({
-                'record': this.record
+                'record': this.record,
+                'selection': w2ui.config_operation.getSelection()
                 }, 
                 function(e){
                     w2ui.config_files.reload();                                        
